@@ -1,4 +1,7 @@
 import { useState } from "react";
+import { ChakraProvider, Heading, Text } from "@chakra-ui/react";
+
+import theme from "src/styles/theme";
 
 const Home = ({ users }) => {
   const [name, setName] = useState("");
@@ -25,20 +28,25 @@ const Home = ({ users }) => {
   console.log(users);
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="text"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        placeholder="Name"
-      />
-      <input
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="Email"
-      />
-      <button type="submit">Create User</button>
-    </form>
+    <ChakraProvider theme={theme}>
+      <form onSubmit={handleSubmit}>
+        <input
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Name"
+        />
+        <input
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Email"
+        />
+        <button type="submit">Create User</button>
+
+        <Text>Poppins</Text>
+        <Heading>Prata</Heading>
+      </form>
+    </ChakraProvider>
   );
 };
 
