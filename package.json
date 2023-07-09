@@ -14,12 +14,15 @@
     "@emotion/styled": "^11.11.0",
     "@fontsource/poppins": "^5.0.5",
     "@fontsource/prata": "^5.0.5",
+    "@hookform/resolvers": "^3.1.1",
+    "axios": "^1.4.0",
     "framer-motion": "^10.12.18",
     "next": "13.4.9",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-hook-form": "^7.45.1",
     "sqlite3": "^5.1.6",
-    "yarn": "^1.22.19"
+    "yup": "^1.2.0"
   },
   "devDependencies": {
     "eslint": "8.44.0",
