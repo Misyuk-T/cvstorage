@@ -10,8 +10,14 @@ const handler = async (req, res) => {
   switch (req.method) {
     case "POST":
       if (name && email) {
-        const { position, socials, description, experience, education } =
-          req.body;
+        const {
+          position,
+          socials,
+          description,
+          experience,
+          education,
+          projects,
+        } = req.body;
 
         try {
           await Users.create(
@@ -22,6 +28,7 @@ const handler = async (req, res) => {
             description,
             experience,
             education,
+            projects,
           );
           res.status(201).json({ message: "User created successfully" });
         } catch (error) {
@@ -73,8 +80,14 @@ const handler = async (req, res) => {
 
     case "PUT":
       if (id && name && email) {
-        const { position, socials, description, experience, education } =
-          req.body;
+        const {
+          position,
+          socials,
+          description,
+          experience,
+          education,
+          projects,
+        } = req.body;
 
         try {
           await Users.update(
@@ -86,6 +99,7 @@ const handler = async (req, res) => {
             description,
             experience,
             education,
+            projects,
           );
           res.status(200).json({ message: "User updated successfully" });
         } catch (error) {

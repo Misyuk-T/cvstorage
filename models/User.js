@@ -1,6 +1,5 @@
 const db = require("../database");
 
-// Define the User model methods
 module.exports = {
   createTable: () => {
     db.run(`
@@ -12,7 +11,8 @@ module.exports = {
         socials TEXT,
         description TEXT,
         experience TEXT,
-        education TEXT
+        education TEXT,
+        projects TEXT
       )
     `);
   },
@@ -51,10 +51,11 @@ module.exports = {
     description,
     experience,
     education,
+    projects,
   ) => {
     return new Promise((resolve, reject) => {
       const stmt = db.prepare(
-        "INSERT INTO users (name, position, email, socials, description, experience, education) VALUES (?, ?, ?, ?, ?, ?, ?)",
+        "INSERT INTO users (name, position, email, socials, description, experience, education, projects) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
       );
       stmt.run(
         name,
@@ -64,6 +65,7 @@ module.exports = {
         description,
         JSON.stringify(experience),
         JSON.stringify(education),
+        JSON.stringify(projects),
         (err) => {
           if (err) {
             reject(err);
@@ -99,11 +101,12 @@ module.exports = {
     description,
     experience,
     education,
+    projects,
   ) => {
     return new Promise((resolve, reject) => {
       const stmt = db.prepare(`
         UPDATE users 
-        SET name = ?, position = ?, email = ?, socials = ?, description = ?, experience = ?, education = ?
+        SET name = ?, position = ?, email = ?, socials = ?, description = ?, experience = ?, education = ?, projects = ?
         WHERE id = ?
       `);
       stmt.run(
@@ -114,6 +117,7 @@ module.exports = {
         description,
         JSON.stringify(experience),
         JSON.stringify(education),
+        JSON.stringify(projects),
         id,
         (err) => {
           if (err) {

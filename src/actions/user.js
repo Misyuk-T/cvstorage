@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "/api/users";
+const BASE_URL = "/api/user";
 
 export const createUser = async (userData) => {
   try {

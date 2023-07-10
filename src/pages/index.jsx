@@ -15,7 +15,7 @@ const Home = ({ users }) => {
 };
 
 export async function getServerSideProps() {
-  const res = await fetch(`http://localhost:3000/api/users`); // Use absolute URL
+  const res = await fetch(`http://localhost:3000/api/user`); // Use absolute URL
   const users = await res.json();
   return {
     props: {

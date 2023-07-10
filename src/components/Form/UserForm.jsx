@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useFieldArray } from "react-hook-form";
@@ -9,26 +9,32 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
-  Input,
   Stack,
+  Textarea,
 } from "@chakra-ui/react";
 
+import { getAllProjects } from "@/actions/projects";
 import { createUser, updateUser, deleteUser } from "@/actions/user";
-import { schema } from "@/helpers/userValidation";
+import schema from "@/helpers/userValidation";
 
 import FormField from "./components/FormField";
 import SocialField from "./components/SocialField";
 import EducationField from "./components/EducationField";
 import ExperienceField from "./components/ExperienceField";
+import ProjectField from "./components/ProjectField";
 
 const UserForm = ({ initialValues = {}, onSubmit, onDelete }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [projectOptions, setProjectOptions] = useState([]);
+
   const {
     register,
     handleSubmit,
     formState: { errors },
     control,
+    setValue,
+    getValues,
   } = useForm({
     resolver: yupResolver(schema),
   });
@@ -60,11 +66,38 @@ const UserForm = ({ initialValues = {}, onSubmit, onDelete }) => {
     name: "experience",
   });
 
+  const {
+    fields: projectFields,
+    append: appendProject,
+    remove: removeProject,
+  } = useFieldArray({
+    control,
+    name: "projects",
+  });
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const projects = await getAllProjects();
+        const options = projects.map((project) => ({
+          value: project.id,
+          label: project.projectName,
+          stackTechnologies: project.technologyStack,
+          description: project.description,
+          achievements: "",
+        }));
+        setProjectOptions(options);
+      } catch (error) {
+        console.error("Error fetching projects:", error);
+      }
+    };
+
+    fetchProjects();
+  }, []);
+
   const onSubmitForm = async (data) => {
     setIsLoading(true);
     setError(null);
-
-    console.log(data, "data");
 
     try {
       if (initialValues.id) {
@@ -109,20 +142,43 @@ const UserForm = ({ initialValues = {}, onSubmit, onDelete }) => {
           register={register}
           errors={errors}
         />
-
         <FormField
           name="position"
           label="Position"
           register={register}
           errors={errors}
         />
-
         <FormField
           name="description"
           label="Description"
           register={register}
           errors={errors}
+          isTextarea={true}
         />
+
+        {projectFields.map((field, index) => (
+          <ProjectField
+            key={field.id}
+            index={index}
+            control={control}
+            register={register}
+            setValue={setValue}
+            getValues={getValues}
+            errors={errors?.projects?.[index]}
+            removeProject={removeProject}
+            projectOptions={projectOptions}
+          />
+        ))}
+
+        <Button onClick={() => appendProject({})}>Add Project</Button>
+
+        <FormControl id="achievements" isInvalid={errors.achievements}>
+          <FormLabel>My Achievements</FormLabel>
+          <Textarea {...register("achievements")} />
+          {errors.achievements && (
+            <FormErrorMessage>{errors.achievements.message}</FormErrorMessage>
+          )}
+        </FormControl>
 
         <FormControl id="socials" isInvalid={errors.socials}>
           <FormLabel>Socials</FormLabel>

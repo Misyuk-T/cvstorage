@@ -1,6 +1,6 @@
 import * as yup from "yup";
 
-export const schema = yup.object().shape({
+const schema = yup.object().shape({
   name: yup.string().required("Name is required"),
   position: yup.string().required("Position is required"),
   email: yup
@@ -27,4 +27,15 @@ export const schema = yup.object().shape({
       description: yup.string(),
     }),
   ),
+  projects: yup.array().of(
+    yup.object().shape({
+      projectId: yup.string().required("Project ID is required"),
+      projectName: yup.string().required("Project name is required"),
+      stackTechnologies: yup.string(),
+      description: yup.string(),
+      achievements: yup.string(),
+    }),
+  ),
 });
+
+export default schema;
