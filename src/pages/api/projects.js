@@ -8,7 +8,7 @@ const handler = async (req, res) => {
 
   switch (req.method) {
     case "POST":
-      if (id && projectName) {
+      if (projectName) {
         const { technologyStack, description } = req.body;
 
         try {
@@ -82,3 +82,5 @@ const handler = async (req, res) => {
       break;
   }
 };
+
+export default handler;

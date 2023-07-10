@@ -2,7 +2,8 @@ import { ChakraProvider } from "@chakra-ui/react";
 
 import theme from "src/styles/theme";
 
-import UserForm from "@/components/Form/UserForm";
+import UserForm from "@/components/UserForm/UserForm";
+import ProjectForm from "@/components/ProjectForm/ProjectForm";
 
 const Home = ({ users }) => {
   console.log(users, "users");
@@ -10,6 +11,8 @@ const Home = ({ users }) => {
   return (
     <ChakraProvider theme={theme}>
       <UserForm />
+      ___________________
+      <ProjectForm />
     </ChakraProvider>
   );
 };

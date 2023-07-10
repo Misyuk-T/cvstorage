@@ -5,7 +5,6 @@ module.exports = {
     db.run(`
       CREATE TABLE IF NOT EXISTS projects (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        projectId TEXT,
         projectName TEXT,
         technologyStack TEXT,
         description TEXT
@@ -42,7 +41,7 @@ module.exports = {
   create: (projectName, technologyStack, description) => {
     return new Promise((resolve, reject) => {
       const stmt = db.prepare(
-        "INSERT INTO projects ( projectName, technologyStack, description) VALUES (?, ?, ?, ?)",
+        "INSERT INTO projects (projectName, technologyStack, description) VALUES (?, ?, ?)",
       );
       stmt.run(projectName, technologyStack, description, (err) => {
         if (err) {

@@ -10,7 +10,6 @@ import {
   FormErrorMessage,
   FormLabel,
   Stack,
-  Textarea,
 } from "@chakra-ui/react";
 
 import { getAllProjects } from "@/actions/projects";
@@ -171,14 +170,6 @@ const UserForm = ({ initialValues = {}, onSubmit, onDelete }) => {
         ))}
 
         <Button onClick={() => appendProject({})}>Add Project</Button>
-
-        <FormControl id="achievements" isInvalid={errors.achievements}>
-          <FormLabel>My Achievements</FormLabel>
-          <Textarea {...register("achievements")} />
-          {errors.achievements && (
-            <FormErrorMessage>{errors.achievements.message}</FormErrorMessage>
-          )}
-        </FormControl>
 
         <FormControl id="socials" isInvalid={errors.socials}>
           <FormLabel>Socials</FormLabel>

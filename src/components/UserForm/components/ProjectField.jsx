@@ -6,6 +6,7 @@ import {
   FormControl,
   FormLabel,
   Button,
+  Textarea,
 } from "@chakra-ui/react";
 
 const ProjectField = ({
@@ -20,15 +21,6 @@ const ProjectField = ({
 }) => {
   const [selectedProject, setSelectedProject] = useState(null);
 
-  useEffect(() => {
-    const projects = getValues("projects");
-    const selectedProjectId = projects[index]?.projectId;
-    const selectedProject = projectOptions.find(
-      (project) => project.value === selectedProjectId,
-    );
-    setSelectedProject(selectedProject);
-  }, [projectOptions, index, getValues]);
-
   const handleProjectSelect = (selectedOption) => {
     setSelectedProject(selectedOption);
     setValue(`projects[${index}].projectId`, selectedOption?.value);
@@ -40,6 +32,15 @@ const ProjectField = ({
     setValue(`projects[${index}].projectId`, "");
     setValue(`projects[${index}].achievements`, "");
   };
+
+  useEffect(() => {
+    const projects = getValues("projects");
+    const selectedProjectId = projects[index]?.projectId;
+    const selectedProject = projectOptions.find(
+      (project) => project.value === selectedProjectId,
+    );
+    setSelectedProject(selectedProject);
+  }, [projectOptions, index, getValues]);
 
   return (
     <FormControl
@@ -72,7 +73,7 @@ const ProjectField = ({
       {selectedProject && (
         <>
           <FormLabel>Achievements</FormLabel>
-          <textarea
+          <Textarea
             {...register(`projects[${index}].achievements`)}
             defaultValue={selectedProject.achievements}
           />

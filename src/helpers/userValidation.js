@@ -30,9 +30,6 @@ const schema = yup.object().shape({
   projects: yup.array().of(
     yup.object().shape({
       projectId: yup.string().required("Project ID is required"),
-      projectName: yup.string().required("Project name is required"),
-      stackTechnologies: yup.string(),
-      description: yup.string(),
       achievements: yup.string(),
     }),
   ),
