@@ -3,9 +3,9 @@ import Users from "models/User";
 Users.createTable();
 
 const handler = async (req, res) => {
-  const name = req.body?.name,
-    email = req.body?.email,
-    id = req.body?.id;
+  const name = req.body?.name;
+  const email = req.body?.email;
+  const id = req.body?.id;
 
   switch (req.method) {
     case "POST":
@@ -17,6 +17,8 @@ const handler = async (req, res) => {
           experience,
           education,
           projects,
+          technologyStack,
+          isEnabled,
         } = req.body;
 
         try {
@@ -29,6 +31,8 @@ const handler = async (req, res) => {
             experience,
             education,
             projects,
+            technologyStack,
+            isEnabled,
           );
           res.status(201).json({ message: "User created successfully" });
         } catch (error) {
@@ -87,6 +91,8 @@ const handler = async (req, res) => {
           experience,
           education,
           projects,
+          technologyStack,
+          isEnabled,
         } = req.body;
 
         try {
@@ -100,6 +106,8 @@ const handler = async (req, res) => {
             experience,
             education,
             projects,
+            technologyStack,
+            isEnabled,
           );
           res.status(200).json({ message: "User updated successfully" });
         } catch (error) {

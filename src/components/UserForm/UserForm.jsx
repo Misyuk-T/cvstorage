@@ -10,10 +10,12 @@ import {
   FormErrorMessage,
   FormLabel,
   Stack,
+  Switch,
 } from "@chakra-ui/react";
 
 import { getAllProjects } from "@/actions/projects";
 import { createUser, updateUser, deleteUser } from "@/actions/user";
+import { getAllTechnologies } from "@/actions/technologies";
 import schema from "@/helpers/userValidation";
 
 import FormField from "./components/FormField";
@@ -21,10 +23,12 @@ import SocialField from "./components/SocialField";
 import EducationField from "./components/EducationField";
 import ExperienceField from "./components/ExperienceField";
 import ProjectField from "./components/ProjectField";
+import TechnologyField from "@/components/ProjectForm/components/TechnologyField";
 
 const UserForm = ({ initialValues = {}, onSubmit, onDelete }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [technologyOptions, setTechnologyOptions] = useState([]);
   const [projectOptions, setProjectOptions] = useState([]);
 
   const {
@@ -74,38 +78,26 @@ const UserForm = ({ initialValues = {}, onSubmit, onDelete }) => {
     name: "projects",
   });
 
-  useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const projects = await getAllProjects();
-        const options = projects.map((project) => ({
-          value: project.id,
-          label: project.projectName,
-          stackTechnologies: project.technologyStack,
-          description: project.description,
-          achievements: "",
-        }));
-        setProjectOptions(options);
-      } catch (error) {
-        console.error("Error fetching projects:", error);
-      }
-    };
-
-    fetchProjects();
-  }, []);
-
   const onSubmitForm = async (data) => {
     setIsLoading(true);
     setError(null);
 
+    const transformedTechnologies = data.technologyStack.map(
+      (technology) => technology.value,
+    );
+    const updatedData = {
+      ...data,
+      technologyStack: transformedTechnologies,
+    };
+
     try {
       if (initialValues.id) {
-        await updateUser(initialValues.id, data);
+        await updateUser(initialValues.id, updatedData);
       } else {
-        await createUser(data);
+        await createUser(updatedData);
       }
       setIsLoading(false);
-      //  onSubmit(result);
+      // onSubmit(result);
     } catch (error) {
       setIsLoading(false);
       setError(error.message);
@@ -125,6 +117,40 @@ const UserForm = ({ initialValues = {}, onSubmit, onDelete }) => {
       setError(error.message);
     }
   };
+
+  const fetchProjects = async () => {
+    try {
+      const projects = await getAllProjects();
+      const options = projects.map((project) => ({
+        value: project.id,
+        label: project.projectName,
+        stackTechnologies: project.technologyStack,
+        description: project.description,
+        achievements: "",
+      }));
+      setProjectOptions(options);
+    } catch (error) {
+      console.error("Error fetching projects:", error);
+    }
+  };
+
+  const fetchTechnologyOptions = async () => {
+    try {
+      const technologies = await getAllTechnologies();
+      const options = technologies.map((technology) => ({
+        value: technology.id,
+        label: technology.name,
+      }));
+      setTechnologyOptions(options);
+    } catch (error) {
+      console.error("Error fetching technology options:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchProjects();
+    fetchTechnologyOptions();
+  }, []);
 
   return (
     <Box as="form" onSubmit={handleSubmit(onSubmitForm)}>
@@ -154,6 +180,24 @@ const UserForm = ({ initialValues = {}, onSubmit, onDelete }) => {
           errors={errors}
           isTextarea={true}
         />
+
+        <TechnologyField
+          control={control}
+          technologyOptions={technologyOptions}
+          errors={errors}
+        />
+
+        <FormControl id="isEnabled" isInvalid={errors.isEnabled}>
+          <FormLabel>Enabled</FormLabel>
+          <Switch
+            id="isEnabled"
+            defaultChecked={initialValues?.isEnabled || false}
+            {...register("isEnabled")}
+          />
+          {errors.isEnabled && (
+            <FormErrorMessage>{errors.isEnabled.message}</FormErrorMessage>
+          )}
+        </FormControl>
 
         {projectFields.map((field, index) => (
           <ProjectField

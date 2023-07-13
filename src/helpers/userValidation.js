@@ -13,7 +13,18 @@ const schema = yup.object().shape({
       url: yup.string().url("Invalid URL").required("URL is required"),
     }),
   ),
+  technologyStack: yup
+    .array()
+    .of(
+      yup.object().shape({
+        value: yup.number().required(),
+        label: yup.string().required(),
+      }),
+    )
+    .required("Technology Stack is required")
+    .min(1, "At least one technology must be selected"),
   description: yup.string(),
+  isEnabled: yup.boolean().required("Is Enabled is required"),
   experience: yup.array().of(
     yup.object().shape({
       companyName: yup.string().required("Company name is required"),

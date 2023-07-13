@@ -12,7 +12,10 @@ module.exports = {
         description TEXT,
         experience TEXT,
         education TEXT,
-        projects TEXT
+        projects TEXT,
+        technologyStack TEXT,
+        isEnabled INTEGER DEFAULT 1,
+        lastUpdated DATE DEFAULT (datetime('now','localtime'))
       )
     `);
   },
@@ -52,11 +55,14 @@ module.exports = {
     experience,
     education,
     projects,
+    technologyStack,
+    isEnabled,
   ) => {
     return new Promise((resolve, reject) => {
       const stmt = db.prepare(
-        "INSERT INTO users (name, position, email, socials, description, experience, education, projects) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+        "INSERT INTO users (name, position, email, socials, description, experience, education, projects, technologyStack, isEnabled, lastUpdated) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
       );
+      const now = new Date().toISOString();
       stmt.run(
         name,
         position,
@@ -66,6 +72,9 @@ module.exports = {
         JSON.stringify(experience),
         JSON.stringify(education),
         JSON.stringify(projects),
+        JSON.stringify(technologyStack),
+        isEnabled ? 1 : 0,
+        now,
         (err) => {
           if (err) {
             reject(err);
@@ -102,13 +111,16 @@ module.exports = {
     experience,
     education,
     projects,
+    technologyStack,
+    isEnabled,
   ) => {
     return new Promise((resolve, reject) => {
       const stmt = db.prepare(`
         UPDATE users 
-        SET name = ?, position = ?, email = ?, socials = ?, description = ?, experience = ?, education = ?, projects = ?
+        SET name = ?, position = ?, email = ?, socials = ?, description = ?, experience = ?, education = ?, projects = ?, technologyStack = ?, isEnabled = ?, lastUpdated = ?
         WHERE id = ?
       `);
+      const now = new Date().toISOString();
       stmt.run(
         name,
         position,
@@ -118,6 +130,9 @@ module.exports = {
         JSON.stringify(experience),
         JSON.stringify(education),
         JSON.stringify(projects),
+        JSON.stringify(technologyStack),
+        isEnabled ? 1 : 0,
+        now,
         id,
         (err) => {
           if (err) {

@@ -7,7 +7,7 @@ export const createUser = async (userData) => {
     const response = await axios.post(BASE_URL, userData);
     return response.data;
   } catch (error) {
-    throw new Error(error.response.data.error);
+    throw new Error(error.response?.data?.error || "Failed to create user");
   }
 };
 
@@ -16,7 +16,7 @@ export const updateUser = async (userId, userData) => {
     const response = await axios.put(`${BASE_URL}/${userId}`, userData);
     return response.data;
   } catch (error) {
-    throw new Error(error.response.data.error);
+    throw new Error(error.response?.data?.error || "Failed to update user");
   }
 };
 
@@ -25,7 +25,7 @@ export const deleteUser = async (userId) => {
     const response = await axios.delete(`${BASE_URL}/${userId}`);
     return response.data;
   } catch (error) {
-    throw new Error(error.response.data.error);
+    throw new Error(error.response?.data?.error || "Failed to delete user");
   }
 };
 
@@ -34,7 +34,7 @@ export const getAllUsers = async () => {
     const response = await axios.get(BASE_URL);
     return response.data;
   } catch (error) {
-    throw new Error(error.response.data.error);
+    throw new Error(error.response?.data?.error || "Failed to get users");
   }
 };
 
@@ -43,6 +43,6 @@ export const getUserById = async (userId) => {
     const response = await axios.get(`${BASE_URL}/${userId}`);
     return response.data;
   } catch (error) {
-    throw new Error(error.response.data.error);
+    throw new Error(error.response?.data?.error || "Failed to get user");
   }
 };
