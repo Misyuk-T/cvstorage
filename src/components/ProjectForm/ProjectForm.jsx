@@ -1,33 +1,48 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-
 import { Box, Button } from "@chakra-ui/react";
 
 import { createProject } from "@/actions/projects";
+import { getAllTechnologies } from "@/actions/technologies";
 import schema from "@/helpers/projectValidation";
 
 import FormField from "@/components/UserForm/components/FormField";
+import TechnologyField from "./components/TechnologyField";
 
 const ProjectForm = ({ onProjectCreated }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [technologyOptions, setTechnologyOptions] = useState([]);
 
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid },
     reset,
+    control,
+    getValues,
   } = useForm({
     resolver: yupResolver(schema),
+    defaultValues: {
+      technologyStack: [],
+    },
   });
 
   const onSubmit = async (data) => {
     setIsLoading(true);
     setError(null);
 
+    const transformedTechnologies = data.technologyStack.map(
+      (technology) => technology.value,
+    );
+    const updatedData = {
+      ...data,
+      technologyStack: transformedTechnologies,
+    };
+
     try {
-      const createdProject = await createProject(data);
+      const createdProject = await createProject(updatedData);
       reset();
       onProjectCreated(createdProject);
     } catch (error) {
@@ -36,6 +51,23 @@ const ProjectForm = ({ onProjectCreated }) => {
 
     setIsLoading(false);
   };
+
+  useEffect(() => {
+    const fetchTechnologyOptions = async () => {
+      try {
+        const technologies = await getAllTechnologies();
+        const options = technologies.map((technology) => ({
+          value: technology.id,
+          label: technology.name,
+        }));
+        setTechnologyOptions(options);
+      } catch (error) {
+        console.error("Error fetching technology options:", error);
+      }
+    };
+
+    fetchTechnologyOptions();
+  }, []);
 
   return (
     <Box as="form" onSubmit={handleSubmit(onSubmit)}>
@@ -46,11 +78,10 @@ const ProjectForm = ({ onProjectCreated }) => {
         errors={errors}
       />
 
-      <FormField
-        name="technologyStack"
-        label="Technology Stack"
+      <TechnologyField
+        control={control}
         register={register}
-        errors={errors}
+        technologyOptions={technologyOptions}
       />
 
       <FormField
@@ -61,7 +92,12 @@ const ProjectForm = ({ onProjectCreated }) => {
         isTextarea={true}
       />
 
-      <Button type="submit" isLoading={isLoading} loadingText="Creating">
+      <Button
+        isDisabled={!isValid}
+        type="submit"
+        isLoading={isLoading}
+        loadingText="Creating"
+      >
         Create Project
       </Button>
 

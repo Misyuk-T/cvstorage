@@ -4,7 +4,10 @@ const API_URL = "/api/projects";
 
 export const createProject = async (projectData) => {
   try {
-    const response = await axios.post(API_URL, projectData);
+    const response = await axios.post(API_URL, {
+      ...projectData,
+      technologyStack: JSON.stringify(projectData.technologyStack),
+    });
     return response.data;
   } catch (error) {
     throw new Error(error.response?.data?.error || "Failed to create project");
