@@ -4,6 +4,7 @@ import theme from "src/styles/theme";
 
 import UserForm from "@/components/UserForm/UserForm";
 import ProjectForm from "@/components/ProjectForm/ProjectForm";
+import TechnologyForm from "@/components/TechnologyForm/TechnologyForm";
 
 const Home = ({ users }) => {
   console.log(users, "users");
@@ -13,6 +14,8 @@ const Home = ({ users }) => {
       <UserForm />
       ___________________
       <ProjectForm />
+      ___________________
+      <TechnologyForm />
     </ChakraProvider>
   );
 };

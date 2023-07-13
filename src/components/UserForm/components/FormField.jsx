@@ -6,9 +6,20 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 
-const FormField = ({ name, label, register, errors, isTextarea = false }) => {
+const FormField = ({
+  name,
+  label,
+  register,
+  errors,
+  isTextarea = false,
+  isRequired = true,
+}) => {
   return (
-    <FormControl id={name} isRequired isInvalid={errors && errors[name]}>
+    <FormControl
+      id={name}
+      isRequired={isRequired}
+      isInvalid={errors && errors[name]}
+    >
       <FormLabel>{label}</FormLabel>
       {isTextarea ? (
         <Textarea type="text" name={name} {...register(name)} />
