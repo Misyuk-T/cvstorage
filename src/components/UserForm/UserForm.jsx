@@ -23,6 +23,7 @@ import SocialField from "./components/SocialField";
 import EducationField from "./components/EducationField";
 import ExperienceField from "./components/ExperienceField";
 import ProjectField from "./components/ProjectField";
+import FileUploadField from "./components/FileUploadField";
 import TechnologyField from "@/components/ProjectForm/components/TechnologyField";
 
 const UserForm = ({ initialValues = {}, onSubmit, onDelete }) => {
@@ -30,6 +31,7 @@ const UserForm = ({ initialValues = {}, onSubmit, onDelete }) => {
   const [error, setError] = useState(null);
   const [technologyOptions, setTechnologyOptions] = useState([]);
   const [projectOptions, setProjectOptions] = useState([]);
+  const [selectedFile, setSelectedFile] = useState(null);
 
   const {
     register,
@@ -78,6 +80,10 @@ const UserForm = ({ initialValues = {}, onSubmit, onDelete }) => {
     name: "projects",
   });
 
+  const handleFileChange = (name, file) => {
+    setSelectedFile({ name, file });
+  };
+
   const onSubmitForm = async (data) => {
     setIsLoading(true);
     setError(null);
@@ -88,7 +94,10 @@ const UserForm = ({ initialValues = {}, onSubmit, onDelete }) => {
     const updatedData = {
       ...data,
       technologyStack: transformedTechnologies,
+      avatar: selectedFile ? selectedFile.file : null,
     };
+
+    console.log(updatedData);
 
     try {
       if (initialValues.id) {
@@ -161,6 +170,13 @@ const UserForm = ({ initialValues = {}, onSubmit, onDelete }) => {
           register={register}
           errors={errors}
         />
+
+        <FileUploadField
+          name="avatar"
+          register={register}
+          onChange={handleFileChange}
+        />
+
         <FormField
           name="email"
           label="Email"
