@@ -1,8 +1,11 @@
+import { mkdir, stat } from "fs/promises";
+import { join } from "path";
 import formidable from "formidable";
-import fs from "fs";
-import path from "path";
+import mime from "mime";
+import * as dateFn from "date-fns";
 
 import Users from "models/User";
+import * as path from "path";
 
 Users.createTable();
 
@@ -12,72 +15,95 @@ export const config = {
   },
 };
 
+export const parseForm = async (req) => {
+  return new Promise(async (resolve, reject) => {
+    const uploadDir = join(
+      process.cwd(),
+      `/uploads/${dateFn.format(Date.now(), "dd-MM-Y")}`,
+    );
+
+    try {
+      await stat(uploadDir);
+    } catch (e) {
+      if (e.code === "ENOENT") {
+        await mkdir(uploadDir, { recursive: true });
+      } else {
+        console.error(e);
+        reject(e);
+        return;
+      }
+    }
+
+    const form = formidable({
+      maxFiles: 1,
+      maxFileSize: 1024 * 1024, // 1mb
+      uploadDir,
+      filename: (_name, _ext, part) => {
+        const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
+        return `${part.name || "unknown"}-${uniqueSuffix}.${
+          mime.getExtension(part.mimetype || "") || "unknown"
+        }`;
+      },
+      filter: (part) => {
+        return (
+          part.name === "media" && (part.mimetype?.includes("image") || false)
+        );
+      },
+    });
+
+    await form.parse(req, function (err, fields, files) {
+      if (err) reject(err);
+      else resolve({ fields, files });
+    });
+  });
+};
+
 const handler = async (req, res) => {
   const { method, body } = req;
 
   switch (method) {
     case "POST":
       try {
-        const form = formidable({ multiples: false });
+        const formik = await parseForm(req);
+        const { fields, files } = formik;
 
-        await form.parse(req, async (err, fields, files) => {
-          if (err) {
-            console.error("Error parsing form data:", err);
-            res.status(500).json({ error: "Internal Server Error" });
-          } else {
-            const {
-              name,
-              email,
-              position,
-              socials,
-              description,
-              experience,
-              education,
-              projects,
-              technologyStack,
-              isEnabled,
-            } = fields;
+        const {
+          name: [name],
+          email: [email],
+          position: [position],
+          socials: [socials],
+          description: [description],
+          experience: [experience],
+          education: [education],
+          projects: [projects],
+          technologyStack: [technologyStack],
+          isEnabled: [isEnabled],
+        } = fields;
+        const mediaFile = files.media;
+        const absolutePath = mediaFile[0].filepath;
+        const workingDirectory = process.cwd();
+        const relativePath = path.relative(workingDirectory, absolutePath);
 
-            // Access the uploaded file using files.avatar
-            const avatarFile = files.avatar;
+        try {
+          await Users.create(
+            name,
+            position,
+            email,
+            JSON.parse(socials),
+            description,
+            JSON.parse(experience),
+            JSON.parse(education),
+            JSON.parse(projects),
+            JSON.parse(technologyStack),
+            relativePath,
+            isEnabled,
+          );
 
-            console.log(files, "files.avatar");
-
-            try {
-              const user = await Users.create(
-                name,
-                position,
-                email,
-                socials,
-                description,
-                experience,
-                education,
-                projects,
-                technologyStack,
-                isEnabled,
-                avatarFile.path, // Assuming you want to store the file path in the database
-              );
-
-              // Read the file contents
-              const fileContents = fs.readFileSync(avatarFile.path);
-
-              // Specify the destination path to save the file
-              const destinationPath = path.join(
-                __dirname,
-                "path_to_save_avatar",
-                avatarFile.name,
-              );
-
-              // Save the file to the destination path
-              fs.writeFileSync(destinationPath, fileContents);
-
-              res.status(201).json({ message: "User created successfully" });
-            } catch (error) {
-              console.error("Error creating user:", error.message);
-              res.status(500).json({ error: "Internal Server Error" });
-            }
-          }
-        });
+          res.status(201).json({ message: "User created successfully" });
+        } catch (error) {
+          console.error("Error creating user:", error.message);
+          res.status(500).json({ error: "Internal Server Error" });
+        }
       } catch (error) {
         console.error("Error processing file upload:", error);
         res.status(500).json({ error: "Internal Server Error" });

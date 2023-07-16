@@ -17,7 +17,7 @@ const FormField = ({
   return (
     <FormControl
       id={name}
-      isRequired={isRequired}
+      //   isRequired={isRequired}
       isInvalid={errors && errors[name]}
     >
       <FormLabel>{label}</FormLabel>

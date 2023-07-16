@@ -14,7 +14,7 @@ module.exports = {
         education TEXT,
         projects TEXT,
         technologyStack TEXT,
-        avatar TEXT,
+        media TEXT,
         isEnabled INTEGER DEFAULT 1,
         lastUpdated DATE DEFAULT (datetime('now','localtime'))
       )
@@ -57,12 +57,12 @@ module.exports = {
     education,
     projects,
     technologyStack,
-    avatar,
+    media,
     isEnabled,
   ) => {
     return new Promise((resolve, reject) => {
       const stmt = db.prepare(
-        "INSERT INTO users (name, position, email, socials, description, experience, education, projects, technologyStack, avatar, isEnabled, lastUpdated) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        "INSERT INTO users (name, position, email, socials, description, experience, education, projects, technologyStack, media, isEnabled, lastUpdated) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
       );
       const now = new Date().toISOString();
       stmt.run(
@@ -75,7 +75,7 @@ module.exports = {
         JSON.stringify(education),
         JSON.stringify(projects),
         JSON.stringify(technologyStack),
-        avatar,
+        media,
         isEnabled ? 1 : 0,
         now,
         (err) => {
@@ -115,13 +115,13 @@ module.exports = {
     education,
     projects,
     technologyStack,
-    avatar,
+    media,
     isEnabled,
   ) => {
     return new Promise((resolve, reject) => {
       const stmt = db.prepare(`
         UPDATE users 
-        SET name = ?, position = ?, email = ?, socials = ?, description = ?, experience = ?, education = ?, projects = ?, technologyStack = ?, avatar = ?, isEnabled = ?, lastUpdated = ?
+        SET name = ?, position = ?, email = ?, socials = ?, description = ?, experience = ?, education = ?, projects = ?, technologyStack = ?, media = ?, isEnabled = ?, lastUpdated = ?
         WHERE id = ?
       `);
       const now = new Date().toISOString();
@@ -135,7 +135,7 @@ module.exports = {
         JSON.stringify(education),
         JSON.stringify(projects),
         JSON.stringify(technologyStack),
-        avatar,
+        media,
         isEnabled ? 1 : 0,
         now,
         id,

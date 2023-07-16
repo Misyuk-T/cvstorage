@@ -26,7 +26,21 @@ import ProjectField from "./components/ProjectField";
 import FileUploadField from "./components/FileUploadField";
 import TechnologyField from "@/components/ProjectForm/components/TechnologyField";
 
-const UserForm = ({ initialValues = {}, onSubmit, onDelete }) => {
+const initialValues = {
+  name: "",
+  position: "",
+  email: "",
+  socials: [],
+  technologyStack: [],
+  description: "",
+  isEnabled: false,
+  experience: [],
+  education: [],
+  projects: [],
+};
+const objectValues = ["experience", "projects", "education", "socials"];
+
+const UserForm = ({ onSubmit, onDelete }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [technologyOptions, setTechnologyOptions] = useState([]);
@@ -42,6 +56,7 @@ const UserForm = ({ initialValues = {}, onSubmit, onDelete }) => {
     getValues,
   } = useForm({
     resolver: yupResolver(schema),
+    defaultValues: initialValues,
   });
 
   const {
@@ -93,17 +108,24 @@ const UserForm = ({ initialValues = {}, onSubmit, onDelete }) => {
     );
     const updatedData = {
       ...data,
-      technologyStack: transformedTechnologies,
-      avatar: selectedFile ? selectedFile.file : null,
+      technologyStack: JSON.stringify(transformedTechnologies),
+      media: selectedFile ? selectedFile.file : null,
     };
 
-    console.log(updatedData);
-
     try {
+      const formData = new FormData();
+      for (const key in updatedData) {
+        if (objectValues.includes(key)) {
+          formData.append(key, JSON.stringify(updatedData[key]));
+        } else {
+          formData.append(key, updatedData[key]);
+        }
+      }
+
       if (initialValues.id) {
-        await updateUser(initialValues.id, updatedData);
+        await updateUser(initialValues.id, formData);
       } else {
-        await createUser(updatedData);
+        await createUser(formData);
       }
       setIsLoading(false);
       // onSubmit(result);
@@ -172,7 +194,7 @@ const UserForm = ({ initialValues = {}, onSubmit, onDelete }) => {
         />
 
         <FileUploadField
-          name="avatar"
+          name="media"
           register={register}
           onChange={handleFileChange}
         />
