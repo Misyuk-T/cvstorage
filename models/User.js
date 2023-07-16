@@ -1,4 +1,6 @@
 const db = require("../database");
+const path = require("path");
+const fs = require("fs");
 
 module.exports = {
   createTable: () => {
@@ -92,14 +94,16 @@ module.exports = {
 
   deleteById: (id) => {
     return new Promise((resolve, reject) => {
+      const folderPath = path.join(process.cwd(), "uploads", id);
       const stmt = db.prepare("DELETE FROM users WHERE id = ?");
-      stmt.run(id, (err) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve();
-        }
-      });
+
+      try {
+        fs.rmdir(folderPath, { recursive: true });
+        stmt.run(id);
+      } catch (err) {
+        reject(err);
+      }
+
       stmt.finalize();
     });
   },
@@ -148,6 +152,19 @@ module.exports = {
         },
       );
       stmt.finalize();
+    });
+  },
+
+  getNextUserID() {
+    return new Promise((resolve, reject) => {
+      db.get("SELECT MAX(id) AS maxId FROM users", (err, row) => {
+        if (err) {
+          reject(err);
+        } else {
+          const nextID = row.maxId ? row.maxId + 1 : 1;
+          resolve(nextID);
+        }
+      });
     });
   },
 };
