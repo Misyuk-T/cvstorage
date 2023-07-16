@@ -25,6 +25,7 @@ import ExperienceField from "./components/ExperienceField";
 import ProjectField from "./components/ProjectField";
 import FileUploadField from "./components/FileUploadField";
 import TechnologyField from "@/components/ProjectForm/components/TechnologyField";
+import ReactSelectField from "@/components/UserForm/components/ReactSelectField";
 
 const initialValues = {
   name: "",
@@ -37,8 +38,37 @@ const initialValues = {
   experience: [],
   education: [],
   projects: [],
+  cvType: "",
+  motivation: "",
+  grade: "",
+  workDirection: "",
 };
 const objectValues = ["experience", "projects", "education", "socials"];
+
+const cvTypeOptions = [
+  { label: "first", value: "first" },
+  { label: "second", value: "second" },
+  { label: "third", value: "third" },
+];
+
+const gradeOptions = [
+  { value: "trainee", label: "trainee" },
+  { value: "junior", label: "junior" },
+  { value: "junior+", label: "junior+" },
+  { value: "middle", label: "middle" },
+  { value: "middle+", label: "middle+" },
+  { value: "senior", label: "senior" },
+  { value: "techLead", label: "techLead" },
+];
+
+const workDirectionOptions = [
+  { value: "frontend", label: "Frontend" },
+  { value: "backend", label: "Backend" },
+  { value: "management", label: "Management" },
+  { value: "qa", label: "QA" },
+  { value: "fullStack", label: "fullStack" },
+  { value: "designer", label: "designer" },
+];
 
 const UserForm = ({ onSubmit, onDelete }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -219,10 +249,41 @@ const UserForm = ({ onSubmit, onDelete }) => {
           isTextarea={true}
         />
 
+        <FormField
+          name="motivation"
+          label="Motivation"
+          register={register}
+          errors={errors}
+          isTextarea={true}
+        />
+
         <TechnologyField
           control={control}
           technologyOptions={technologyOptions}
           errors={errors}
+        />
+
+        <ReactSelectField
+          control={control}
+          name="cvType"
+          label="cvType"
+          options={cvTypeOptions}
+          defaultValue={cvTypeOptions[0]}
+        />
+
+        <ReactSelectField
+          control={control}
+          name="grade"
+          label="grade"
+          options={gradeOptions}
+        />
+
+        <ReactSelectField
+          control={control}
+          name="workDirection"
+          label="workDirection"
+          options={workDirectionOptions}
+          defaultValue={workDirectionOptions[0].value}
         />
 
         <FormControl id="isEnabled" isInvalid={errors.isEnabled}>

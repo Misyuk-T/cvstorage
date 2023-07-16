@@ -40,6 +40,10 @@ const schema = yup.object().shape({
       achievements: yup.string(),
     }),
   ),
+  motivation: yup.string(),
+  cvType: yup.string(),
+  grade: yup.string(),
+  workDirection: yup.string(),
 });
 
 export default schema;

@@ -1,6 +1,4 @@
 const db = require("../database");
-const path = require("path");
-const fs = require("fs");
 
 module.exports = {
   createTable: () => {
@@ -17,6 +15,10 @@ module.exports = {
         projects TEXT,
         technologyStack TEXT,
         media TEXT,
+        motivation TEXT,
+        cvType TEXT,
+        grade TEXT,
+        workDirection TEXT,
         isEnabled INTEGER DEFAULT 1,
         lastUpdated DATE DEFAULT (datetime('now','localtime'))
       )
@@ -60,11 +62,15 @@ module.exports = {
     projects,
     technologyStack,
     media,
+    motivation,
+    cvType,
+    grade,
+    workDirection,
     isEnabled,
   ) => {
     return new Promise((resolve, reject) => {
       const stmt = db.prepare(
-        "INSERT INTO users (name, position, email, socials, description, experience, education, projects, technologyStack, media, isEnabled, lastUpdated) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        "INSERT INTO users (name, position, email, socials, description, experience, education, projects, technologyStack, media, motivation, cvType, grade, workDirection, isEnabled, lastUpdated) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
       );
       const now = new Date().toISOString();
       stmt.run(
@@ -78,7 +84,11 @@ module.exports = {
         JSON.stringify(projects),
         JSON.stringify(technologyStack),
         media,
-        isEnabled ? 1 : 0,
+        motivation,
+        cvType,
+        grade,
+        workDirection,
+        isEnabled === "true" ? 1 : 0,
         now,
         (err) => {
           if (err) {
@@ -94,11 +104,9 @@ module.exports = {
 
   deleteById: (id) => {
     return new Promise((resolve, reject) => {
-      const folderPath = path.join(process.cwd(), "uploads", id);
       const stmt = db.prepare("DELETE FROM users WHERE id = ?");
 
       try {
-        fs.rmdir(folderPath, { recursive: true });
         stmt.run(id);
       } catch (err) {
         reject(err);
@@ -120,12 +128,16 @@ module.exports = {
     projects,
     technologyStack,
     media,
+    motivation,
+    cvType,
+    grade,
+    workDirection,
     isEnabled,
   ) => {
     return new Promise((resolve, reject) => {
       const stmt = db.prepare(`
         UPDATE users 
-        SET name = ?, position = ?, email = ?, socials = ?, description = ?, experience = ?, education = ?, projects = ?, technologyStack = ?, media = ?, isEnabled = ?, lastUpdated = ?
+        SET name = ?, position = ?, email = ?, socials = ?, description = ?, experience = ?, education = ?, projects = ?, technologyStack = ?, media = ?, motivation = ?, cvType = ?, grade = ?, workDirection = ?, isEnabled = ?, lastUpdated = ?
         WHERE id = ?
       `);
       const now = new Date().toISOString();
@@ -140,6 +152,10 @@ module.exports = {
         JSON.stringify(projects),
         JSON.stringify(technologyStack),
         media,
+        motivation,
+        cvType,
+        grade,
+        workDirection,
         isEnabled ? 1 : 0,
         now,
         id,

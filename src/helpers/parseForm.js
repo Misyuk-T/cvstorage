@@ -1,7 +1,8 @@
-import { join } from "path";
+import path, { join } from "path";
 import { mkdir, stat } from "fs/promises";
 import formidable from "formidable";
 import mime from "mime";
+import fs from "fs";
 
 export const parseForm = async (req, userId) => {
   return new Promise(async (resolve, reject) => {
@@ -40,4 +41,9 @@ export const parseForm = async (req, userId) => {
       else resolve({ fields, files });
     });
   });
+};
+
+export const deleteUserMedia = async (id) => {
+  const folderPath = path.join(process.cwd(), "uploads", id);
+  await fs.rmdir(folderPath, { recursive: true });
 };

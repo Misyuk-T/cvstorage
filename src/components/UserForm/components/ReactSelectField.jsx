@@ -1,0 +1,34 @@
+import React from "react";
+import { useController } from "react-hook-form";
+import Select from "react-select";
+
+import { FormControl, FormErrorMessage, FormLabel } from "@chakra-ui/react";
+
+const ReactSelectField = ({
+  control,
+  name,
+  label,
+  options,
+  defaultValue = null,
+}) => {
+  const {
+    field: { value, onChange, onBlur },
+    fieldState: { error },
+  } = useController({ control, name, defaultValue });
+
+  return (
+    <FormControl id={name} isInvalid={!!error}>
+      <FormLabel>{label}</FormLabel>
+      <Select
+        name={name}
+        options={options}
+        value={options.find((option) => option.value === value)}
+        onChange={(selectedOption) => onChange(selectedOption.value)}
+        onBlur={onBlur}
+      />
+      {error && <FormErrorMessage>{error.message}</FormErrorMessage>}
+    </FormControl>
+  );
+};
+
+export default ReactSelectField;

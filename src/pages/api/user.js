@@ -1,6 +1,6 @@
 import * as path from "path";
 import Users from "models/User";
-import { parseForm } from "@/helpers/parseForm";
+import { deleteUserMedia, parseForm } from "@/helpers/parseForm";
 
 Users.createTable();
 
@@ -30,6 +30,10 @@ const handler = async (req, res) => {
           education: [education],
           projects: [projects],
           technologyStack: [technologyStack],
+          motivation: [motivation],
+          cvType: [cvType],
+          grade: [grade],
+          workDirection: [workDirection],
           isEnabled: [isEnabled],
         } = fields;
         const mediaFile = files.media;
@@ -49,6 +53,10 @@ const handler = async (req, res) => {
             JSON.parse(projects),
             JSON.parse(technologyStack),
             relativePath,
+            motivation,
+            cvType,
+            grade,
+            workDirection,
             isEnabled,
           );
 
@@ -97,6 +105,10 @@ const handler = async (req, res) => {
           education,
           projects,
           technologyStack,
+          motivation,
+          cvType,
+          grade,
+          workDirection,
           isEnabled,
         } = body;
 
@@ -111,6 +123,10 @@ const handler = async (req, res) => {
           education,
           projects,
           technologyStack,
+          motivation,
+          cvType,
+          grade,
+          workDirection,
           isEnabled,
         );
 
@@ -124,6 +140,7 @@ const handler = async (req, res) => {
     case "DELETE":
       try {
         const id = body.id;
+        await deleteUserMedia(id);
         await Users.deleteById(id);
 
         res.status(200).json({ message: "User deleted successfully" });
