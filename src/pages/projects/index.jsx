@@ -2,6 +2,7 @@ import { getAllProjects } from "src/actions/projects";
 
 const ProjectList = ({ projects }) => {
   console.log(projects, "projects");
+
   return (
     <div>
       <h1>Project List</h1>
@@ -23,7 +24,7 @@ export async function getServerSideProps() {
     return { props: { projects } };
   } catch (error) {
     console.error("Error fetching projects:", error.message);
-    return { props: { projects: [] } };
+    return { props: { error: error.message, projects: [] } };
   }
 }
 

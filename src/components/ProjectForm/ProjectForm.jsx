@@ -21,7 +21,6 @@ const ProjectForm = ({ onProjectCreated }) => {
     formState: { errors, isValid },
     reset,
     control,
-    getValues,
   } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {

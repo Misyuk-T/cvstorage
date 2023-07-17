@@ -7,7 +7,8 @@ export const createTechnology = async (technologyData) => {
     const response = await axios.post(BASE_URL, technologyData);
     return response.data;
   } catch (error) {
-    throw new Error(error.response.data.error);
+    console.error("Error creating technology:", error);
+    throw new Error("Failed to create technology");
   }
 };
 
@@ -16,7 +17,8 @@ export const getAllTechnologies = async () => {
     const response = await axios.get(BASE_URL);
     return response.data;
   } catch (error) {
-    throw new Error(error.response.data.error);
+    console.error("Error fetching technologies:", error);
+    throw new Error("Failed to get technologies");
   }
 };
 
@@ -25,7 +27,8 @@ export const getTechnologyById = async (technologyId) => {
     const response = await axios.get(`${BASE_URL}/${technologyId}`);
     return response.data;
   } catch (error) {
-    throw new Error(error.response.data.error);
+    console.error("Error fetching technology:", error);
+    throw new Error("Failed to get technology");
   }
 };
 
@@ -34,6 +37,7 @@ export const deleteTechnology = async (technologyId) => {
     const response = await axios.delete(`${BASE_URL}/${technologyId}`);
     return response.data;
   } catch (error) {
-    throw new Error(error.response.data.error);
+    console.error("Error deleting technology:", error);
+    throw new Error("Failed to delete technology");
   }
 };

@@ -10,7 +10,8 @@ export const createProject = async (projectData) => {
     });
     return response.data;
   } catch (error) {
-    throw new Error(error.response?.data?.error || "Failed to create project");
+    console.error("Error creating project:", error);
+    throw new Error("Failed to create project");
   }
 };
 
@@ -19,7 +20,8 @@ export const getProject = async (projectId) => {
     const response = await axios.get(`${API_URL}?id=${projectId}`);
     return response.data;
   } catch (error) {
-    throw new Error(error.response?.data?.error || "Failed to get project");
+    console.error("Error getting project:", error);
+    throw new Error("Failed to get project");
   }
 };
 
@@ -28,7 +30,8 @@ export const getAllProjects = async () => {
     const response = await axios.get(API_URL);
     return response.data;
   } catch (error) {
-    throw new Error(error.response?.data?.error || "Failed to get projects");
+    console.error("Error getting projects:", error);
+    throw new Error("Failed to get projects");
   }
 };
 
@@ -37,7 +40,8 @@ export const deleteProject = async (projectId) => {
     const response = await axios.delete(`${API_URL}?id=${projectId}`);
     return response.data;
   } catch (error) {
-    throw new Error(error.response?.data?.error || "Failed to delete project");
+    console.error("Error deleting project:", error);
+    throw new Error("Failed to delete project");
   }
 };
 
@@ -46,6 +50,7 @@ export const updateProject = async (projectId, projectData) => {
     const response = await axios.put(`${API_URL}?id=${projectId}`, projectData);
     return response.data;
   } catch (error) {
-    throw new Error(error.response?.data?.error || "Failed to update project");
+    console.error("Error updating project:", error);
+    throw new Error("Failed to update project");
   }
 };
