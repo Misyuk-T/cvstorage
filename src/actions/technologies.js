@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "/api/technologies";
+const BASE_URL = "http://localhost:3000/api/technologies";
 
 export const createTechnology = async (technologyData) => {
   try {

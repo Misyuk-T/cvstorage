@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "/api/user";
+const BASE_URL = "http://localhost:3000/api/user";
 
 export const createUser = async (userData) => {
   try {

@@ -268,7 +268,7 @@ const UserForm = ({ onSubmit, onDelete }) => {
           name="cvType"
           label="cvType"
           options={cvTypeOptions}
-          defaultValue={cvTypeOptions[0]}
+          defaultValue={cvTypeOptions[0].value}
         />
 
         <ReactSelectField
@@ -276,6 +276,7 @@ const UserForm = ({ onSubmit, onDelete }) => {
           name="grade"
           label="grade"
           options={gradeOptions}
+          defaultValue={gradeOptions[0].value}
         />
 
         <ReactSelectField

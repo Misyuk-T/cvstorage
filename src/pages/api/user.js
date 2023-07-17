@@ -2,7 +2,9 @@ import * as path from "path";
 import Users from "models/User";
 import { deleteUserMedia, parseForm } from "@/helpers/parseForm";
 
-Users.createTable();
+const initializeApp = () => {
+  Users.createTable();
+};
 
 export const config = {
   api: {
@@ -12,6 +14,8 @@ export const config = {
 
 const handler = async (req, res) => {
   const { method, body } = req;
+
+  await initializeApp();
 
   switch (method) {
     case "POST":

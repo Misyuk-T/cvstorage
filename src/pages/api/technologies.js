@@ -1,10 +1,14 @@
 import Technologies from "models/Technologies";
 
-Technologies.createTable();
+const initializeApp = () => {
+  Technologies.createTable();
+};
 
 const handler = async (req, res) => {
   const { method, body } = req;
   const id = body.id;
+
+  await initializeApp();
 
   switch (method) {
     case "POST":

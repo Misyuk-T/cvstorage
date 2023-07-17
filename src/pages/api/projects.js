@@ -2,9 +2,15 @@ import Projects from "models/Projects";
 
 Projects.createTable();
 
+const initializeApp = () => {
+  Projects.createTable();
+};
+
 const handler = async (req, res) => {
   const projectName = req.body?.projectName,
     id = req.body?.id;
+
+  await initializeApp();
 
   switch (req.method) {
     case "POST":
