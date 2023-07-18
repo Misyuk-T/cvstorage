@@ -1,25 +1,42 @@
 import { ChakraProvider } from "@chakra-ui/react";
-import Link from "next/link";
 
 import theme from "src/styles/theme";
 
-import UserForm from "@/components/UserForm/UserForm";
-import ProjectForm from "@/components/ProjectForm/ProjectForm";
-import TechnologyForm from "@/components/TechnologyForm/TechnologyForm";
+import { getAllTechnologies } from "@/actions/technologies";
+import { getAllUsers } from "@/actions/user";
+import { getAllProjects } from "@/actions/projects";
 
-const Home = () => {
+import Sidebar from "@/components/Sidebar/Sidebar";
+
+const Home = ({ technologies, users, projects }) => {
+  console.log("Technologies:", technologies);
+  console.log("Users:", users);
+  console.log("Projects:", projects);
+
   return (
     <ChakraProvider theme={theme}>
-      <Link href="/technologies">technologies</Link>
-      <Link href="/users">users</Link>
-      <Link href="/projects">projects</Link>
-      <UserForm />
-      ___________________
-      <ProjectForm />
-      ___________________
-      <TechnologyForm />
+      <Sidebar technologies={technologies} users={users} projects={projects} />
     </ChakraProvider>
   );
 };
+
+export async function getServerSideProps() {
+  try {
+    const technologies = await getAllTechnologies();
+    const users = await getAllUsers();
+    const projects = await getAllProjects();
+    return { props: { technologies, users, projects } };
+  } catch (error) {
+    console.error("Error fetching data:", error.message);
+    return {
+      props: {
+        error: error.message,
+        technologies: [],
+        users: [],
+        projects: [],
+      },
+    };
+  }
+}
 
 export default Home;

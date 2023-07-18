@@ -1,14 +1,7 @@
 import Technologies from "models/Technologies";
 
-const initializeApp = () => {
-  Technologies.createTable();
-};
-
 const handler = async (req, res) => {
   const { method, body } = req;
-  const id = body.id;
-
-  await initializeApp();
 
   switch (method) {
     case "POST":
@@ -23,45 +16,17 @@ const handler = async (req, res) => {
           res.status(500).json({ error: "Internal Server Error" });
         }
       } else {
-        res.status(400).json({ error: "Name are required" });
+        res.status(400).json({ error: "Name is required" });
       }
       break;
 
     case "GET":
-      if (id) {
-        try {
-          const technology = await Technologies.findById(id);
-          if (technology) {
-            res.status(200).json(technology);
-          } else {
-            res.status(404).json({ error: "Technology not found" });
-          }
-        } catch (error) {
-          console.error("Error fetching technology:", error.message);
-          res.status(500).json({ error: "Internal Server Error" });
-        }
-      } else {
-        try {
-          const technologies = await Technologies.findAll();
-          res.status(200).json(technologies);
-        } catch (error) {
-          console.error("Error fetching technologies:", error.message);
-          res.status(500).json({ error: "Internal Server Error" });
-        }
-      }
-      break;
-
-    case "DELETE":
-      if (id) {
-        try {
-          await Technologies.deleteById(id);
-          res.status(200).json({ message: "Technology deleted successfully" });
-        } catch (error) {
-          console.error("Error deleting technology:", error.message);
-          res.status(500).json({ error: "Internal Server Error" });
-        }
-      } else {
-        res.status(400).json({ error: "Technology ID is required" });
+      try {
+        const technologies = await Technologies.findAll();
+        res.status(200).json(technologies);
+      } catch (error) {
+        console.error("Error fetching technologies:", error.message);
+        res.status(500).json({ error: "Internal Server Error" });
       }
       break;
 

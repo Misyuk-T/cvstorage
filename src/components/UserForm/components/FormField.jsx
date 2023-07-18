@@ -11,20 +11,31 @@ const FormField = ({
   label,
   register,
   errors,
+  placeHolder,
   isTextarea = false,
-  isRequired = true,
+  isRequired,
 }) => {
   return (
     <FormControl
       id={name}
-      //   isRequired={isRequired}
+      isRequired={isRequired}
       isInvalid={errors && errors[name]}
     >
       <FormLabel>{label}</FormLabel>
       {isTextarea ? (
-        <Textarea type="text" name={name} {...register(name)} />
+        <Textarea
+          placeholder={placeHolder}
+          type="text"
+          name={name}
+          {...register(name)}
+        />
       ) : (
-        <Input type="text" name={name} {...register(name)} />
+        <Input
+          type="text"
+          placeholder={placeHolder}
+          name={name}
+          {...register(name)}
+        />
       )}
       {errors && <FormErrorMessage>{errors[name]?.message}</FormErrorMessage>}
     </FormControl>

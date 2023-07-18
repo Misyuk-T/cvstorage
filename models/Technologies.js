@@ -64,10 +64,10 @@ module.exports = {
     });
   },
 
-  update: (id, name) => {
+  update: (id, newName) => {
     return new Promise((resolve, reject) => {
-      const stmt = db.prepare("UPDATE technologies SET name = ?, WHERE id = ?");
-      stmt.run(name, id, (err) => {
+      const stmt = db.prepare("UPDATE technologies SET name = ? WHERE id = ?");
+      stmt.run(newName, id, (err) => {
         if (err) {
           reject(err);
         } else {

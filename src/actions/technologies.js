@@ -22,6 +22,18 @@ export const getAllTechnologies = async () => {
   }
 };
 
+export const updateTechnology = async (technologyId, newName) => {
+  try {
+    const response = await axios.put(`${BASE_URL}/${technologyId}`, {
+      name: newName,
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error updating technology:", error);
+    throw new Error("Failed to update technology");
+  }
+};
+
 export const getTechnologyById = async (technologyId) => {
   try {
     const response = await axios.get(`${BASE_URL}/${technologyId}`);
