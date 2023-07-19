@@ -2,6 +2,13 @@ import React, { useState } from "react";
 import { Box, Flex, Text, VStack, Button } from "@chakra-ui/react";
 
 import TechnologyBlock from "@/components/Sidebar/components/TehcnologyBlock";
+import ProjectBlock from "@/components/Sidebar/components/ProjectBlock";
+
+const TABS = [
+  { key: "users", label: "Users" },
+  { key: "projects", label: "Projects" },
+  { key: "technologies", label: "Technologies" },
+];
 
 const Sidebar = ({ technologies, users, projects }) => {
   const [selectedTab, setSelectedTab] = useState("technologies");
@@ -16,8 +23,7 @@ const Sidebar = ({ technologies, users, projects }) => {
         // return <UsersBlock users={users} />;
         return <div>users</div>;
       case "projects":
-        // return <ProjectsBlock projects={projects} />;
-        return <div>technologies</div>;
+        return <ProjectBlock projects={projects} technologies={technologies} />;
       case "technologies":
       default:
         return <TechnologyBlock technologies={technologies} />;
@@ -42,33 +48,20 @@ const Sidebar = ({ technologies, users, projects }) => {
           <Text fontWeight="bold" width="100%">
             Dashboard
           </Text>
-          <Button
-            width="100%"
-            onClick={handleClick("users")}
-            _hover={{
-              background: "gray.50",
-            }}
-          >
-            Users
-          </Button>
-          <Button
-            width="100%"
-            onClick={handleClick("projects")}
-            _hover={{
-              background: "gray.50",
-            }}
-          >
-            Projects
-          </Button>
-          <Button
-            width="100%"
-            onClick={handleClick("technologies")}
-            _hover={{
-              background: "gray.50",
-            }}
-          >
-            Technologies
-          </Button>
+
+          {TABS.map((tab) => (
+            <Button
+              key={tab.key}
+              width="100%"
+              onClick={handleClick(tab.key)}
+              background={selectedTab === tab.key ? "gray.50" : "gray.100"}
+              _hover={{
+                background: "gray.50",
+              }}
+            >
+              {tab.label}
+            </Button>
+          ))}
         </VStack>
       </Box>
 

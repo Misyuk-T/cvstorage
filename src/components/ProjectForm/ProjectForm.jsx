@@ -1,31 +1,32 @@
 import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Box, Button } from "@chakra-ui/react";
 
-import { createProject } from "@/actions/projects";
-import { getAllTechnologies } from "@/actions/technologies";
+import { Box, Button, Flex, Stack } from "@chakra-ui/react";
+
+import {
+  createProject,
+  deleteProject,
+  updateProject,
+} from "@/actions/projects";
 import schema from "@/helpers/projectValidation";
 
 import FormField from "@/components/UserForm/components/FormField";
 import TechnologyField from "./components/TechnologyField";
 
-const ProjectForm = ({ onProjectCreated }) => {
+const ProjectForm = ({ initialValues, technologies, onComplete }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [technologyOptions, setTechnologyOptions] = useState([]);
 
   const {
     register,
     handleSubmit,
-    formState: { errors, isValid },
+    formState: { errors, isValid, isDirty },
     reset,
     control,
   } = useForm({
     resolver: yupResolver(schema),
-    defaultValues: {
-      technologyStack: [],
-    },
+    defaultValues: initialValues || {},
   });
 
   const onSubmit = async (data) => {
@@ -41,9 +42,13 @@ const ProjectForm = ({ onProjectCreated }) => {
     };
 
     try {
-      const createdProject = await createProject(updatedData);
+      if (initialValues) {
+        await updateProject(initialValues.id, updatedData);
+      } else {
+        await createProject(updatedData);
+      }
+      onComplete && onComplete();
       reset();
-      onProjectCreated(createdProject);
     } catch (error) {
       setError(error.message);
     }
@@ -51,54 +56,75 @@ const ProjectForm = ({ onProjectCreated }) => {
     setIsLoading(false);
   };
 
-  useEffect(() => {
-    const fetchTechnologyOptions = async () => {
-      try {
-        const technologies = await getAllTechnologies();
-        const options = technologies.map((technology) => ({
-          value: technology.id,
-          label: technology.name,
-        }));
-        setTechnologyOptions(options);
-      } catch (error) {
-        console.error("Error fetching technology options:", error);
-      }
-    };
+  const handleDelete = async () => {
+    setIsLoading(true);
+    setError(null);
 
-    fetchTechnologyOptions();
-  }, []);
+    try {
+      await deleteProject(initialValues.id);
+      setIsLoading(false);
+      reset();
+      onComplete && onComplete();
+    } catch (error) {
+      setIsLoading(false);
+      setError(error.message);
+    }
+  };
+
+  useEffect(() => {
+    if (initialValues) {
+      reset(initialValues);
+    }
+  }, [initialValues]);
 
   return (
     <Box as="form" onSubmit={handleSubmit(onSubmit)}>
-      <FormField
-        name="projectName"
-        label="Project Name"
-        register={register}
-        errors={errors}
-      />
+      <Stack gap={5}>
+        <FormField
+          name="projectName"
+          label="Project Name"
+          register={register}
+          errors={errors}
+          isRequired
+        />
 
-      <TechnologyField
-        control={control}
-        register={register}
-        technologyOptions={technologyOptions}
-      />
+        <TechnologyField
+          control={control}
+          register={register}
+          technologyOptions={technologies}
+        />
 
-      <FormField
-        name="description"
-        label="Description"
-        register={register}
-        errors={errors}
-        isTextarea={true}
-      />
+        <FormField
+          name="description"
+          label="Description"
+          register={register}
+          errors={errors}
+          isTextarea={true}
+          isRequired
+        />
+      </Stack>
 
-      <Button
-        isDisabled={!isValid}
-        type="submit"
-        isLoading={isLoading}
-        loadingText="Creating"
-      >
-        Create Project
-      </Button>
+      <Flex justifyContent="flex-end" gap={10} mt={4}>
+        {initialValues && (
+          <Button
+            colorScheme="red"
+            onClick={handleDelete}
+            variant="outline"
+            isLoading={isLoading}
+          >
+            Delete Technology
+          </Button>
+        )}
+
+        <Button
+          isDisabled={!isValid || !isDirty}
+          type="submit"
+          isLoading={isLoading}
+          loadingText="Creating"
+        >
+          {initialValues ? "Update Project" : "Create Project"}
+        </Button>
+      </Flex>
 
       {error && (
         <Box color="red.500" mt={4}>

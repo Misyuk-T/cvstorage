@@ -1,5 +1,4 @@
 import { useState } from "react";
-import ReactSearchBox from "react-search-box";
 import {
   Box,
   Tabs,
@@ -10,21 +9,19 @@ import {
   Text,
   Flex,
 } from "@chakra-ui/react";
-import { SearchIcon } from "@chakra-ui/icons";
+
+import { transformTechnologiesToSearch } from "@/helpers/transformData";
 
 import TechnologyForm from "@/components/TechnologyForm/TechnologyForm";
-
-const transformData = (initialData) => {
-  return initialData.map((item) => ({
-    key: item.id.toString(),
-    value: item.name,
-  }));
-};
+import SearchBox from "@/components/Sidebar/components/SearchBox";
 
 const TechnologyBlock = ({ technologies }) => {
   const [selectedTechnology, setSelectedTechnology] = useState(null);
 
-  const formattedData = transformData(technologies);
+  const formattedData = transformTechnologiesToSearch(technologies);
+  const sortedTechnologies = technologies.sort((a, b) =>
+    a.name.localeCompare(b.name),
+  );
 
   const handleSelect = (value) => {
     const selectedId = +value.item.key;
@@ -38,10 +35,6 @@ const TechnologyBlock = ({ technologies }) => {
   const handleClose = () => {
     setSelectedTechnology(null);
   };
-
-  const sortedTechnologies = technologies.sort((a, b) =>
-    a.name.localeCompare(b.name),
-  );
 
   return (
     <Tabs variant="enclosed" isFitted>
@@ -61,29 +54,10 @@ const TechnologyBlock = ({ technologies }) => {
               Select technology for update:
             </Text>
 
-            <Box
-              sx={{
-                input: {
-                  padding: "10px 10px 10px 40px",
-                  borderColor: "#CBD5E0",
-
-                  "& ~ span": {
-                    margin: "0 10px",
-                  },
-                },
-              }}
-            >
-              <ReactSearchBox
-                placeholder="Search by technology name..."
-                data={formattedData}
-                onSelect={handleSelect}
-                inputHeight="40px"
-                inputFontSize="16px"
-                leftIcon={<SearchIcon />}
-                iconBoxSize="20px"
-                clearOnSelect={false}
-              />
-            </Box>
+            <SearchBox
+              formattedData={formattedData}
+              handleSelect={handleSelect}
+            />
 
             {selectedTechnology && (
               <Box
@@ -112,9 +86,13 @@ const TechnologyBlock = ({ technologies }) => {
                     my={1}
                     mx={2}
                     px={2}
-                    border="1px solid black"
+                    width="fit-content"
+                    fontFamily="Share Tech Mono"
+                    border="1px solid"
+                    borderColor="blue.600"
                     borderRadius={5}
-                    background={isActive ? "gray.300" : "transparent"}
+                    color="blue.800"
+                    background={isActive ? "gray.50" : "transparent"}
                     _hover={{
                       background: "gray.100",
                     }}

@@ -1138,6 +1138,21 @@
   resolved "https://registry.npmjs.org/@fontsource/prata/-/prata-5.0.5.tgz"
   integrity sha512-FM9EujD3wtx6m+OVLgPLuFIxJhCgbn6aYK0OTH4ZNEs+qitIx19zLx53j5JaALLaKdTmpYhGXrzw1sQN+jSlrw==
 
+"@fontsource/roboto-mono@^5.0.5":
+  version "5.0.5"
+  resolved "https://registry.yarnpkg.com/@fontsource/roboto-mono/-/roboto-mono-5.0.5.tgz#93efd0077113c89bfaa18dd424b52d7937348b5b"
+  integrity sha512-pql1Fl/KX2Fqt3oLWos+WTvLt+oo5eCOT+phlA7iIqRPMpOY7MwgmZWxkb0f/giq8twI51mqpnudXPeq8nzocg==
+
+"@fontsource/roboto-slab@^5.0.5":
+  version "5.0.5"
+  resolved "https://registry.yarnpkg.com/@fontsource/roboto-slab/-/roboto-slab-5.0.5.tgz#fd06746e5cd28aad2929cd92bdd36703b63c394d"
+  integrity sha512-3K/fRYLKxuXJB3Z4niUPkB+Gl45tsKMuKiWzn7zMYZLSIOJxz+yA+69IPE2Zv1RGHDDVDgWGOt4lZVDShI2qrQ==
+
+"@fontsource/share-tech-mono@^5.0.5":
+  version "5.0.5"
+  resolved "https://registry.yarnpkg.com/@fontsource/share-tech-mono/-/share-tech-mono-5.0.5.tgz#b233a25e661c251f8231c9d78054b3f9a1726d44"
+  integrity sha512-Dlf+9Qrrhq0u1oflShKmXCf9vp4LOb+Z4+aeccbnGkzb9v/yt1Zt9nck0nsfXuSAKG2frbtW5copMaj9MooHig==
+
 "@gar/promisify@^1.0.1":
   version "1.1.3"
   resolved "https://registry.npmjs.org/@gar/promisify/-/promisify-1.1.3.tgz"

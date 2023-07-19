@@ -3,9 +3,13 @@ import Select from "react-select";
 
 import { FormControl, FormErrorMessage, FormLabel } from "@chakra-ui/react";
 
+import { transformTechnologiesToSelect } from "@/helpers/transformData";
+
 const TechnologyField = ({ control, technologyOptions, errors }) => {
+  const options = transformTechnologiesToSelect(technologyOptions);
+
   return (
-    <FormControl mb={4}>
+    <FormControl isRequired>
       <FormLabel>Technology</FormLabel>
       <Controller
         name="technologyStack"
@@ -14,7 +18,7 @@ const TechnologyField = ({ control, technologyOptions, errors }) => {
         render={({ field }) => (
           <Select
             {...field}
-            options={technologyOptions}
+            options={options}
             isMulti
             placeholder="Select a technology"
           />

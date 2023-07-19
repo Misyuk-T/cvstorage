@@ -28,6 +28,7 @@ export const getProject = async (projectId) => {
 export const getAllProjects = async () => {
   try {
     const response = await axios.get(API_URL);
+
     return response.data;
   } catch (error) {
     console.error("Error getting projects:", error);
@@ -37,7 +38,7 @@ export const getAllProjects = async () => {
 
 export const deleteProject = async (projectId) => {
   try {
-    const response = await axios.delete(`${API_URL}?id=${projectId}`);
+    const response = await axios.delete(`${API_URL}/${projectId}`);
     return response.data;
   } catch (error) {
     console.error("Error deleting project:", error);
@@ -47,7 +48,10 @@ export const deleteProject = async (projectId) => {
 
 export const updateProject = async (projectId, projectData) => {
   try {
-    const response = await axios.put(`${API_URL}?id=${projectId}`, projectData);
+    const response = await axios.put(`${API_URL}/${projectId}`, {
+      ...projectData,
+      technologyStack: JSON.stringify(projectData.technologyStack),
+    });
     return response.data;
   } catch (error) {
     console.error("Error updating project:", error);

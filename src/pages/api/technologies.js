@@ -1,6 +1,12 @@
 import Technologies from "models/Technologies";
 
+const initializeApp = () => {
+  Technologies.createTable();
+};
+
 const handler = async (req, res) => {
+  await initializeApp();
+
   const { method, body } = req;
 
   switch (method) {
