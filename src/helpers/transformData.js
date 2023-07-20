@@ -8,7 +8,7 @@ export const transformTechnologiesToSearch = (data) => {
 export const transformTechnologiesToSelect = (data) => {
   return data.map((item) => ({
     label: item.name,
-    value: item.id,
+    value: item.id.toString(),
   }));
 };
 
@@ -16,5 +16,12 @@ export const transformProjectsToSearch = (data) => {
   return data.map((item) => ({
     value: item.projectName,
     key: item.id.toString(),
+  }));
+};
+
+export const transformProjectsToSelect = (data) => {
+  return data.map((item) => ({
+    label: item.projectName,
+    value: item.id.toString(),
   }));
 };

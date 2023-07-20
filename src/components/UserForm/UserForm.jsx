@@ -70,11 +70,9 @@ const workDirectionOptions = [
   { value: "designer", label: "designer" },
 ];
 
-const UserForm = ({ onSubmit, onDelete }) => {
+const UserForm = ({ technologies, projects }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [technologyOptions, setTechnologyOptions] = useState([]);
-  const [projectOptions, setProjectOptions] = useState([]);
   const [selectedFile, setSelectedFile] = useState(null);
 
   const {
@@ -179,40 +177,6 @@ const UserForm = ({ onSubmit, onDelete }) => {
     }
   };
 
-  const fetchProjects = async () => {
-    try {
-      const projects = await getAllProjects();
-      const options = projects.map((project) => ({
-        value: project.id,
-        label: project.projectName,
-        stackTechnologies: project.technologyStack,
-        description: project.description,
-        achievements: "",
-      }));
-      setProjectOptions(options);
-    } catch (error) {
-      console.error("Error fetching projects:", error);
-    }
-  };
-
-  const fetchTechnologyOptions = async () => {
-    try {
-      const technologies = await getAllTechnologies();
-      const options = technologies.map((technology) => ({
-        value: technology.id,
-        label: technology.name,
-      }));
-      setTechnologyOptions(options);
-    } catch (error) {
-      console.error("Error fetching technology options:", error);
-    }
-  };
-
-  useEffect(() => {
-    fetchProjects();
-    fetchTechnologyOptions();
-  }, []);
-
   return (
     <Box as="form" onSubmit={handleSubmit(onSubmitForm)}>
       <Stack spacing={4}>
@@ -259,7 +223,7 @@ const UserForm = ({ onSubmit, onDelete }) => {
 
         <TechnologyField
           control={control}
-          technologyOptions={technologyOptions}
+          technologyOptions={technologies}
           errors={errors}
         />
 
@@ -309,7 +273,7 @@ const UserForm = ({ onSubmit, onDelete }) => {
             getValues={getValues}
             errors={errors?.projects?.[index]}
             removeProject={removeProject}
-            projectOptions={projectOptions}
+            projects={projects}
           />
         ))}
 

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Controller } from "react-hook-form";
 import Select from "react-select";
+
 import {
   FormErrorMessage,
   FormControl,
@@ -9,6 +10,8 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 
+import { transformProjectsToSelect } from "@/helpers/transformData";
+
 const ProjectField = ({
   control,
   register,
@@ -16,10 +19,12 @@ const ProjectField = ({
   getValues,
   errors,
   removeProject,
-  projectOptions,
+  projects,
   index,
 }) => {
   const [selectedProject, setSelectedProject] = useState(null);
+
+  const formattedOptions = transformProjectsToSelect(projects);
 
   const handleProjectSelect = (selectedOption) => {
     setSelectedProject(selectedOption);
@@ -36,11 +41,11 @@ const ProjectField = ({
   useEffect(() => {
     const projects = getValues("projects");
     const selectedProjectId = projects[index]?.projectId;
-    const selectedProject = projectOptions.find(
+    const selectedProject = formattedOptions.find(
       (project) => project.value === selectedProjectId,
     );
     setSelectedProject(selectedProject);
-  }, [projectOptions, index, getValues]);
+  }, [formattedOptions, index, getValues]);
 
   return (
     <FormControl
@@ -56,7 +61,7 @@ const ProjectField = ({
         render={({ field }) => (
           <Select
             {...field}
-            options={projectOptions}
+            options={formattedOptions}
             value={selectedProject}
             onChange={(selectedOption) => handleProjectSelect(selectedOption)}
             isClearable
