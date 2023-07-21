@@ -21,12 +21,13 @@ const FormField = ({
       isRequired={isRequired}
       isInvalid={errors && errors[name]}
     >
-      <FormLabel>{label}</FormLabel>
+      <FormLabel fontWeight={600}>{label}</FormLabel>
       {isTextarea ? (
         <Textarea
           placeholder={placeHolder}
           type="text"
           name={name}
+          resize="block"
           {...register(name)}
         />
       ) : (

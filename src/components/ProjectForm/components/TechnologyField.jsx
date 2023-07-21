@@ -10,7 +10,7 @@ const TechnologyField = ({ control, technologyOptions, errors }) => {
 
   return (
     <FormControl isRequired>
-      <FormLabel>Technology</FormLabel>
+      <FormLabel>Technology Stack</FormLabel>
       <Controller
         name="technologyStack"
         control={control}
@@ -20,7 +20,7 @@ const TechnologyField = ({ control, technologyOptions, errors }) => {
             {...field}
             options={options}
             isMulti
-            placeholder="Select a technology"
+            placeholder="Select..."
           />
         )}
       />

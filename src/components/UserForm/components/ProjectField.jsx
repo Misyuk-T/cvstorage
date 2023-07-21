@@ -5,10 +5,12 @@ import Select from "react-select";
 import {
   FormErrorMessage,
   FormControl,
-  FormLabel,
-  Button,
   Textarea,
+  Flex,
+  Stack,
+  IconButton,
 } from "@chakra-ui/react";
+import { DeleteIcon } from "@chakra-ui/icons";
 
 import { transformProjectsToSelect } from "@/helpers/transformData";
 
@@ -34,8 +36,6 @@ const ProjectField = ({
   const handleDeleteProject = () => {
     removeProject(index);
     setSelectedProject(null);
-    setValue(`projects[${index}].projectId`, "");
-    setValue(`projects[${index}].achievements`, "");
   };
 
   useEffect(() => {
@@ -53,40 +53,46 @@ const ProjectField = ({
       isInvalid={errors?.projects?.[index]}
       mb={4}
     >
-      <FormLabel>Project</FormLabel>
-      <Controller
-        name={`projects[${index}].projectId`}
-        control={control}
-        defaultValue=""
-        render={({ field }) => (
-          <Select
-            {...field}
-            options={formattedOptions}
-            value={selectedProject}
-            onChange={(selectedOption) => handleProjectSelect(selectedOption)}
-            isClearable
-            placeholder="Select a project"
+      <Flex gap={3}>
+        <Stack w="100%" gap={3}>
+          <Controller
+            name={`projects[${index}].projectId`}
+            control={control}
+            defaultValue=""
+            render={({ field }) => (
+              <Select
+                {...field}
+                options={formattedOptions}
+                value={selectedProject}
+                onChange={(selectedOption) =>
+                  handleProjectSelect(selectedOption)
+                }
+                isClearable
+                placeholder="Select a project"
+              />
+            )}
           />
-        )}
-      />
+
+          <Textarea
+            {...register(`projects[${index}].achievements`)}
+            placeholder="Achievements"
+            isRequired
+            // defaultValue={selectedProject.achievements}
+          />
+        </Stack>
+        <IconButton
+          colorScheme="red"
+          flexShrink={0}
+          onClick={handleDeleteProject}
+          icon={<DeleteIcon />}
+          aria-label="delete"
+        />
+      </Flex>
+
       {errors?.projects?.[index] && (
         <FormErrorMessage>
           {errors?.projects[index]?.projectId?.message}
         </FormErrorMessage>
-      )}
-
-      {selectedProject && (
-        <>
-          <FormLabel>Achievements</FormLabel>
-          <Textarea
-            {...register(`projects[${index}].achievements`)}
-            defaultValue={selectedProject.achievements}
-          />
-        </>
-      )}
-
-      {selectedProject && (
-        <Button onClick={handleDeleteProject}>Delete Project</Button>
       )}
     </FormControl>
   );

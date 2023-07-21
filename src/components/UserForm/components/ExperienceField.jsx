@@ -1,4 +1,12 @@
-import { Box, Button, Input, FormErrorMessage } from "@chakra-ui/react";
+import {
+  Input,
+  FormErrorMessage,
+  Flex,
+  Stack,
+  Textarea,
+  IconButton,
+} from "@chakra-ui/react";
+import { DeleteIcon } from "@chakra-ui/icons";
 
 const ExperienceField = ({
   index,
@@ -10,43 +18,60 @@ const ExperienceField = ({
   const companyNameError = errors?.experience?.[index]?.companyName;
   const timePeriodError = errors?.experience?.[index]?.timePeriod;
   const descriptionError = errors?.experience?.[index]?.description;
+  const existingError = descriptionError || timePeriodError || companyNameError;
+
+  const handleRemove = () => {
+    removeExperience(index);
+  };
 
   return (
-    <Box key={field.id}>
-      <Input
-        type="text"
-        name={`experience[${index}].companyName`}
-        placeholder="Company Name"
-        {...register(`experience[${index}].companyName`)}
-        isInvalid={companyNameError}
-      />
-      {companyNameError && (
-        <FormErrorMessage>{companyNameError.message}</FormErrorMessage>
-      )}
+    <Stack key={field.id} mb={3}>
+      <Flex gap={3} w="100%">
+        <Stack gap={3} w="100%">
+          <Flex gap={3}>
+            <Input
+              type="text"
+              name={`experience[${index}].companyName`}
+              placeholder="Company Name"
+              {...register(`experience[${index}].companyName`)}
+              isInvalid={companyNameError}
+              isRequired
+            />
 
-      <Input
-        type="text"
-        name={`experience[${index}].timePeriod`}
-        placeholder="Time Period"
-        {...register(`experience[${index}].timePeriod`)}
-        isInvalid={timePeriodError}
-      />
-      {timePeriodError && (
-        <FormErrorMessage>{timePeriodError.message}</FormErrorMessage>
-      )}
+            <Input
+              type="text"
+              name={`experience[${index}].timePeriod`}
+              placeholder="Time Period"
+              {...register(`experience[${index}].timePeriod`)}
+              isInvalid={timePeriodError}
+              isRequired
+            />
+          </Flex>
 
-      <Input
-        type="text"
-        name={`experience[${index}].description`}
-        placeholder="Description"
-        {...register(`experience[${index}].description`)}
-        isInvalid={descriptionError}
-      />
-      {descriptionError && (
-        <FormErrorMessage>{descriptionError.message}</FormErrorMessage>
-      )}
-      <Button onClick={() => removeExperience(index)}>Remove</Button>
-    </Box>
+          <Textarea
+            type="text"
+            name={`experience[${index}].description`}
+            placeholder="Description"
+            {...register(`experience[${index}].description`)}
+            isInvalid={descriptionError}
+          />
+        </Stack>
+
+        <IconButton
+          colorScheme="red"
+          icon={<DeleteIcon />}
+          flexShrink={0}
+          onClick={handleRemove}
+          aria-label="delete"
+        />
+      </Flex>
+
+      {descriptionError ||
+        timePeriodError ||
+        (companyNameError && (
+          <FormErrorMessage>{existingError.message}</FormErrorMessage>
+        ))}
+    </Stack>
   );
 };
 

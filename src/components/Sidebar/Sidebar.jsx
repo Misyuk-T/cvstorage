@@ -3,6 +3,7 @@ import { Box, Flex, Text, VStack, Button } from "@chakra-ui/react";
 
 import TechnologyBlock from "@/components/Sidebar/components/TehcnologyBlock";
 import ProjectBlock from "@/components/Sidebar/components/ProjectBlock";
+import UsersBlock from "@/components/Sidebar/components/UserBlock";
 
 const TABS = [
   { key: "users", label: "Users" },
@@ -20,8 +21,13 @@ const Sidebar = ({ technologies, users, projects }) => {
   const renderBlock = () => {
     switch (selectedTab) {
       case "users":
-        // return <UsersBlock users={users} />;
-        return <div>users</div>;
+        return (
+          <UsersBlock
+            users={users}
+            projects={projects}
+            technologies={technologies}
+          />
+        );
       case "projects":
         return <ProjectBlock projects={projects} technologies={technologies} />;
       case "technologies":

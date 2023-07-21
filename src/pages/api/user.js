@@ -40,8 +40,9 @@ const handler = async (req, res) => {
           workDirection: [workDirection],
           isEnabled: [isEnabled],
         } = fields;
-        const mediaFile = files.media;
-        const absolutePath = mediaFile[0].filepath;
+        const mediaFile = files?.media;
+        const absolutePath =
+          (mediaFile && mediaFile[0]?.filepath) || "assets/default_avatar.png";
         const workingDirectory = process.cwd();
         const relativePath = path.relative(workingDirectory, absolutePath);
 

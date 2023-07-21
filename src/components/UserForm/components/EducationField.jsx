@@ -1,4 +1,11 @@
-import { Box, Button, Input, FormErrorMessage } from "@chakra-ui/react";
+import {
+  Input,
+  FormErrorMessage,
+  Flex,
+  IconButton,
+  Stack,
+} from "@chakra-ui/react";
+import { DeleteIcon } from "@chakra-ui/icons";
 
 const EducationField = ({
   index,
@@ -10,30 +17,46 @@ const EducationField = ({
   const rankError = errors?.education?.[index]?.rank;
   const descriptionError = errors?.education?.[index]?.description;
 
+  const existingError = rankError || descriptionError;
+
+  const handleRemove = () => {
+    removeEducation(index);
+  };
+
   return (
-    <Box key={field.id}>
-      <Input
-        type="text"
-        name={`education[${index}].rank`}
-        placeholder="Rank"
-        {...register(`education[${index}].rank`)}
-        isInvalid={rankError}
-      />
+    <Stack>
+      <Flex key={field.id} gap={3} mb={3}>
+        <Input
+          type="text"
+          name={`education[${index}].rank`}
+          placeholder="Rank"
+          {...register(`education[${index}].rank`)}
+          isInvalid={rankError}
+          isRequired
+        />
 
-      {rankError && <FormErrorMessage>{rankError.message}</FormErrorMessage>}
-      <Input
-        type="text"
-        name={`education[${index}].description`}
-        placeholder="Description"
-        {...register(`education[${index}].description`)}
-        isInvalid={descriptionError}
-      />
+        <Input
+          type="text"
+          name={`education[${index}].description`}
+          placeholder="Description"
+          {...register(`education[${index}].description`)}
+          isInvalid={descriptionError}
+          isRequired
+        />
 
-      {descriptionError && (
-        <FormErrorMessage>{descriptionError.message}</FormErrorMessage>
+        <IconButton
+          colorScheme="red"
+          flexShrink={0}
+          onClick={handleRemove}
+          icon={<DeleteIcon />}
+          aria-label="delete"
+        />
+      </Flex>
+
+      {existingError && (
+        <FormErrorMessage>{existingError.message}</FormErrorMessage>
       )}
-      <Button onClick={() => removeEducation(index)}>Remove</Button>
-    </Box>
+    </Stack>
   );
 };
 
