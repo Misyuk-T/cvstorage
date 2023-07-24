@@ -30,7 +30,7 @@ import ExperienceField from "./components/ExperienceField";
 import SocialField from "./components/SocialField";
 import FormField from "./components/FormField";
 
-const initialValues = {
+const defaultValues = {
   name: "",
   position: "",
   email: "",
@@ -43,7 +43,11 @@ const initialValues = {
   workDirection: "",
 };
 
-const UserForm = ({ technologies, projects }) => {
+const UserForm = ({
+  technologies,
+  projects,
+  initialValues = defaultValues,
+}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
@@ -113,6 +117,7 @@ const UserForm = ({ technologies, projects }) => {
   const onSubmitForm = async (data) => {
     setIsLoading(true);
     setError(null);
+    console.log(data);
 
     const transformedTechnologies = data.technologyStack.map(
       (technology) => technology.value,
@@ -218,7 +223,6 @@ const UserForm = ({ technologies, projects }) => {
               id="isEnabled"
               isInvalid={errors.isEnabled}
               width="fit-content"
-              isRequired
             >
               <FormLabel whiteSpace="nowrap">Active</FormLabel>
               <Switch
@@ -465,7 +469,7 @@ const UserForm = ({ technologies, projects }) => {
                 control={control}
                 register={register}
                 setValue={setValue}
-                getValues={getValues}
+                value={getValues(`projects[${index}].projectId`)}
                 errors={errors?.projects?.[index]}
                 removeProject={removeProject}
                 projects={projects}
@@ -477,14 +481,27 @@ const UserForm = ({ technologies, projects }) => {
 
         <FormField
           name="motivation"
-          label="Conclusion"
+          label="Motivation"
           register={register}
           errors={errors}
           isTextarea={true}
-          placeHolder="Conclusion at the end of CV"
+          placeHolder="..."
         />
 
         <Flex mt={5} gap={5}>
+          {initialValues.id && (
+            <Button
+              colorScheme="red"
+              variant="outline"
+              onClick={handleDelete}
+              isLoading={isLoading}
+              width={initialValues.id ? "calc(50% - 10px)" : "100%"}
+              loadingText="Deleting"
+            >
+              Delete
+            </Button>
+          )}
+
           <Button
             type="submit"
             width={initialValues.id ? "calc(50% - 10px)" : "100%"}
@@ -492,19 +509,8 @@ const UserForm = ({ technologies, projects }) => {
             isLoading={isLoading}
             loadingText="Submitting"
           >
-            Save CV
+            {initialValues.id ? "Update CV" : "Save CV"}
           </Button>
-
-          {initialValues.id && (
-            <Button
-              colorScheme="red"
-              onClick={handleDelete}
-              isLoading={isLoading}
-              loadingText="Deleting"
-            >
-              Delete
-            </Button>
-          )}
         </Flex>
 
         {error && (

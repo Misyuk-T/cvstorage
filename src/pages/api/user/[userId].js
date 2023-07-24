@@ -1,5 +1,6 @@
 import Users from "models/User";
-import { deleteUserMedia } from "@/helpers/parseForm";
+import { deleteUserMedia, parseForm } from "@/helpers/parseForm";
+import path from "path";
 
 const handler = async (req, res) => {
   const { method, body, query } = req;
@@ -30,24 +31,33 @@ const handler = async (req, res) => {
 
     case "PUT":
       try {
-        const id = query.userId;
+        const parsedForm = await parseForm(req, id);
+
+        const { fields, files } = parsedForm;
+
+        console.log(parsedForm, "parsedForm");
+
         const {
-          name,
-          email,
-          position,
-          socials,
-          description,
-          experience,
-          education,
-          projects,
-          technologyStack,
-          relativePath,
-          motivation,
-          cvType,
-          grade,
-          workDirection,
-          isEnabled,
-        } = body;
+          name: [name],
+          email: [email],
+          position: [position],
+          socials: [socials],
+          description: [description],
+          experience: [experience],
+          education: [education],
+          projects: [projects],
+          technologyStack: [technologyStack],
+          motivation: [motivation],
+          cvType: [cvType],
+          grade: [grade],
+          workDirection: [workDirection],
+          isEnabled: [isEnabled],
+        } = fields;
+        const mediaFile = files?.media;
+        const absolutePath =
+          (mediaFile && mediaFile[0]?.filepath) || "assets/default_avatar.png";
+        const workingDirectory = process.cwd();
+        const relativePath = path.relative(workingDirectory, absolutePath);
 
         await Users.update(
           id,

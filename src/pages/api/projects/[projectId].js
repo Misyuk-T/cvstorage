@@ -9,7 +9,10 @@ const handler = async (req, res) => {
       try {
         const project = await Projects.findById(id);
         if (project) {
-          res.status(200).json(project);
+          res.status(200).json({
+            ...project,
+            technologyStack: JSON.parse(project.technologyStack),
+          });
         } else {
           res.status(404).json({ error: "Project not found" });
         }

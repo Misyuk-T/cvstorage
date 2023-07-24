@@ -1,9 +1,8 @@
 import { useState } from "react";
 import {
-  Box,
+  Flex,
   Tab,
   Table,
-  TableContainer,
   TabList,
   TabPanel,
   TabPanels,
@@ -14,16 +13,10 @@ import {
   Th,
   Thead,
   Tr,
-  Flex,
 } from "@chakra-ui/react";
 
-import {
-  transformProjectsToSearch,
-  transformTechnologiesToSelect,
-} from "@/helpers/transformData";
+import { transformTechnologiesToSelect } from "@/helpers/transformData";
 
-import ProjectForm from "@/components/ProjectForm/ProjectForm";
-import SearchBox from "@/components/Sidebar/components/SearchBox";
 import UserForm from "@/components/UserForm/UserForm";
 
 const intersectTechnologies = (project, technologies) => {
@@ -40,11 +33,13 @@ const getTechnologyNames = (project, technologies) => {
 const UsersBlock = ({ technologies, projects, users }) => {
   const [selectedUser, setSelectedUser] = useState(null);
 
-  console.log(technologies, projects, "here");
+  // console.log(technologies, projects, "here");
+  // console.log(users, "users");
+  // console.log(selectedUser, "selectedUser");
 
   const handleSelect = (value, id = "") => {
     const selectedId = id || +value.item.key;
-    const selectedItem = projects.find((item) => item.id === selectedId);
+    const selectedItem = users.find((item) => item.id === selectedId);
     const technologyList = intersectTechnologies(selectedItem, technologies);
 
     setSelectedUser({
@@ -70,39 +65,48 @@ const UsersBlock = ({ technologies, projects, users }) => {
         </TabPanel>
 
         <TabPanel>
-          <div>vfdvfd</div>
-          {/*<SearchBox*/}
-          {/*  formattedData={formattedData}*/}
-          {/*  handleSelect={handleSelect}*/}
-          {/*/>*/}
+          {selectedUser && (
+            <UserForm
+              technologies={technologies}
+              projects={projects}
+              initialValues={selectedUser}
+            />
+          )}
 
-          {/*{selectedProject && (*/}
-          {/*  <Box*/}
-          {/*    mt={5}*/}
-          {/*    p={10}*/}
-          {/*    borderRadius={5}*/}
-          {/*    border="1px solid"*/}
-          {/*    borderColor="gray.300"*/}
-          {/*  >*/}
-          {/*    <ProjectForm*/}
-          {/*      initialValues={selectedProject}*/}
-          {/*      technologies={technologies}*/}
-          {/*      onComplete={handleClose}*/}
-          {/*    />*/}
-          {/*  </Box>*/}
-          {/*)}*/}
-
-          {/*<TableContainer my={5}>*/}
-          {/*  <Table variant="simple">*/}
-          {/*    <Thead>*/}
-          {/*      <Tr fontWeight={600}>*/}
-          {/*        <Th>Project Name</Th>*/}
-          {/*        <Th>Technology Stack</Th>*/}
-          {/*        <Th isNumeric>Description</Th>*/}
-          {/*      </Tr>*/}
-          {/*    </Thead>*/}
-          {/*  </Table>*/}
-          {/*</TableContainer>*/}
+          <Table variant="simple">
+            <Thead>
+              <Tr fontWeight={600}>
+                <Th>User Name</Th>
+                <Th>Email</Th>
+                <Th isNumeric>Position</Th>
+              </Tr>
+            </Thead>
+            <Tbody fontSize={14}>
+              {users.map((user) => (
+                <Tr
+                  key={user.id}
+                  onClick={() => handleSelect(null, user.id)}
+                  cursor="pointer"
+                  sx={{
+                    transition: "background .2s",
+                  }}
+                  _hover={{
+                    background: "gray.200",
+                  }}
+                >
+                  <Td fontWeight={500}>
+                    <Text fontFamily="Roboto Slab">{user.name}</Text>
+                  </Td>
+                  <Td>
+                    <Text fontFamily="Roboto Slab">{user.email}</Text>
+                  </Td>
+                  <Td isNumeric>
+                    <Text fontFamily="Roboto Slab">{user.position}</Text>
+                  </Td>
+                </Tr>
+              ))}
+            </Tbody>
+          </Table>
         </TabPanel>
       </TabPanels>
     </Tabs>

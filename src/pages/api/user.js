@@ -1,6 +1,6 @@
 import * as path from "path";
 import Users from "models/User";
-import { deleteUserMedia, parseForm } from "@/helpers/parseForm";
+import { parseForm } from "@/helpers/parseForm";
 
 const initializeApp = () => {
   Users.createTable();
@@ -13,7 +13,7 @@ export const config = {
 };
 
 const handler = async (req, res) => {
-  const { method, body } = req;
+  const { method } = req;
 
   await initializeApp();
 
@@ -77,80 +77,19 @@ const handler = async (req, res) => {
       break;
 
     case "GET":
-      const id = body?.id;
-
       try {
-        if (id) {
-          const user = await Users.findById(id);
-          if (user) {
-            res.status(200).json(user);
-          } else {
-            res.status(404).json({ error: "User not found" });
-          }
-        } else {
-          const users = await Users.findAll();
-          res.status(200).json(users);
-        }
+        const users = await Users.findAll();
+        const parsedUsers = users.map((user) => ({
+          ...user,
+          socials: JSON.parse(user.socials),
+          experience: JSON.parse(user.experience),
+          education: JSON.parse(user.education),
+          projects: JSON.parse(user.projects),
+          technologyStack: JSON.parse(user.technologyStack),
+        }));
+        res.status(200).json(parsedUsers);
       } catch (error) {
         console.error("Error fetching users:", error.message);
-        res.status(500).json({ error: "Internal Server Error" });
-      }
-      break;
-
-    case "PUT":
-      try {
-        const {
-          id,
-          name,
-          email,
-          position,
-          socials,
-          description,
-          experience,
-          education,
-          projects,
-          technologyStack,
-          motivation,
-          cvType,
-          grade,
-          workDirection,
-          isEnabled,
-        } = body;
-
-        await Users.update(
-          id,
-          name,
-          position,
-          email,
-          socials,
-          description,
-          experience,
-          education,
-          projects,
-          technologyStack,
-          motivation,
-          cvType,
-          grade,
-          workDirection,
-          isEnabled,
-        );
-
-        res.status(200).json({ message: "User updated successfully" });
-      } catch (error) {
-        console.error("Error updating user:", error.message);
-        res.status(500).json({ error: "Internal Server Error" });
-      }
-      break;
-
-    case "DELETE":
-      try {
-        const id = body.id;
-        await deleteUserMedia(id);
-        await Users.deleteById(id);
-
-        res.status(200).json({ message: "User deleted successfully" });
-      } catch (error) {
-        console.error("Error deleting user:", error.message);
         res.status(500).json({ error: "Internal Server Error" });
       }
       break;

@@ -14,17 +14,27 @@ import { DeleteIcon } from "@chakra-ui/icons";
 
 import { transformProjectsToSelect } from "@/helpers/transformData";
 
+const getIntersectedProject = (id, projects) => {
+  return projects.find((item) => item.id === +id);
+};
+
 const ProjectField = ({
   control,
   register,
   setValue,
-  getValues,
   errors,
   removeProject,
   projects,
   index,
+  value,
 }) => {
-  const [selectedProject, setSelectedProject] = useState(null);
+  const initialProjects = getIntersectedProject(value, projects);
+  const formattedData = initialProjects && {
+    label: initialProjects.projectName,
+    value: initialProjects.id.toString(),
+  };
+
+  const [selectedProject, setSelectedProject] = useState(formattedData);
 
   const formattedOptions = transformProjectsToSelect(projects);
 
@@ -37,15 +47,6 @@ const ProjectField = ({
     removeProject(index);
     setSelectedProject(null);
   };
-
-  useEffect(() => {
-    const projects = getValues("projects");
-    const selectedProjectId = projects[index]?.projectId;
-    const selectedProject = formattedOptions.find(
-      (project) => project.value === selectedProjectId,
-    );
-    setSelectedProject(selectedProject);
-  }, [formattedOptions, index, getValues]);
 
   return (
     <FormControl
