@@ -41,6 +41,7 @@ const defaultValues = {
   motivation: "",
   grade: "",
   workDirection: "",
+  media: "",
 };
 
 const UserForm = ({
@@ -125,13 +126,13 @@ const UserForm = ({
     const updatedData = {
       ...data,
       technologyStack: JSON.stringify(transformedTechnologies),
-      media: selectedFile ? selectedFile.file : null,
+      media: selectedFile ? selectedFile.file : initialValues.media,
     };
 
     try {
       const formData = new FormData();
       for (const key in updatedData) {
-        if (key === "media" && updatedData[key] === null) continue;
+        if (key === "media" && updatedData[key] === "") continue;
 
         if (Array.isArray(updatedData[key])) {
           formData.append(key, JSON.stringify(updatedData[key]));

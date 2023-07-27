@@ -37,13 +37,20 @@ export const parseForm = async (req, userId) => {
     });
 
     await form.parse(req, function (err, fields, files) {
-      if (err) reject(err);
-      else resolve({ fields, files });
+      if (err) {
+        reject(err);
+      } else resolve({ fields, files });
     });
   });
 };
 
 export const deleteUserMedia = async (id) => {
-  const folderPath = path.join(process.cwd(), "uploads", id);
-  await fs.rmdir(folderPath, { recursive: true });
+  const folderPath = path.join(process.cwd(), "uploads", id.toString());
+
+  try {
+    await fs.rm(folderPath, { recursive: true });
+  } catch (error) {
+    console.error("Error deleting user media:", error.message);
+    throw error; // Rethrow the error to be caught in the calling function if needed.
+  }
 };

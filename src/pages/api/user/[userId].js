@@ -1,14 +1,21 @@
-import Users from "models/User";
-import { deleteUserMedia, parseForm } from "@/helpers/parseForm";
 import path from "path";
 
+import Users from "models/User";
+import { deleteUserMedia, parseForm } from "@/helpers/parseForm";
+
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+};
+
 const handler = async (req, res) => {
-  const { method, body, query } = req;
+  const { method, query } = req;
+  const id = query.userId;
 
   switch (method) {
     case "GET":
       try {
-        const id = query.userId;
         const user = await Users.findById(id);
 
         if (user) {
@@ -34,8 +41,6 @@ const handler = async (req, res) => {
         const parsedForm = await parseForm(req, id);
 
         const { fields, files } = parsedForm;
-
-        console.log(parsedForm, "parsedForm");
 
         const {
           name: [name],
@@ -87,7 +92,6 @@ const handler = async (req, res) => {
 
     case "DELETE":
       try {
-        const id = query.userId;
         await deleteUserMedia(id);
         await Users.deleteById(id);
 

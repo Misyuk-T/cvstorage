@@ -105,14 +105,14 @@ module.exports = {
   deleteById: (id) => {
     return new Promise((resolve, reject) => {
       const stmt = db.prepare("DELETE FROM users WHERE id = ?");
-
-      try {
-        stmt.run(id);
-      } catch (err) {
-        reject(err);
-      }
-
-      stmt.finalize();
+      stmt.run(id, (err) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve();
+        }
+        stmt.finalize();
+      });
     });
   },
 
