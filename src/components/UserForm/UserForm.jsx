@@ -22,19 +22,18 @@ import {
 } from "@/components/UserForm/mocks";
 
 import FileUploadField from "./components/FileUploadField";
-import TechnologyField from "@/components/ProjectForm/components/TechnologyField";
 import ReactSelectField from "@/components/UserForm/components/ReactSelectField";
 import ProjectField from "./components/ProjectField";
 import EducationField from "./components/EducationField";
 import ExperienceField from "./components/ExperienceField";
 import SocialField from "./components/SocialField";
 import FormField from "./components/FormField";
+import UserTechnologyStackField from "@/components/UserForm/components/UserTechnologyStackField";
 
 const defaultValues = {
   name: "",
   position: "",
   email: "",
-  technologyStack: [],
   description: "",
   isEnabled: false,
   cvType: "",
@@ -50,9 +49,8 @@ const UserForm = ({
   initialValues = defaultValues,
 }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
-  const [imagePreview, setImagePreview] = useState(null);
+  const [imagePreview, setImagePreview] = useState(initialValues.media);
 
   const {
     register,
@@ -102,6 +100,15 @@ const UserForm = ({
     name: "projects",
   });
 
+  const {
+    fields: technologyFields,
+    append: appendTechnology,
+    remove: removeTechnology,
+  } = useFieldArray({
+    control,
+    name: "technologyStack",
+  });
+
   const handleFileChange = (name, file) => {
     setSelectedFile({ name, file });
     if (file) {
@@ -117,15 +124,9 @@ const UserForm = ({
 
   const onSubmitForm = async (data) => {
     setIsLoading(true);
-    setError(null);
-    console.log(data);
 
-    const transformedTechnologies = data.technologyStack.map(
-      (technology) => technology.value,
-    );
     const updatedData = {
       ...data,
-      technologyStack: JSON.stringify(transformedTechnologies),
       media: selectedFile ? selectedFile.file : initialValues.media,
     };
 
@@ -149,22 +150,20 @@ const UserForm = ({
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
-      setError(error.message);
     }
   };
 
   const handleDelete = async () => {
     setIsLoading(true);
-    setError(null);
-
     try {
       await deleteUser(initialValues.id);
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
-      setError(error.message);
     }
   };
+
+  console.log(errors);
 
   return (
     <Box as="form" onSubmit={handleSubmit(onSubmitForm)}>
@@ -175,7 +174,7 @@ const UserForm = ({
           pt={3}
           borderRadius={5}
           border="2px solid"
-          borderColor="gray.200"
+          borderColor="gray.300"
           position="relative"
         >
           <Text
@@ -244,6 +243,7 @@ const UserForm = ({
               register={register}
               onChange={handleFileChange}
               imagePreview={imagePreview}
+              error={errors}
             />
           </Box>
 
@@ -277,24 +277,68 @@ const UserForm = ({
               />
             </Flex>
 
-            <TechnologyField
-              control={control}
-              technologyOptions={technologies}
+            <FormField
+              name="description"
+              label="Description"
+              register={register}
               errors={errors}
+              isTextarea={true}
+              placeHolder="Short information about user"
+              isRequired
             />
           </Stack>
         </Flex>
-        <FormField
-          name="description"
-          label="Description"
-          register={register}
-          errors={errors}
-          isTextarea={true}
-          placeHolder="Short information about user"
-          isRequired
-        />
 
         <Stack gap={8} mt={5}>
+          <FormControl
+            id="technologyStack"
+            isInvalid={errors.technologyStack}
+            isRequired={technologyFields.length > 0}
+          >
+            <Stack
+              gap={5}
+              p={5}
+              borderRadius={5}
+              border="2px solid"
+              borderColor="gray.300"
+              position="relative"
+            >
+              <FormLabel
+                fontSize={16}
+                backgroundColor="white"
+                position="absolute"
+                top={-4}
+                p={1}
+                px={2}
+                fontWeight={600}
+              >
+                Technology Block
+              </FormLabel>
+
+              {technologyFields.map((field, index) => (
+                <UserTechnologyStackField
+                  key={field.id}
+                  control={control}
+                  register={register}
+                  setValue={setValue}
+                  errors={errors}
+                  removeTechnologies={() => removeTechnology(index)}
+                  technologies={technologies}
+                  index={index}
+                  value={field}
+                />
+              ))}
+
+              <Button
+                onClick={() =>
+                  appendTechnology({ technologyId: "", level: 50 })
+                }
+              >
+                Add Technology Item
+              </Button>
+            </Stack>
+          </FormControl>
+
           <FormControl
             id="socials"
             isInvalid={errors.socials}
@@ -305,7 +349,7 @@ const UserForm = ({
               p={5}
               borderRadius={5}
               border="2px solid"
-              borderColor="gray.200"
+              borderColor="gray.300"
               position="relative"
             >
               <FormLabel
@@ -335,10 +379,6 @@ const UserForm = ({
                 Add Social Item
               </Button>
             </Stack>
-
-            {errors.socials && (
-              <FormErrorMessage>{errors.socials.message}</FormErrorMessage>
-            )}
           </FormControl>
 
           <FormControl
@@ -352,7 +392,7 @@ const UserForm = ({
               position="relative"
               borderRadius={5}
               border="2px solid"
-              borderColor="gray.200"
+              borderColor="gray.300"
             >
               <FormLabel
                 fontSize={16}
@@ -387,10 +427,6 @@ const UserForm = ({
                 Add Experience Item
               </Button>
             </Stack>
-
-            {errors.experience && (
-              <FormErrorMessage>{errors.experience.message}</FormErrorMessage>
-            )}
           </FormControl>
 
           <FormControl
@@ -404,7 +440,7 @@ const UserForm = ({
               borderRadius={5}
               border="2px solid"
               position="relative"
-              borderColor="gray.200"
+              borderColor="gray.300"
             >
               <FormLabel
                 fontSize={16}
@@ -434,10 +470,6 @@ const UserForm = ({
                 Add Education Item
               </Button>
             </Stack>
-
-            {errors.education && (
-              <FormErrorMessage>{errors.education.message}</FormErrorMessage>
-            )}
           </FormControl>
 
           <Stack
@@ -446,7 +478,7 @@ const UserForm = ({
             borderRadius={5}
             position="relative"
             border="2px solid"
-            borderColor="gray.200"
+            borderColor="gray.300"
           >
             <FormControl
               isRequired={projectFields.length > 0}
@@ -513,12 +545,6 @@ const UserForm = ({
             {initialValues.id ? "Update CV" : "Save CV"}
           </Button>
         </Flex>
-
-        {error && (
-          <Box color="red.500" mt={4}>
-            {error}
-          </Box>
-        )}
       </Stack>
     </Box>
   );

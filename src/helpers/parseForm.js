@@ -6,7 +6,7 @@ import fs from "fs";
 
 export const parseForm = async (req, userId) => {
   return new Promise(async (resolve, reject) => {
-    const uploadDir = join(process.cwd(), `/uploads/${userId}`);
+    const uploadDir = join(process.cwd(), `public/uploads/${userId}`);
 
     try {
       await stat(uploadDir);
@@ -22,7 +22,6 @@ export const parseForm = async (req, userId) => {
 
     const form = formidable({
       maxFiles: 1,
-      maxFileSize: 1024 * 1024, // 1mb
       uploadDir,
       filename: (_name, _ext, part) => {
         return `${part.name || "unknown"}.${

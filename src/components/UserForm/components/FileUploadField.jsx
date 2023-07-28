@@ -1,11 +1,17 @@
 import NextImage from "next/image";
 
-import { Flex, FormControl, IconButton } from "@chakra-ui/react";
+import { Flex, FormControl, IconButton, Stack, Text } from "@chakra-ui/react";
 import { DeleteIcon, DownloadIcon } from "@chakra-ui/icons";
 
-import DefaultAvatar from "src/assets/default_avatar.png";
+import DefaultAvatar from "public/default_avatar.png";
 
-const FileUploadField = ({ name, register, onChange, imagePreview }) => {
+const FileUploadField = ({ name, register, onChange, imagePreview, error }) => {
+  const defaultImagePreviewPath = imagePreview ? imagePreview : DefaultAvatar;
+  const imagePreviewPath =
+    imagePreview && imagePreview.includes("public")
+      ? `/${imagePreview.split("\\").slice(1).join("/")}`
+      : defaultImagePreviewPath;
+
   const handleFileChange = (event) => {
     const file = event.target.files[0];
 
@@ -18,7 +24,7 @@ const FileUploadField = ({ name, register, onChange, imagePreview }) => {
 
   return (
     <FormControl w="auto">
-      <Flex align="center" gap={8}>
+      <Stack align="center" gap={2}>
         <Flex
           alignItems="center"
           width="150px"
@@ -56,13 +62,13 @@ const FileUploadField = ({ name, register, onChange, imagePreview }) => {
           <NextImage
             width={150}
             height={150}
-            src={imagePreview ? imagePreview : DefaultAvatar}
+            src={imagePreviewPath}
             alt="Preview"
-            style={{ objectFit: "contain" }}
           />
           <input
             {...register(name)}
             type="file"
+            accept="image/*"
             id={name}
             onChange={handleFileChange}
             style={{
@@ -77,7 +83,13 @@ const FileUploadField = ({ name, register, onChange, imagePreview }) => {
             }}
           />
         </Flex>
-      </Flex>
+
+        {error?.media && (
+          <Text fontSize="sm" color="red">
+            {error?.media.message}
+          </Text>
+        )}
+      </Stack>
     </FormControl>
   );
 };

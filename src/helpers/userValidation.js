@@ -13,15 +13,12 @@ const schema = yup.object().shape({
       url: yup.string().url("Invalid URL").required("URL is required"),
     }),
   ),
-  technologyStack: yup
-    .array()
-    .of(
-      yup.object().shape({
-        value: yup.number().required("Technology value is required"),
-        label: yup.string().required("Technology label is required"),
-      }),
-    )
-    .min(1, "At least one technology must be selected"),
+  technologyStack: yup.array().of(
+    yup.object().shape({
+      technologyId: yup.string().required("Technology value is required"),
+      level: yup.string().required("Technology label is required"),
+    }),
+  ),
   description: yup.string().required("Description is required"),
   isEnabled: yup.boolean().required("Enabled is required"),
   experience: yup.array().of(
@@ -47,6 +44,30 @@ const schema = yup.object().shape({
   cvType: yup.string().required("CV Type is required"),
   grade: yup.string().required("Grade is required"),
   workDirection: yup.string().required("Work direction is required"),
+  media: yup
+    .mixed()
+    .test("is-valid-media", "Max size limit 4mb", function (value) {
+      const type = typeof value;
+
+      if (type !== "string" && type !== "object") {
+        // If the value is empty, it's not a valid media.
+        return false;
+      }
+      console.log(value);
+
+      if (type === "object") {
+        // Get the file size in bytes from the 'size' property of the file object.
+        const fileSizeInBytes = value[0].size;
+
+        // Define the maximum size in bytes (4MB).
+        const maxFileSizeInBytes = 4 * 1024 * 1024;
+
+        return fileSizeInBytes <= maxFileSizeInBytes;
+      }
+
+      // If it's a string (image URL), we don't need to validate its size.
+      return true;
+    }),
 });
 
 export default schema;

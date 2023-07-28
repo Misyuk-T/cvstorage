@@ -1,10 +1,4 @@
-import {
-  Input,
-  FormErrorMessage,
-  Flex,
-  IconButton,
-  Stack,
-} from "@chakra-ui/react";
+import { Input, Flex, IconButton, Stack, Text } from "@chakra-ui/react";
 import { DeleteIcon } from "@chakra-ui/icons";
 
 const SocialField = ({ index, field, removeSocial, register, errors }) => {
@@ -49,7 +43,9 @@ const SocialField = ({ index, field, removeSocial, register, errors }) => {
       </Flex>
 
       {existingError && (
-        <FormErrorMessage>{existingError.message}</FormErrorMessage>
+        <Text color="red" fontSize="sm">
+          {existingError.message}
+        </Text>
       )}
     </Stack>
   );

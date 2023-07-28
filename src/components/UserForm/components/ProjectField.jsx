@@ -1,14 +1,14 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Controller } from "react-hook-form";
 import Select from "react-select";
 
 import {
-  FormErrorMessage,
   FormControl,
   Textarea,
   Flex,
   Stack,
   IconButton,
+  Text,
 } from "@chakra-ui/react";
 import { DeleteIcon } from "@chakra-ui/icons";
 
@@ -78,7 +78,7 @@ const ProjectField = ({
             {...register(`projects[${index}].achievements`)}
             placeholder="Achievements"
             isRequired
-            // defaultValue={selectedProject.achievements}
+            defaultValue={selectedProject?.achievements}
           />
         </Stack>
         <IconButton
@@ -91,9 +91,9 @@ const ProjectField = ({
       </Flex>
 
       {errors?.projects?.[index] && (
-        <FormErrorMessage>
+        <Text color="red" fontSize="sm">
           {errors?.projects[index]?.projectId?.message}
-        </FormErrorMessage>
+        </Text>
       )}
     </FormControl>
   );

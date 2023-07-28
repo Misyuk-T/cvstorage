@@ -2,8 +2,8 @@ import {
   FormControl,
   FormLabel,
   Input,
-  FormErrorMessage,
   Textarea,
+  Text,
 } from "@chakra-ui/react";
 
 const FormField = ({
@@ -38,7 +38,11 @@ const FormField = ({
           {...register(name)}
         />
       )}
-      {errors && <FormErrorMessage>{errors[name]?.message}</FormErrorMessage>}
+      {errors && (
+        <Text color="red" fontSize="sm">
+          {errors[name]?.message}
+        </Text>
+      )}
     </FormControl>
   );
 };

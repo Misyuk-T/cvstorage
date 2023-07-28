@@ -1,10 +1,10 @@
 import {
   Input,
-  FormErrorMessage,
   Flex,
   Stack,
   Textarea,
   IconButton,
+  Text,
 } from "@chakra-ui/react";
 import { DeleteIcon } from "@chakra-ui/icons";
 
@@ -66,11 +66,11 @@ const ExperienceField = ({
         />
       </Flex>
 
-      {descriptionError ||
-        timePeriodError ||
-        (companyNameError && (
-          <FormErrorMessage>{existingError.message}</FormErrorMessage>
-        ))}
+      {existingError && (
+        <Text color="red" fontSize="sm">
+          {existingError.message}
+        </Text>
+      )}
     </Stack>
   );
 };

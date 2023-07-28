@@ -1,6 +1,5 @@
 import { useState } from "react";
 import {
-  Flex,
   Tab,
   Table,
   TabList,
@@ -15,37 +14,20 @@ import {
   Tr,
 } from "@chakra-ui/react";
 
-import { transformTechnologiesToSelect } from "@/helpers/transformData";
-
 import UserForm from "@/components/UserForm/UserForm";
-
-const intersectTechnologies = (project, technologies) => {
-  const projectTechnologies = project.technologyStack;
-  return technologies.filter((tech) => projectTechnologies.includes(tech.id));
-};
-
-const getTechnologyNames = (project, technologies) => {
-  return project.technologyStack.map((techId) => {
-    return technologies.find((tech) => tech.id === techId);
-  });
-};
 
 const UsersBlock = ({ technologies, projects, users }) => {
   const [selectedUser, setSelectedUser] = useState(null);
 
   // console.log(technologies, projects, "here");
   // console.log(users, "users");
-  // console.log(selectedUser, "selectedUser");
+  console.log(selectedUser, "selectedUser");
 
   const handleSelect = (value, id = "") => {
     const selectedId = id || +value.item.key;
     const selectedItem = users.find((item) => item.id === selectedId);
-    const technologyList = intersectTechnologies(selectedItem, technologies);
 
-    setSelectedUser({
-      ...selectedItem,
-      technologyStack: transformTechnologiesToSelect(technologyList),
-    });
+    setSelectedUser(selectedItem);
   };
 
   const handleClose = () => {
