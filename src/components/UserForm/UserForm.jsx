@@ -1,10 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Button,
   Flex,
   FormControl,
-  FormErrorMessage,
   FormLabel,
   Stack,
   Switch,
@@ -19,7 +18,7 @@ import {
   cvTypeOptions,
   gradeOptions,
   workDirectionOptions,
-} from "@/components/UserForm/mocks";
+} from "/src/helpers/constants";
 
 import FileUploadField from "./components/FileUploadField";
 import ReactSelectField from "@/components/UserForm/components/ReactSelectField";
@@ -35,17 +34,23 @@ const defaultValues = {
   position: "",
   email: "",
   description: "",
-  isEnabled: false,
+  isEnabled: 1,
   cvType: "",
   motivation: "",
   grade: "",
   workDirection: "",
   media: "",
+  socials: [],
+  experience: [],
+  education: [],
+  projects: [],
+  technologyStack: [],
 };
 
 const UserForm = ({
   technologies,
   projects,
+  onComplete,
   initialValues = defaultValues,
 }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -55,10 +60,11 @@ const UserForm = ({
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isDirty },
     control,
     setValue,
     getValues,
+    reset,
   } = useForm({
     resolver: yupResolver(schema),
     defaultValues: initialValues,
@@ -130,6 +136,8 @@ const UserForm = ({
       media: selectedFile ? selectedFile.file : initialValues.media,
     };
 
+    console.log(updatedData, "updatedData");
+
     try {
       const formData = new FormData();
       for (const key in updatedData) {
@@ -151,6 +159,8 @@ const UserForm = ({
     } catch (error) {
       setIsLoading(false);
     }
+
+    onComplete && onComplete();
   };
 
   const handleDelete = async () => {
@@ -163,7 +173,10 @@ const UserForm = ({
     }
   };
 
-  console.log(errors);
+  useEffect(() => {
+    setImagePreview(initialValues.media);
+    reset({ ...initialValues, isEnabled: initialValues.isEnabled === 1 });
+  }, [initialValues]);
 
   return (
     <Box as="form" onSubmit={handleSubmit(onSubmitForm)}>
@@ -178,7 +191,7 @@ const UserForm = ({
           position="relative"
         >
           <Text
-            fontSize={16}
+            fontSize={17}
             backgroundColor="white"
             position="absolute"
             top={-4}
@@ -189,7 +202,7 @@ const UserForm = ({
             System information
           </Text>
           <Flex
-            py={5}
+            py={4}
             w="100%"
             gap={5}
             alignItems="center"
@@ -222,72 +235,91 @@ const UserForm = ({
             <FormControl
               id="isEnabled"
               isInvalid={errors.isEnabled}
-              width="fit-content"
+              width="100px"
             >
-              <FormLabel whiteSpace="nowrap">Active</FormLabel>
-              <Switch
-                id="isEnabled"
-                defaultChecked={initialValues?.isEnabled || true}
-                {...register("isEnabled")}
-              />
-              {errors.isEnabled && (
-                <FormErrorMessage>{errors.isEnabled.message}</FormErrorMessage>
-              )}
+              <Stack width="100%" alignItems="center" justifyContent="center">
+                <FormLabel whiteSpace="nowrap" mb={3}>
+                  Active
+                </FormLabel>
+                <Switch pb={2} id="isEnabled" {...register("isEnabled")} />
+              </Stack>
             </FormControl>
           </Flex>
         </Stack>
-        <Flex gap={10} alignItems="flex-start">
-          <Box mt="12px">
-            <FileUploadField
-              name="media"
-              register={register}
-              onChange={handleFileChange}
-              imagePreview={imagePreview}
-              error={errors}
-            />
-          </Box>
 
-          <Stack justifyContent="space-between" w="100%" gap={5}>
-            <Flex gap={5} w="100%">
+        <Stack
+          w="100%"
+          px={10}
+          py={5}
+          borderRadius={5}
+          border="2px solid"
+          borderColor="gray.300"
+          position="relative"
+        >
+          <Text
+            fontSize={17}
+            backgroundColor="white"
+            position="absolute"
+            top={-4}
+            p={1}
+            px={2}
+            fontWeight={600}
+          >
+            About
+          </Text>
+          <Flex gap={10} alignItems="flex-start">
+            <Box mt="32px">
+              <FileUploadField
+                name="media"
+                register={register}
+                onChange={handleFileChange}
+                imagePreview={imagePreview}
+                error={errors}
+              />
+            </Box>
+
+            <Stack justifyContent="space-between" w="100%" gap={3}>
+              <Flex gap={5} w="100%">
+                <FormField
+                  name="name"
+                  label="Name"
+                  register={register}
+                  errors={errors}
+                  isRequired
+                  placeHolder="John Smith"
+                />
+
+                <FormField
+                  name="email"
+                  label="Email"
+                  register={register}
+                  errors={errors}
+                  isRequired
+                  placeHolder="example@exm.com"
+                />
+
+                <FormField
+                  name="position"
+                  label="Position"
+                  register={register}
+                  errors={errors}
+                  isRequired
+                  placeHolder="JS React developer"
+                />
+              </Flex>
+
               <FormField
-                name="name"
-                label="Name"
+                name="description"
+                label="Description"
                 register={register}
                 errors={errors}
+                isTextarea={true}
+                placeHolder="Short information about user"
                 isRequired
-                placeHolder="John Smith"
               />
-
-              <FormField
-                name="email"
-                label="Email"
-                register={register}
-                errors={errors}
-                isRequired
-                placeHolder="example@exm.com"
-              />
-
-              <FormField
-                name="position"
-                label="Position"
-                register={register}
-                errors={errors}
-                isRequired
-                placeHolder="JS React developer"
-              />
-            </Flex>
-
-            <FormField
-              name="description"
-              label="Description"
-              register={register}
-              errors={errors}
-              isTextarea={true}
-              placeHolder="Short information about user"
-              isRequired
-            />
-          </Stack>
-        </Flex>
+            </Stack>
+          </Flex>
+        </Stack>
 
         <Stack gap={8} mt={5}>
           <FormControl
@@ -298,13 +330,14 @@ const UserForm = ({
             <Stack
               gap={5}
               p={5}
+              pt={8}
               borderRadius={5}
               border="2px solid"
               borderColor="gray.300"
               position="relative"
             >
               <FormLabel
-                fontSize={16}
+                fontSize={17}
                 backgroundColor="white"
                 position="absolute"
                 top={-4}
@@ -315,19 +348,23 @@ const UserForm = ({
                 Technology Block
               </FormLabel>
 
-              {technologyFields.map((field, index) => (
-                <UserTechnologyStackField
-                  key={field.id}
-                  control={control}
-                  register={register}
-                  setValue={setValue}
-                  errors={errors}
-                  removeTechnologies={() => removeTechnology(index)}
-                  technologies={technologies}
-                  index={index}
-                  value={field}
-                />
-              ))}
+              {technologyFields.length && (
+                <Flex flexWrap="wrap" justifyContent="space-between" gap={5}>
+                  {technologyFields.map((field, index) => (
+                    <UserTechnologyStackField
+                      key={field.id}
+                      control={control}
+                      register={register}
+                      setValue={setValue}
+                      errors={errors}
+                      removeTechnologies={() => removeTechnology(index)}
+                      technologies={technologies}
+                      index={index}
+                      value={field}
+                    />
+                  ))}
+                </Flex>
+              )}
 
               <Button
                 onClick={() =>
@@ -347,13 +384,14 @@ const UserForm = ({
             <Stack
               gap={5}
               p={5}
+              pt={8}
               borderRadius={5}
               border="2px solid"
               borderColor="gray.300"
               position="relative"
             >
               <FormLabel
-                fontSize={16}
+                fontSize={17}
                 backgroundColor="white"
                 position="absolute"
                 top={-4}
@@ -389,13 +427,14 @@ const UserForm = ({
             <Stack
               gap={5}
               p={5}
+              pt={8}
               position="relative"
               borderRadius={5}
               border="2px solid"
               borderColor="gray.300"
             >
               <FormLabel
-                fontSize={16}
+                fontSize={17}
                 backgroundColor="white"
                 position="absolute"
                 top={-4}
@@ -437,13 +476,14 @@ const UserForm = ({
             <Stack
               gap={5}
               p={5}
+              pt={8}
               borderRadius={5}
               border="2px solid"
               position="relative"
               borderColor="gray.300"
             >
               <FormLabel
-                fontSize={16}
+                fontSize={17}
                 backgroundColor="white"
                 position="absolute"
                 top={-4}
@@ -475,6 +515,7 @@ const UserForm = ({
           <Stack
             gap={5}
             p={5}
+            pt={8}
             borderRadius={5}
             position="relative"
             border="2px solid"
@@ -490,7 +531,7 @@ const UserForm = ({
               backgroundColor="white"
               m={0}
             >
-              <FormLabel fontSize={16} m={0} fontWeight={600}>
+              <FormLabel fontSize={17} m={0} fontWeight={600}>
                 Projects Block
               </FormLabel>
             </FormControl>
@@ -512,14 +553,34 @@ const UserForm = ({
           </Stack>
         </Stack>
 
-        <FormField
-          name="motivation"
-          label="Motivation"
-          register={register}
-          errors={errors}
-          isTextarea={true}
-          placeHolder="..."
-        />
+        <Stack
+          gap={5}
+          p={5}
+          pt={6}
+          borderRadius={5}
+          border="2px solid"
+          position="relative"
+          borderColor="gray.300"
+        >
+          <FormLabel
+            fontSize={17}
+            backgroundColor="white"
+            position="absolute"
+            top={-4}
+            p={1}
+            px={2}
+            fontWeight={600}
+          >
+            Motivation / Conclusion
+          </FormLabel>
+          <FormField
+            name="motivation"
+            register={register}
+            errors={errors}
+            isTextarea={true}
+            placeHolder="Briefly explain motivation or career objectives"
+          />
+        </Stack>
 
         <Flex mt={5} gap={5}>
           {initialValues.id && (
@@ -541,6 +602,7 @@ const UserForm = ({
             colorScheme="green"
             isLoading={isLoading}
             loadingText="Submitting"
+            isDisabled={!isDirty}
           >
             {initialValues.id ? "Update CV" : "Save CV"}
           </Button>

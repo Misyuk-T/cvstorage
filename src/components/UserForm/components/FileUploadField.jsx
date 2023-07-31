@@ -1,14 +1,20 @@
-import NextImage from "next/image";
-
-import { Flex, FormControl, IconButton, Stack, Text } from "@chakra-ui/react";
+import {
+  Flex,
+  FormControl,
+  IconButton,
+  Stack,
+  Text,
+  Img,
+} from "@chakra-ui/react";
 import { DeleteIcon, DownloadIcon } from "@chakra-ui/icons";
 
-import DefaultAvatar from "public/default_avatar.png";
-
 const FileUploadField = ({ name, register, onChange, imagePreview, error }) => {
-  const defaultImagePreviewPath = imagePreview ? imagePreview : DefaultAvatar;
+  const defaultImagePreviewPath = imagePreview
+    ? imagePreview
+    : "/default_avatar.png";
+  const isInitialPath = imagePreview?.includes("public");
   const imagePreviewPath =
-    imagePreview && imagePreview.includes("public")
+    imagePreview && isInitialPath
       ? `/${imagePreview.split("\\").slice(1).join("/")}`
       : defaultImagePreviewPath;
 
@@ -34,6 +40,7 @@ const FileUploadField = ({ name, register, onChange, imagePreview, error }) => {
           border="1px solid"
           borderColor="gray.400"
           borderRadius={5}
+          cursor="pointer"
         >
           {imagePreview ? (
             <IconButton
@@ -46,6 +53,7 @@ const FileUploadField = ({ name, register, onChange, imagePreview, error }) => {
               size="xs"
               aria-label="delete avatar"
               zIndex={2}
+              cursor="pointer"
             >
               Remove Image
             </IconButton>
@@ -57,14 +65,10 @@ const FileUploadField = ({ name, register, onChange, imagePreview, error }) => {
               top="45px"
               left="55px"
               opacity={0.7}
+              cursor="pointer"
             />
           )}
-          <NextImage
-            width={150}
-            height={150}
-            src={imagePreviewPath}
-            alt="Preview"
-          />
+          <Img src={imagePreviewPath} alt="Preview" cursor="pointer" />
           <input
             {...register(name)}
             type="file"

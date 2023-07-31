@@ -21,6 +21,7 @@ import {
   transformProjectsToSearch,
   transformTechnologiesToSelect,
 } from "@/helpers/transformData";
+import { scrollToTop } from "@/helpers/scrollTo";
 
 import ProjectForm from "@/components/ProjectForm/ProjectForm";
 import SearchBox from "@/components/Sidebar/components/SearchBox";
@@ -49,6 +50,7 @@ const ProjectBlock = ({ technologies, projects }) => {
     const selectedItem = projects.find((item) => item.id === selectedId);
     const technologyList = intersectTechnologies(selectedItem, technologies);
 
+    scrollToTop();
     setSelectedProject({
       ...selectedItem,
       technologyStack: transformTechnologiesToSelect(technologyList),
@@ -61,9 +63,9 @@ const ProjectBlock = ({ technologies, projects }) => {
 
   return (
     <Tabs variant="enclosed" isFitted>
-      <TabList>
+      <TabList mb={5}>
         <Tab fontWeight={600}>Create</Tab>
-        <Tab fontWeight={600}>Update</Tab>
+        <Tab fontWeight={600}>Observe</Tab>
       </TabList>
 
       <TabPanels>
@@ -72,6 +74,10 @@ const ProjectBlock = ({ technologies, projects }) => {
         </TabPanel>
 
         <TabPanel>
+          <Text fontWeight={500} mb={4}>
+            Select project for update:
+          </Text>
+
           <SearchBox
             formattedData={formattedData}
             handleSelect={handleSelect}
@@ -123,21 +129,27 @@ const ProjectBlock = ({ technologies, projects }) => {
                     <Td>
                       <Flex gap={2}>
                         {getTechnologyNames(project, technologies).map(
-                          (technology) => (
-                            <Text
-                              key={technology.id}
-                              width="fit-content"
-                              fontFamily="Share Tech Mono"
-                              px={2}
-                              border="1px solid"
-                              borderColor="blue.600"
-                              borderRadius={5}
-                              background="gray.50"
-                              color="blue.800"
-                            >
-                              {technology.name}
-                            </Text>
-                          ),
+                          (technology, index) => {
+                            if (!technology) {
+                              return <div key={technology?.id + index} />;
+                            }
+
+                            return (
+                              <Text
+                                key={technology.id}
+                                width="fit-content"
+                                fontFamily="Share Tech Mono"
+                                px={2}
+                                border="1px solid"
+                                borderColor="blue.600"
+                                borderRadius={5}
+                                background="gray.50"
+                                color="blue.800"
+                              >
+                                {technology?.name}
+                              </Text>
+                            );
+                          },
                         )}
                       </Flex>
                     </Td>

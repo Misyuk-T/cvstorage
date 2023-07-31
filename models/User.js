@@ -156,7 +156,7 @@ module.exports = {
         cvType,
         grade,
         workDirection,
-        isEnabled ? 1 : 0,
+        isEnabled === "true" ? 1 : 0,
         now,
         id,
         (err) => {

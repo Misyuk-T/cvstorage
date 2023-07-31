@@ -22,12 +22,6 @@ const getIntersectedTechnology = (id, technologies) => {
   return technologies.find((item) => item.id === +id);
 };
 
-const labelStyles = {
-  mt: "2",
-  ml: "-2.5",
-  fontSize: "sm",
-};
-
 const UserTechnologyStackField = ({
   control,
   setValue,
@@ -48,6 +42,7 @@ const UserTechnologyStackField = ({
   const [selectedTechnology, setSelectedTechnology] = useState(formattedData);
 
   const formattedOptions = transformTechnologiesToSelect(technologies);
+  const isClientSide = typeof window !== "undefined";
 
   const handleTechnologySelect = (selectedOption) => {
     setSelectedTechnology(selectedOption);
@@ -66,7 +61,7 @@ const UserTechnologyStackField = ({
     <FormControl
       id={`technologyStack[${index}]`}
       isInvalid={errors?.technology?.[index]}
-      mb={4}
+      width="48%"
     >
       <Flex gap={3}>
         <Stack w="100%" gap={3}>
@@ -77,6 +72,7 @@ const UserTechnologyStackField = ({
             render={({ field }) => (
               <Select
                 {...field}
+                instanceId="technologiesSelect"
                 options={formattedOptions}
                 value={selectedTechnology}
                 onChange={(selectedOption) =>
@@ -84,8 +80,18 @@ const UserTechnologyStackField = ({
                 }
                 isClearable
                 placeholder="Select a technology"
-                menuPortalTarget={document.body}
-                styles={{ menuPortal: (base) => ({ ...base, zIndex: 100 }) }}
+                menuPortalTarget={isClientSide && document.body}
+                styles={{
+                  menuPortal: (base) => ({ ...base, zIndex: 100 }),
+                  option: (styles) => ({
+                    ...styles,
+                    cursor: "pointer",
+                  }),
+                  control: (styles) => ({
+                    ...styles,
+                    cursor: "pointer",
+                  }),
+                }}
               />
             )}
           />

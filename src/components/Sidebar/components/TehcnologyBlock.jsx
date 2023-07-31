@@ -10,6 +10,7 @@ import {
   Flex,
 } from "@chakra-ui/react";
 
+import { scrollToTop } from "@/helpers/scrollTo";
 import { transformTechnologiesToSearch } from "@/helpers/transformData";
 
 import TechnologyForm from "@/components/TechnologyForm/TechnologyForm";
@@ -29,6 +30,7 @@ const TechnologyBlock = ({ technologies }) => {
       (item) => item.id === selectedId,
     );
 
+    scrollToTop();
     setSelectedTechnology(selectedTechnology);
   };
 
@@ -38,9 +40,9 @@ const TechnologyBlock = ({ technologies }) => {
 
   return (
     <Tabs variant="enclosed" isFitted>
-      <TabList>
+      <TabList mb={5}>
         <Tab fontWeight={600}>Create</Tab>
-        <Tab fontWeight={600}>Update</Tab>
+        <Tab fontWeight={600}>Observe</Tab>
       </TabList>
 
       <TabPanels>
@@ -97,7 +99,7 @@ const TechnologyBlock = ({ technologies }) => {
                       background: "gray.100",
                     }}
                   >
-                    {technology.name}
+                    {technology?.name}
                   </Text>
                 );
               })}

@@ -1,32 +1,31 @@
 import { useState } from "react";
 import {
+  Box,
   Tab,
-  Table,
   TabList,
   TabPanel,
   TabPanels,
   Tabs,
-  Tbody,
-  Td,
   Text,
-  Th,
-  Thead,
-  Tr,
 } from "@chakra-ui/react";
 
+import { scrollToTop } from "@/helpers/scrollTo";
+import { transformUserToSearch } from "@/helpers/transformData";
+
 import UserForm from "@/components/UserForm/UserForm";
+import SearchBox from "@/components/Sidebar/components/SearchBox";
+import UserList from "@/components/Sidebar/components/UserList";
 
 const UsersBlock = ({ technologies, projects, users }) => {
   const [selectedUser, setSelectedUser] = useState(null);
 
-  // console.log(technologies, projects, "here");
-  // console.log(users, "users");
-  console.log(selectedUser, "selectedUser");
+  const formattedData = transformUserToSearch(users);
 
   const handleSelect = (value, id = "") => {
-    const selectedId = id || +value.item.key;
+    const selectedId = id || +value?.item.key;
     const selectedItem = users.find((item) => item.id === selectedId);
 
+    scrollToTop();
     setSelectedUser(selectedItem);
   };
 
@@ -36,7 +35,7 @@ const UsersBlock = ({ technologies, projects, users }) => {
 
   return (
     <Tabs variant="enclosed" isFitted>
-      <TabList>
+      <TabList mb={5}>
         <Tab fontWeight={600}>Create</Tab>
         <Tab fontWeight={600}>Observe</Tab>
       </TabList>
@@ -47,48 +46,34 @@ const UsersBlock = ({ technologies, projects, users }) => {
         </TabPanel>
 
         <TabPanel>
-          {selectedUser && (
-            <UserForm
-              technologies={technologies}
-              projects={projects}
-              initialValues={selectedUser}
-            />
-          )}
+          <Text fontWeight={500} mb={4}>
+            Select user for update:
+          </Text>
 
-          <Table variant="simple">
-            <Thead>
-              <Tr fontWeight={600}>
-                <Th>User Name</Th>
-                <Th>Email</Th>
-                <Th isNumeric>Position</Th>
-              </Tr>
-            </Thead>
-            <Tbody fontSize={14}>
-              {users.map((user) => (
-                <Tr
-                  key={user.id}
-                  onClick={() => handleSelect(null, user.id)}
-                  cursor="pointer"
-                  sx={{
-                    transition: "background .2s",
-                  }}
-                  _hover={{
-                    background: "gray.200",
-                  }}
-                >
-                  <Td fontWeight={500}>
-                    <Text fontFamily="Roboto Slab">{user.name}</Text>
-                  </Td>
-                  <Td>
-                    <Text fontFamily="Roboto Slab">{user.email}</Text>
-                  </Td>
-                  <Td isNumeric>
-                    <Text fontFamily="Roboto Slab">{user.position}</Text>
-                  </Td>
-                </Tr>
-              ))}
-            </Tbody>
-          </Table>
+          <Box mb={8}>
+            <SearchBox
+              formattedData={formattedData}
+              handleSelect={handleSelect}
+            />
+          </Box>
+
+          <UserList
+            users={users}
+            onCloseForm={handleClose}
+            onSelect={handleSelect}
+            selectedUser={selectedUser}
+          />
+
+          {selectedUser && (
+            <Box my={5}>
+              <UserForm
+                onComplete={handleClose}
+                technologies={technologies}
+                projects={projects}
+                initialValues={selectedUser}
+              />
+            </Box>
+          )}
         </TabPanel>
       </TabPanels>
     </Tabs>

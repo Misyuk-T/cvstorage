@@ -42,7 +42,7 @@ const handler = async (req, res) => {
         } = fields;
         const mediaFile = files?.media;
         const absolutePath =
-          (mediaFile && mediaFile[0]?.filepath) || "assets/default_avatar.png";
+          (mediaFile && mediaFile[0]?.filepath) || "public/default_avatar.png";
         const workingDirectory = process.cwd();
         const relativePath = path.relative(workingDirectory, absolutePath);
 

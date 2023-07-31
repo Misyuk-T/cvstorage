@@ -19,7 +19,7 @@ const SearchBox = ({ formattedData, handleSelect }) => {
       }}
     >
       <ReactSearchBox
-        placeholder="Search by technology name..."
+        placeholder="Search by name..."
         data={formattedData}
         onSelect={handleSelect}
         inputHeight="40px"

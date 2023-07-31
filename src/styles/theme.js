@@ -18,6 +18,10 @@ const theme = extendTheme({
         body: {
           fontFamily: "Poppins",
         },
+
+        ".rcs-inner-handle": {
+          backgroundColor: "gray.400 !important",
+        },
       },
     },
   },

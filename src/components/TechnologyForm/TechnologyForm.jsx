@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
-import { Button, Stack, Box, Flex } from "@chakra-ui/react";
+import { Button, Stack, Flex } from "@chakra-ui/react";
 
 import {
   createTechnology,
@@ -15,7 +15,6 @@ import FormField from "@/components/UserForm/components/FormField";
 
 const TechnologyForm = ({ initialValues, onComplete }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
 
   const {
     register,
@@ -29,7 +28,6 @@ const TechnologyForm = ({ initialValues, onComplete }) => {
 
   const onSubmitForm = async (data) => {
     setIsLoading(true);
-    setError(null);
 
     try {
       if (initialValues) {
@@ -42,13 +40,11 @@ const TechnologyForm = ({ initialValues, onComplete }) => {
       reset();
     } catch (error) {
       setIsLoading(false);
-      setError(error.message);
     }
   };
 
   const handleDelete = async () => {
     setIsLoading(true);
-    setError(null);
 
     try {
       await deleteTechnology(initialValues.id);
@@ -57,7 +53,6 @@ const TechnologyForm = ({ initialValues, onComplete }) => {
       onComplete && onComplete();
     } catch (error) {
       setIsLoading(false);
-      setError(error.message);
     }
   };
 
@@ -75,7 +70,7 @@ const TechnologyForm = ({ initialValues, onComplete }) => {
           label="Technology Name"
           register={register}
           errors={errors}
-          placeHolder="React development"
+          placeHolder="Name"
           isRequired
         />
 
@@ -93,6 +88,7 @@ const TechnologyForm = ({ initialValues, onComplete }) => {
 
           <Button
             type="submit"
+            colorScheme="green"
             isDisabled={!isValid || !isDirty}
             isLoading={isLoading}
             loadingText="Submitting"
@@ -100,12 +96,6 @@ const TechnologyForm = ({ initialValues, onComplete }) => {
             {initialValues ? "Update Technology" : "Create Technology"}
           </Button>
         </Flex>
-
-        {error && (
-          <Box color="red.500" mt={4}>
-            {error}
-          </Box>
-        )}
       </Stack>
     </form>
   );

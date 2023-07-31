@@ -15,6 +15,7 @@ const ReactSelectField = ({
     field: { value, onChange, onBlur },
     fieldState: { error },
   } = useController({ control, name, defaultValue });
+  const isClientSide = typeof window !== "undefined";
 
   return (
     <FormControl id={name} isInvalid={!!error} isRequired>
@@ -22,11 +23,22 @@ const ReactSelectField = ({
       <Select
         name={name}
         options={options}
+        instanceId={`id${name}`}
         value={options.find((option) => option.value === value)}
         onChange={(selectedOption) => onChange(selectedOption.value)}
         onBlur={onBlur}
-        menuPortalTarget={document.body}
-        styles={{ menuPortal: (base) => ({ ...base, zIndex: 100 }) }}
+        menuPortalTarget={isClientSide && document.body}
+        styles={{
+          menuPortal: (base) => ({ ...base, zIndex: 100 }),
+          option: (styles) => ({
+            ...styles,
+            cursor: "pointer",
+          }),
+          control: (styles) => ({
+            ...styles,
+            cursor: "pointer",
+          }),
+        }}
       />
       {error && <FormErrorMessage>{error.message}</FormErrorMessage>}
     </FormControl>

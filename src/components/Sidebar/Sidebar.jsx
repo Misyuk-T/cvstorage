@@ -12,7 +12,7 @@ const TABS = [
 ];
 
 const Sidebar = ({ technologies, users, projects }) => {
-  const [selectedTab, setSelectedTab] = useState("technologies");
+  const [selectedTab, setSelectedTab] = useState("");
 
   const handleClick = (tab) => () => {
     setSelectedTab(tab);
@@ -20,7 +20,11 @@ const Sidebar = ({ technologies, users, projects }) => {
 
   const renderBlock = () => {
     switch (selectedTab) {
-      case "users":
+      case "projects":
+        return <ProjectBlock projects={projects} technologies={technologies} />;
+      case "technologies":
+        return <TechnologyBlock technologies={technologies} />;
+      default:
         return (
           <UsersBlock
             users={users}
@@ -28,11 +32,6 @@ const Sidebar = ({ technologies, users, projects }) => {
             technologies={technologies}
           />
         );
-      case "projects":
-        return <ProjectBlock projects={projects} technologies={technologies} />;
-      case "technologies":
-      default:
-        return <TechnologyBlock technologies={technologies} />;
     }
   };
 
@@ -44,6 +43,8 @@ const Sidebar = ({ technologies, users, projects }) => {
         p="4"
         borderRight="1px"
         borderColor="gray.300"
+        position="fixed"
+        height="100vh"
       >
         <VStack
           spacing="4"
@@ -51,7 +52,7 @@ const Sidebar = ({ technologies, users, projects }) => {
           justifyContent="center"
           textAlign="center"
         >
-          <Text fontWeight="bold" width="100%">
+          <Text fontWeight="bold" fontSize="20" width="100%" mb={3}>
             Dashboard
           </Text>
 
@@ -64,6 +65,8 @@ const Sidebar = ({ technologies, users, projects }) => {
               _hover={{
                 background: "gray.50",
               }}
+              border="1px solid"
+              borderColor="gray.400"
             >
               {tab.label}
             </Button>
@@ -71,7 +74,7 @@ const Sidebar = ({ technologies, users, projects }) => {
         </VStack>
       </Box>
 
-      <Box flex="1" py={6}>
+      <Box flex="1" my={6} ml="250px">
         {renderBlock()}
       </Box>
     </Flex>

@@ -16,7 +16,6 @@ import TechnologyField from "./components/TechnologyField";
 
 const ProjectForm = ({ initialValues, technologies, onComplete }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
 
   const {
     register,
@@ -31,7 +30,6 @@ const ProjectForm = ({ initialValues, technologies, onComplete }) => {
 
   const onSubmit = async (data) => {
     setIsLoading(true);
-    setError(null);
 
     const transformedTechnologies = data.technologyStack.map(
       (technology) => technology.value,
@@ -41,34 +39,25 @@ const ProjectForm = ({ initialValues, technologies, onComplete }) => {
       technologyStack: transformedTechnologies,
     };
 
-    try {
-      if (initialValues) {
-        await updateProject(initialValues.id, updatedData);
-      } else {
-        await createProject(updatedData);
-      }
-      onComplete && onComplete();
-      reset();
-    } catch (error) {
-      setError(error.message);
+    if (initialValues) {
+      await updateProject(initialValues.id, updatedData);
+    } else {
+      await createProject(updatedData);
     }
 
+    onComplete && onComplete();
+    reset();
     setIsLoading(false);
   };
 
   const handleDelete = async () => {
     setIsLoading(true);
-    setError(null);
 
-    try {
-      await deleteProject(initialValues.id);
-      setIsLoading(false);
-      reset();
-      onComplete && onComplete();
-    } catch (error) {
-      setIsLoading(false);
-      setError(error.message);
-    }
+    await deleteProject(initialValues.id);
+    reset();
+    onComplete && onComplete();
+
+    setIsLoading(false);
   };
 
   useEffect(() => {
@@ -84,6 +73,7 @@ const ProjectForm = ({ initialValues, technologies, onComplete }) => {
           name="projectName"
           label="Project Name"
           register={register}
+          placeHolder="Name"
           errors={errors}
           isRequired
         />
@@ -96,10 +86,11 @@ const ProjectForm = ({ initialValues, technologies, onComplete }) => {
 
         <FormField
           name="description"
-          label="Description"
+          label="Project Description"
           register={register}
           errors={errors}
           isTextarea={true}
+          placeHolder="Description"
           isRequired
         />
       </Stack>
@@ -112,7 +103,7 @@ const ProjectForm = ({ initialValues, technologies, onComplete }) => {
             variant="outline"
             isLoading={isLoading}
           >
-            Delete Technology
+            Delete Project
           </Button>
         )}
 
@@ -121,16 +112,11 @@ const ProjectForm = ({ initialValues, technologies, onComplete }) => {
           type="submit"
           isLoading={isLoading}
           loadingText="Creating"
+          colorScheme="green"
         >
           {initialValues ? "Update Project" : "Create Project"}
         </Button>
       </Flex>
-
-      {error && (
-        <Box color="red.500" mt={4}>
-          {error}
-        </Box>
-      )}
     </Box>
   );
 };

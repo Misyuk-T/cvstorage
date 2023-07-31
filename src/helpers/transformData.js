@@ -25,3 +25,10 @@ export const transformProjectsToSelect = (data) => {
     value: item.id.toString(),
   }));
 };
+
+export const transformUserToSearch = (data) => {
+  return data.map((item) => ({
+    value: item.name,
+    key: item.id.toString(),
+  }));
+};

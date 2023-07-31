@@ -53,11 +53,10 @@ const schema = yup.object().shape({
         // If the value is empty, it's not a valid media.
         return false;
       }
-      console.log(value);
 
-      if (type === "object") {
+      if (type === "object" && type) {
         // Get the file size in bytes from the 'size' property of the file object.
-        const fileSizeInBytes = value[0].size;
+        const fileSizeInBytes = value[0]?.size;
 
         // Define the maximum size in bytes (4MB).
         const maxFileSizeInBytes = 4 * 1024 * 1024;

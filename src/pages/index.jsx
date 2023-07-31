@@ -1,7 +1,3 @@
-import { ChakraProvider } from "@chakra-ui/react";
-
-import theme from "src/styles/theme";
-
 import { getAllTechnologies } from "@/actions/technologies";
 import { getAllUsers } from "@/actions/user";
 import { getAllProjects } from "@/actions/projects";
@@ -14,9 +10,7 @@ const Home = ({ technologies, users, projects }) => {
   console.log("Projects:", projects);
 
   return (
-    <ChakraProvider theme={theme}>
-      <Sidebar technologies={technologies} users={users} projects={projects} />
-    </ChakraProvider>
+    <Sidebar technologies={technologies} users={users} projects={projects} />
   );
 };
 
