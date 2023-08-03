@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import {
   Box,
   Tab,
@@ -83,15 +83,17 @@ const ProjectBlock = ({ technologies, projects }) => {
           background: isSelected ? "red.100" : "gray.200",
         }}
       >
-        <Td fontWeight={500}>
-          <Text fontFamily="Roboto Slab">{project.projectName}</Text>
+        <Td>
+          <Text fontFamily="Roboto Slab" fontWeight={600}>
+            {project.projectName}
+          </Text>
         </Td>
         <Td>
           <Flex gap={2}>
             {getTechnologyNames(project, technologies).map(
               (technology, index) => {
                 if (!technology) {
-                  return <div key={technology?.id + index} />;
+                  return <React.Fragment key={index} />;
                 }
 
                 return (

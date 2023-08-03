@@ -20,18 +20,18 @@ const handler = async (req, res) => {
       break;
 
     case "PUT":
-      const newName = req.body.name;
+      const { name, type } = req.body;
 
-      if (newName) {
+      if (name && type) {
         try {
-          await Technologies.update(id, newName);
+          await Technologies.update(id, name, type);
           res.status(200).json({ message: "Technology updated successfully" });
         } catch (error) {
           console.error("Error updating technology:", error.message);
           res.status(500).json({ error: "Internal Server Error" });
         }
       } else {
-        res.status(400).json({ error: "New name is required" });
+        res.status(400).json({ error: "Name and type are required" });
       }
       break;
 

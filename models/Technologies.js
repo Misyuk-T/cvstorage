@@ -5,7 +5,8 @@ module.exports = {
     db.run(`
       CREATE TABLE IF NOT EXISTS technologies (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT
+        name TEXT,
+        type TEXT
       )
     `);
   },
@@ -36,10 +37,12 @@ module.exports = {
     });
   },
 
-  create: (name) => {
+  create: (name, type) => {
     return new Promise((resolve, reject) => {
-      const stmt = db.prepare("INSERT INTO technologies (name) VALUES (?)");
-      stmt.run(name, (err) => {
+      const stmt = db.prepare(
+        "INSERT INTO technologies (name, type) VALUES (?, ?)",
+      );
+      stmt.run(name, type, (err) => {
         if (err) {
           reject(err);
         } else {
@@ -64,10 +67,12 @@ module.exports = {
     });
   },
 
-  update: (id, newName) => {
+  update: (id, name, type) => {
     return new Promise((resolve, reject) => {
-      const stmt = db.prepare("UPDATE technologies SET name = ? WHERE id = ?");
-      stmt.run(newName, id, (err) => {
+      const stmt = db.prepare(
+        "UPDATE technologies SET name = ?, type = ? WHERE id = ?",
+      );
+      stmt.run(name, type, id, (err) => {
         if (err) {
           reject(err);
         } else {

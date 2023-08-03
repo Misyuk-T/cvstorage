@@ -24,3 +24,9 @@ export const workDirectionOptions = [
   { value: "designer", label: "Designer" },
   { value: "other", label: "Other" },
 ];
+
+export const technologyTypes = [
+  { value: "hardSkill", label: "Hard Skill" },
+  { value: "softSkill", label: "Soft Skill" },
+  { value: "language", label: "Language" },
+];

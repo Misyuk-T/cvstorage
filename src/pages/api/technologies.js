@@ -11,18 +11,18 @@ const handler = async (req, res) => {
 
   switch (method) {
     case "POST":
-      const name = body.name;
+      const { name, type } = body;
 
-      if (name) {
+      if (name && type) {
         try {
-          await Technologies.create(name);
+          await Technologies.create(name, type);
           res.status(201).json({ message: "Technology created successfully" });
         } catch (error) {
           console.error("Error creating technology:", error.message);
           res.status(500).json({ error: "Internal Server Error" });
         }
       } else {
-        res.status(400).json({ error: "Name is required" });
+        res.status(400).json({ error: "Name and type are required" });
       }
       break;
 

@@ -1,3 +1,4 @@
+import React from "react";
 import { useState } from "react";
 import {
   Box,
@@ -15,23 +16,35 @@ import { transformTechnologiesToSearch } from "@/helpers/transformData";
 
 import TechnologyForm from "@/components/TechnologyForm/TechnologyForm";
 import SearchBox from "@/components/Sidebar/components/SearchBox";
+import TechnologyItem from "@/components/Sidebar/components/TechnologyItem";
 
 const TechnologyBlock = ({ technologies }) => {
   const [selectedTechnology, setSelectedTechnology] = useState(null);
 
   const formattedData = transformTechnologiesToSearch(technologies);
-  const sortedTechnologies = technologies.sort((a, b) =>
-    a.name.localeCompare(b.name),
-  );
 
-  const handleSelect = (value) => {
-    const selectedId = +value.item.key;
-    const selectedTechnology = technologies.find(
-      (item) => item.id === selectedId,
-    );
+  const sortedTechnologies = technologies.slice().sort((a, b) => {
+    if (a.type !== b.type) {
+      return a.type.localeCompare(b.type);
+    }
+
+    return a.name.localeCompare(b.name);
+  });
+
+  const handleClick = (value) => {
+    console.log(value);
+    if (selectedTechnology && !value) {
+      setSelectedTechnology(null);
+    } else {
+      const selectedId = value.id || +value.item.key;
+      const selectedTechnology = technologies.find(
+        (item) => item.id === selectedId,
+      );
+
+      setSelectedTechnology(selectedTechnology);
+    }
 
     scrollToTop();
-    setSelectedTechnology(selectedTechnology);
   };
 
   const handleClose = () => {
@@ -58,8 +71,27 @@ const TechnologyBlock = ({ technologies }) => {
 
             <SearchBox
               formattedData={formattedData}
-              handleSelect={handleSelect}
+              handleSelect={handleClick}
             />
+
+            <Flex mt={5} flexWrap="wrap">
+              {selectedTechnology ? (
+                <TechnologyItem
+                  technology={selectedTechnology}
+                  onClick={() => handleClick(null)}
+                  isActive={selectedTechnology}
+                />
+              ) : (
+                sortedTechnologies.map((technology) => (
+                  <TechnologyItem
+                    key={technology.id}
+                    technology={technology}
+                    onClick={() => handleClick(technology)}
+                    isActive={selectedTechnology}
+                  />
+                ))
+              )}
+            </Flex>
 
             {selectedTechnology && (
               <Box
@@ -75,35 +107,6 @@ const TechnologyBlock = ({ technologies }) => {
                 />
               </Box>
             )}
-
-            <Flex mt={5} flexWrap={"wrap"}>
-              {sortedTechnologies.map((technology) => {
-                const isActive = technology.id === selectedTechnology?.id;
-
-                return (
-                  <Text
-                    key={technology.id}
-                    onClick={() => setSelectedTechnology(technology)}
-                    cursor="pointer"
-                    my={1}
-                    mx={2}
-                    px={2}
-                    width="fit-content"
-                    fontFamily="Share Tech Mono"
-                    border="1px solid"
-                    borderColor="blue.600"
-                    borderRadius={5}
-                    color="blue.800"
-                    background={isActive ? "gray.50" : "transparent"}
-                    _hover={{
-                      background: "gray.100",
-                    }}
-                  >
-                    {technology?.name}
-                  </Text>
-                );
-              })}
-            </Flex>
           </Box>
         </TabPanel>
       </TabPanels>

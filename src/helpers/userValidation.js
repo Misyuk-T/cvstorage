@@ -37,6 +37,7 @@ const schema = yup.object().shape({
   projects: yup.array().of(
     yup.object().shape({
       projectId: yup.string().required("Project ID is required"),
+      role: yup.string().required("Project ID is required"),
       achievements: yup.string().required("Achievements is required"),
     }),
   ),

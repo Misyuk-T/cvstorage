@@ -22,10 +22,11 @@ export const getAllTechnologies = async () => {
   }
 };
 
-export const updateTechnology = async (technologyId, newName) => {
+export const updateTechnology = async (id, name, type) => {
   try {
-    const response = await axios.put(`${BASE_URL}/${technologyId}`, {
-      name: newName,
+    const response = await axios.put(`${BASE_URL}/${id}`, {
+      name,
+      type,
     });
     return response.data;
   } catch (error) {

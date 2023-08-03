@@ -14,6 +14,10 @@ const TABS = [
 const Sidebar = ({ technologies, users, projects }) => {
   const [selectedTab, setSelectedTab] = useState("");
 
+  const hardTypeTechnologies = technologies.filter(
+    (item) => item.type === "hardSkill",
+  );
+
   const handleClick = (tab) => () => {
     setSelectedTab(tab);
   };
@@ -21,7 +25,12 @@ const Sidebar = ({ technologies, users, projects }) => {
   const renderBlock = () => {
     switch (selectedTab) {
       case "projects":
-        return <ProjectBlock projects={projects} technologies={technologies} />;
+        return (
+          <ProjectBlock
+            projects={projects}
+            technologies={hardTypeTechnologies}
+          />
+        );
       case "technologies":
         return <TechnologyBlock technologies={technologies} />;
       default:

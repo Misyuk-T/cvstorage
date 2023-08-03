@@ -1,3 +1,4 @@
+import React from "react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -10,17 +11,25 @@ import {
   deleteTechnology,
 } from "@/actions/technologies";
 import schema from "@/helpers/technologyValidation";
+import { technologyTypes } from "@/helpers/constants";
 
 import FormField from "@/components/UserForm/components/FormField";
+import ReactSelectField from "@/components/UserForm/components/ReactSelectField";
 
-const TechnologyForm = ({ initialValues, onComplete }) => {
+const defaultValues = {
+  name: "",
+  type: "hardSkill",
+};
+
+const TechnologyForm = ({ initialValues = defaultValues, onComplete }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const {
-    register,
+    control,
     handleSubmit,
     formState: { errors, isValid, isDirty },
     reset,
+    register,
   } = useForm({
     resolver: yupResolver(schema),
     defaultValues: initialValues || {},
@@ -30,14 +39,16 @@ const TechnologyForm = ({ initialValues, onComplete }) => {
     setIsLoading(true);
 
     try {
-      if (initialValues) {
-        await updateTechnology(initialValues.id, data.name);
+      const { name, type } = data;
+
+      if (initialValues.id) {
+        await updateTechnology(initialValues.id, name, type);
       } else {
-        await createTechnology(data);
+        await createTechnology({ name, type });
       }
       onComplete && onComplete();
       setIsLoading(false);
-      reset();
+      reset(defaultValues);
     } catch (error) {
       setIsLoading(false);
     }
@@ -65,14 +76,25 @@ const TechnologyForm = ({ initialValues, onComplete }) => {
   return (
     <form onSubmit={handleSubmit(onSubmitForm)}>
       <Stack spacing={4}>
-        <FormField
-          name="name"
-          label="Technology Name"
-          register={register}
-          errors={errors}
-          placeHolder="Name"
-          isRequired
-        />
+        <Flex gap={5}>
+          <FormField
+            name="name"
+            label="Technology Name"
+            register={register}
+            errors={errors}
+            placeHolder="Name"
+            isRequired
+          />
+
+          <ReactSelectField
+            name="type"
+            label="Technology Type"
+            control={control}
+            errors={errors}
+            options={technologyTypes}
+            isRequired
+          />
+        </Flex>
 
         <Flex gap={10} justifyContent="flex-end">
           {initialValues && (
@@ -93,7 +115,7 @@ const TechnologyForm = ({ initialValues, onComplete }) => {
             isLoading={isLoading}
             loadingText="Submitting"
           >
-            {initialValues ? "Update Technology" : "Create Technology"}
+            {initialValues.id ? "Update Technology" : "Create Technology"}
           </Button>
         </Flex>
       </Stack>

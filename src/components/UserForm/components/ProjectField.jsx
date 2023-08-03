@@ -9,6 +9,8 @@ import {
   Stack,
   IconButton,
   Text,
+  Input,
+  Box,
 } from "@chakra-ui/react";
 import { DeleteIcon } from "@chakra-ui/icons";
 
@@ -56,23 +58,34 @@ const ProjectField = ({
     >
       <Flex gap={3}>
         <Stack w="100%" gap={3}>
-          <Controller
-            name={`projects[${index}].projectId`}
-            control={control}
-            defaultValue=""
-            render={({ field }) => (
-              <Select
-                {...field}
-                options={formattedOptions}
-                value={selectedProject}
-                onChange={(selectedOption) =>
-                  handleProjectSelect(selectedOption)
-                }
-                isClearable
-                placeholder="Select a project"
+          <Flex gap={5}>
+            <Box width="140%">
+              <Controller
+                name={`projects[${index}].projectId`}
+                control={control}
+                defaultValue=""
+                render={({ field }) => (
+                  <Select
+                    {...field}
+                    options={formattedOptions}
+                    value={selectedProject}
+                    onChange={(selectedOption) =>
+                      handleProjectSelect(selectedOption)
+                    }
+                    isClearable
+                    placeholder="Select a project"
+                  />
+                )}
               />
-            )}
-          />
+            </Box>
+
+            <Input
+              {...register(`projects[${index}].role`)}
+              placeholder="User Role"
+              isRequired
+              defaultValue={selectedProject?.role}
+            />
+          </Flex>
 
           <Textarea
             {...register(`projects[${index}].achievements`)}

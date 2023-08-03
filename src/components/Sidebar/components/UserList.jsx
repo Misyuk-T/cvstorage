@@ -13,7 +13,6 @@ import {
   Text,
   Table,
   Box,
-  Heading,
 } from "@chakra-ui/react";
 
 import { workDirectionOptions } from "@/helpers/constants";
@@ -57,7 +56,7 @@ const UserList = ({ users, onCloseForm, onSelect, selectedUser }) => {
         }}
       >
         <Td>
-          <Text fontWeight="500" fontSize="16px" fontFamily="Roboto Slab">
+          <Text fontWeight="600" fontSize="16px" fontFamily="Roboto Slab">
             {user.name}
           </Text>
         </Td>
@@ -99,29 +98,19 @@ const UserList = ({ users, onCloseForm, onSelect, selectedUser }) => {
             <Thead>
               <Tr>
                 <Th>
-                  <Text fontWeight="900" fontSize="14px">
-                    User Name
-                  </Text>
+                  <Text fontSize="14px">User Name</Text>
                 </Th>
                 <Th>
-                  <Text fontWeight="900" fontSize="14px">
-                    Grade
-                  </Text>
+                  <Text fontSize="14px">Grade</Text>
                 </Th>
                 <Th>
-                  <Text fontWeight="900" fontSize="14px">
-                    CV Type
-                  </Text>
+                  <Text fontSize="14px">CV Type</Text>
                 </Th>
                 <Th>
-                  <Text fontWeight="900" fontSize="14px">
-                    Last Updated
-                  </Text>
+                  <Text fontSize="14px">Last Updated</Text>
                 </Th>
                 <Th>
-                  <Text fontWeight="900" fontSize="14px">
-                    Active
-                  </Text>
+                  <Text fontSize="14px">Active</Text>
                 </Th>
               </Tr>
             </Thead>
@@ -129,18 +118,14 @@ const UserList = ({ users, onCloseForm, onSelect, selectedUser }) => {
               {selectedUser
                 ? renderUserInformation(selectedUser)
                 : users.map((user) => renderUserInformation(user))}
-
-              {!users.length && (
-                <Tr>
-                  <Td border="none">
-                    <Heading fontSize="xl" textAlign="center">
-                      Empty Results...
-                    </Heading>
-                  </Td>
-                </Tr>
-              )}
             </Tbody>
           </Table>
+
+          {!users.length && (
+            <Text fontSize="xl" textAlign="center" mt={10}>
+              Empty Results...
+            </Text>
+          )}
         </TabPanel>
 
         {usersByWorkDirection.map((usersInDirection, index) => (
@@ -149,29 +134,19 @@ const UserList = ({ users, onCloseForm, onSelect, selectedUser }) => {
               <Thead>
                 <Tr>
                   <Th>
-                    <Text fontWeight="900" fontSize="14px">
-                      User Name
-                    </Text>
+                    <Text fontSize="14px">User Name</Text>
                   </Th>
                   <Th>
-                    <Text fontWeight="900" fontSize="14px">
-                      Grade
-                    </Text>
+                    <Text fontSize="14px">Grade</Text>
                   </Th>
                   <Th>
-                    <Text fontWeight="900" fontSize="14px">
-                      CV Type
-                    </Text>
+                    <Text fontSize="14px">CV Type</Text>
                   </Th>
                   <Th>
-                    <Text fontWeight="900" fontSize="14px">
-                      Last Updated
-                    </Text>
+                    <Text fontSize="14px">Last Updated</Text>
                   </Th>
                   <Th>
-                    <Text fontWeight="900" fontSize="14px">
-                      Active
-                    </Text>
+                    <Text fontSize="14px">Active</Text>
                   </Th>
                 </Tr>
               </Thead>
@@ -179,18 +154,14 @@ const UserList = ({ users, onCloseForm, onSelect, selectedUser }) => {
                 {selectedUser
                   ? renderUserInformation(selectedUser)
                   : usersInDirection.map((user) => renderUserInformation(user))}
-
-                {!usersInDirection.length && (
-                  <Tr>
-                    <Td border="none">
-                      <Heading fontSize="xl" textAlign="center">
-                        Empty Results...
-                      </Heading>
-                    </Td>
-                  </Tr>
-                )}
               </Tbody>
             </Table>
+
+            {!usersInDirection.length && (
+              <Text fontSize="xl" textAlign="center" mt={10}>
+                Empty Results...
+              </Text>
+            )}
           </TabPanel>
         ))}
       </TabPanels>
