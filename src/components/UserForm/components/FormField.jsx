@@ -14,6 +14,7 @@ const FormField = ({
   placeHolder,
   isTextarea = false,
   isRequired,
+  type = "text",
 }) => {
   return (
     <FormControl
@@ -25,14 +26,14 @@ const FormField = ({
       {isTextarea ? (
         <Textarea
           placeholder={placeHolder}
-          type="text"
+          type={type}
           name={name}
           resize="block"
           {...register(name)}
         />
       ) : (
         <Input
-          type="text"
+          type={type}
           placeholder={placeHolder}
           name={name}
           {...register(name)}

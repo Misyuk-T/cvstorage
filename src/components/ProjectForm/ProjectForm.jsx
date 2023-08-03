@@ -2,7 +2,15 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
-import { Box, Button, Flex, Stack } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  FormControl,
+  FormLabel,
+  Stack,
+  Switch,
+} from "@chakra-ui/react";
 
 import {
   createProject,
@@ -14,6 +22,15 @@ import schema from "@/helpers/projectValidation";
 import FormField from "@/components/UserForm/components/FormField";
 import TechnologyField from "./components/TechnologyField";
 
+const defaultValues = {
+  projectName: "",
+  teamSize: 0,
+  link: "",
+  nda: false,
+  description: "",
+  technologyStack: [],
+};
+
 const ProjectForm = ({ initialValues, technologies, onComplete }) => {
   const [isLoading, setIsLoading] = useState(false);
 
@@ -23,9 +40,10 @@ const ProjectForm = ({ initialValues, technologies, onComplete }) => {
     formState: { errors, isValid, isDirty },
     reset,
     control,
+    getValues,
   } = useForm({
     resolver: yupResolver(schema),
-    defaultValues: initialValues || {},
+    defaultValues: initialValues || defaultValues,
   });
 
   const onSubmit = async (data) => {
@@ -34,9 +52,14 @@ const ProjectForm = ({ initialValues, technologies, onComplete }) => {
     const transformedTechnologies = data.technologyStack.map(
       (technology) => technology.value,
     );
+
+    console.log(data.nda);
+
     const updatedData = {
       ...data,
+      nda: data.nda ? 1 : 0,
       technologyStack: transformedTechnologies,
+      teamSize: parseInt(data.teamSize),
     };
 
     if (initialValues) {
@@ -77,6 +100,43 @@ const ProjectForm = ({ initialValues, technologies, onComplete }) => {
           errors={errors}
           isRequired
         />
+
+        <Flex gap={5}>
+          <Box w="100%">
+            <FormField
+              name="link"
+              label="Project Link"
+              register={register}
+              placeHolder="Link"
+              errors={errors}
+              isRequired
+            />
+          </Box>
+
+          <FormField
+            name="teamSize"
+            label="Team Size"
+            register={register}
+            placeHolder="Team Size"
+            errors={errors}
+            type="number"
+            isRequired
+          />
+
+          <FormControl id="nda" w="min-content">
+            <Stack alignItems="flex-end" justifyContent="flex-end">
+              <FormLabel whiteSpace="nowrap" m={0}>
+                NDA
+              </FormLabel>
+              <Switch
+                mt={2}
+                id="nda"
+                {...register("nda")}
+                isChecked={getValues("nda")}
+              />
+            </Stack>
+          </FormControl>
+        </Flex>
 
         <TechnologyField
           control={control}

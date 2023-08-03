@@ -7,7 +7,10 @@ module.exports = {
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         projectName TEXT,
         technologyStack TEXT,
-        description TEXT
+        description TEXT,
+        teamSize INTEGER,
+        link TEXT,
+        nda INTEGER DEFAULT 1
       )
     `);
   },
@@ -38,18 +41,26 @@ module.exports = {
     });
   },
 
-  create: (projectName, technologyStack, description) => {
+  create: (projectName, technologyStack, description, teamSize, link, nda) => {
     return new Promise((resolve, reject) => {
       const stmt = db.prepare(
-        "INSERT INTO projects (projectName, technologyStack, description) VALUES (?, ?, ?)",
+        "INSERT INTO projects (projectName, technologyStack, description, teamSize, link, nda) VALUES (?, ?, ?, ?, ?, ?)",
       );
-      stmt.run(projectName, technologyStack, description, (err) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve();
-        }
-      });
+      stmt.run(
+        projectName,
+        technologyStack,
+        description,
+        teamSize,
+        link,
+        nda,
+        (err) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve();
+          }
+        },
+      );
       stmt.finalize();
     });
   },
@@ -68,20 +79,37 @@ module.exports = {
     });
   },
 
-  update: (id, projectName, technologyStack, description) => {
+  update: (
+    id,
+    projectName,
+    technologyStack,
+    description,
+    teamSize,
+    link,
+    nda,
+  ) => {
     return new Promise((resolve, reject) => {
       const stmt = db.prepare(`
         UPDATE projects 
-        SET projectName = ?, technologyStack = ?, description = ?
+        SET projectName = ?, technologyStack = ?, description = ?, teamSize = ?, link = ?, nda = ?
         WHERE id = ?
       `);
-      stmt.run(projectName, technologyStack, description, id, (err) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve();
-        }
-      });
+      stmt.run(
+        projectName,
+        technologyStack,
+        description,
+        teamSize,
+        link,
+        nda,
+        id,
+        (err) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve();
+          }
+        },
+      );
       stmt.finalize();
     });
   },

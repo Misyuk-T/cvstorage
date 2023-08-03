@@ -20,16 +20,24 @@ const handler = async (req, res) => {
 
         res.status(200).json(formattedData);
       } catch (error) {
-        console.error("Error fetching technologies:", error.message);
+        console.error("Error fetching projects:", error.message);
         res.status(500).json({ error: "Internal Server Error" });
       }
       break;
 
     case "POST":
-      const { projectName, technologyStack, description } = req.body;
+      const { projectName, technologyStack, description, teamSize, link, nda } =
+        req.body;
 
       try {
-        await Projects.create(projectName, technologyStack, description);
+        await Projects.create(
+          projectName,
+          technologyStack,
+          description,
+          teamSize,
+          link,
+          nda,
+        );
         res.status(201).json({ message: "Project created successfully" });
       } catch (error) {
         console.error("Error creating project:", error.message);

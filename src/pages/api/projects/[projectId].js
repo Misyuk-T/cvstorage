@@ -33,10 +33,19 @@ const handler = async (req, res) => {
       break;
 
     case "PUT":
-      const { projectName, technologyStack, description } = req.body;
+      const { projectName, technologyStack, description, teamSize, link, nda } =
+        req.body;
 
       try {
-        await Projects.update(id, projectName, technologyStack, description);
+        await Projects.update(
+          id,
+          projectName,
+          technologyStack,
+          description,
+          teamSize,
+          link,
+          nda,
+        );
         res.status(200).json({ message: "Project updated successfully" });
       } catch (error) {
         console.error("Error updating project:", error.message);
