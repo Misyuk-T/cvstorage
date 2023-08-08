@@ -30,7 +30,7 @@ const handler = async (req, res) => {
         req.body;
 
       try {
-        await Projects.create(
+        const newProject = await Projects.create(
           projectName,
           technologyStack,
           description,
@@ -38,7 +38,7 @@ const handler = async (req, res) => {
           link,
           nda,
         );
-        res.status(201).json({ message: "Project created successfully" });
+        res.status(201).json(newProject);
       } catch (error) {
         console.error("Error creating project:", error.message);
         res.status(500).json({ error: "Internal Server Error" });

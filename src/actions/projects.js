@@ -8,7 +8,10 @@ export const createProject = async (projectData) => {
       ...projectData,
       technologyStack: JSON.stringify(projectData.technologyStack),
     });
-    return response.data;
+    return {
+      ...response.data,
+      technologyStack: JSON.parse(response.data.technologyStack),
+    };
   } catch (error) {
     console.error("Error creating project:", error);
     throw new Error("Failed to create project");
@@ -52,7 +55,10 @@ export const updateProject = async (projectId, projectData) => {
       ...projectData,
       technologyStack: JSON.stringify(projectData.technologyStack),
     });
-    return response.data;
+    return {
+      ...response.data,
+      technologyStack: JSON.parse(response.data.technologyStack),
+    };
   } catch (error) {
     console.error("Error updating project:", error);
     throw new Error("Failed to update project");

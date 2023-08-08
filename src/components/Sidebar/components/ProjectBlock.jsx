@@ -84,12 +84,17 @@ const ProjectBlock = ({ technologies, projects }) => {
         }}
       >
         <Td>
-          <Text fontFamily="Roboto Slab" fontWeight={600}>
+          <Text
+            fontFamily="Roboto Slab"
+            fontWeight={600}
+            maxW={300}
+            whiteSpace="wrap"
+          >
             {project.projectName}
           </Text>
         </Td>
         <Td>
-          <Flex gap={2}>
+          <Flex gap={2} wrap="wrap">
             {getTechnologyNames(project, technologies).map(
               (technology, index) => {
                 if (!technology) {
@@ -116,7 +121,7 @@ const ProjectBlock = ({ technologies, projects }) => {
           </Flex>
         </Td>
         <Td isNumeric>
-          <Text whiteSpace="initial" fontSize={12}>
+          <Text whiteSpace="initial" fontSize={12} maxW={600} noOfLines={11}>
             {project.description}
           </Text>
         </Td>

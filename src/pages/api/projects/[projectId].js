@@ -24,8 +24,8 @@ const handler = async (req, res) => {
 
     case "DELETE":
       try {
-        await Projects.deleteById(id);
-        res.status(200).json({ message: "Project deleted successfully" });
+        const deletedProject = await Projects.deleteById(id);
+        res.status(200).json(deletedProject);
       } catch (error) {
         console.error("Error deleting project:", error.message);
         res.status(500).json({ error: "Internal Server Error" });
@@ -37,7 +37,7 @@ const handler = async (req, res) => {
         req.body;
 
       try {
-        await Projects.update(
+        const updatedProject = await Projects.update(
           id,
           projectName,
           technologyStack,
@@ -46,7 +46,8 @@ const handler = async (req, res) => {
           link,
           nda,
         );
-        res.status(200).json({ message: "Project updated successfully" });
+
+        res.status(200).json(updatedProject);
       } catch (error) {
         console.error("Error updating project:", error.message);
         res.status(500).json({ error: "Internal Server Error" });

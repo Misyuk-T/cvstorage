@@ -57,11 +57,20 @@ module.exports = {
           if (err) {
             reject(err);
           } else {
-            resolve();
+            const insertedId = stmt.lastID;
+            resolve({
+              id: insertedId,
+              projectName,
+              technologyStack,
+              description,
+              teamSize,
+              link,
+              nda,
+            });
+            stmt.finalize();
           }
         },
       );
-      stmt.finalize();
     });
   },
 
@@ -72,10 +81,10 @@ module.exports = {
         if (err) {
           reject(err);
         } else {
-          resolve();
+          stmt.finalize();
+          resolve({ id });
         }
       });
-      stmt.finalize();
     });
   },
 
@@ -106,11 +115,19 @@ module.exports = {
           if (err) {
             reject(err);
           } else {
-            resolve();
+            resolve({
+              id,
+              projectName,
+              technologyStack,
+              description,
+              teamSize,
+              link,
+              nda,
+            });
+            stmt.finalize();
           }
         },
       );
-      stmt.finalize();
     });
   },
 };

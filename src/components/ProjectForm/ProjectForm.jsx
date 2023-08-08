@@ -12,6 +12,7 @@ import {
   Switch,
 } from "@chakra-ui/react";
 
+import useProjectsStore from "@/store/projectsStore";
 import {
   createProject,
   deleteProject,
@@ -32,6 +33,12 @@ const defaultValues = {
 };
 
 const ProjectForm = ({ initialValues, technologies, onComplete }) => {
+  const {
+    addProject: addStoreProject,
+    updateProject: updateStoreProject,
+    deleteProject: deleteStoreProject,
+  } = useProjectsStore();
+
   const [isLoading, setIsLoading] = useState(false);
 
   const {
@@ -63,9 +70,13 @@ const ProjectForm = ({ initialValues, technologies, onComplete }) => {
     };
 
     if (initialValues) {
-      await updateProject(initialValues.id, updatedData);
+      await updateProject(initialValues.id, updatedData).then((data) => {
+        updateStoreProject({ ...data, id: +data.id });
+      });
     } else {
-      await createProject(updatedData);
+      await createProject(updatedData).then((data) => {
+        addStoreProject(data);
+      });
     }
 
     onComplete && onComplete();
@@ -76,7 +87,9 @@ const ProjectForm = ({ initialValues, technologies, onComplete }) => {
   const handleDelete = async () => {
     setIsLoading(true);
 
-    await deleteProject(initialValues.id);
+    await deleteProject(initialValues.id).then((data) => {
+      deleteStoreProject(+data.id);
+    });
     reset();
     onComplete && onComplete();
 
@@ -88,6 +101,8 @@ const ProjectForm = ({ initialValues, technologies, onComplete }) => {
       reset(initialValues);
     }
   }, [initialValues]);
+
+  console.log(getValues("nda"), 'getValues("nda")');
 
   return (
     <Box as="form" onSubmit={handleSubmit(onSubmit)}>
@@ -128,12 +143,7 @@ const ProjectForm = ({ initialValues, technologies, onComplete }) => {
               <FormLabel whiteSpace="nowrap" m={0}>
                 NDA
               </FormLabel>
-              <Switch
-                mt={2}
-                id="nda"
-                {...register("nda")}
-                isChecked={getValues("nda")}
-              />
+              <Switch mt={2} id="nda" {...register("nda")} />
             </Stack>
           </FormControl>
         </Flex>
