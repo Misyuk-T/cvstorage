@@ -12,6 +12,7 @@ import {
 import { useFieldArray, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 
+import useUsersStore from "@/store/usersStore";
 import { createUser, deleteUser, updateUser } from "@/actions/user";
 import schema from "@/helpers/userValidation";
 import {
@@ -53,6 +54,12 @@ const UserForm = ({
   onComplete,
   initialValues = defaultValues,
 }) => {
+  const {
+    addUser: addStoreUser,
+    updateUser: updateStoreUser,
+    deleteUser: deleteStoreUser,
+  } = useUsersStore();
+
   const [isLoading, setIsLoading] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(initialValues.media);
@@ -136,8 +143,6 @@ const UserForm = ({
       media: selectedFile ? selectedFile.file : initialValues.media,
     };
 
-    console.log(updatedData, "updatedData");
-
     try {
       const formData = new FormData();
       for (const key in updatedData) {
@@ -151,9 +156,15 @@ const UserForm = ({
       }
 
       if (initialValues.id) {
-        await updateUser(initialValues.id, formData);
+        await updateUser(initialValues.id, formData).then((data) => {
+          console.log("updated", data);
+          updateStoreUser({ ...data, id: +data.id });
+        });
       } else {
-        await createUser(formData);
+        await createUser(formData).then((data) => {
+          console.log("created", data);
+          addStoreUser(data);
+        });
       }
       setIsLoading(false);
     } catch (error) {
@@ -166,7 +177,9 @@ const UserForm = ({
   const handleDelete = async () => {
     setIsLoading(true);
     try {
-      await deleteUser(initialValues.id);
+      await deleteUser(initialValues.id).then((data) => {
+        deleteStoreUser(+data.id);
+      });
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);

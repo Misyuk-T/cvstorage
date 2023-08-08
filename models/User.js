@@ -69,10 +69,10 @@ module.exports = {
     isEnabled,
   ) => {
     return new Promise((resolve, reject) => {
+      const now = new Date().toISOString();
       const stmt = db.prepare(
         "INSERT INTO users (name, position, email, socials, description, experience, education, projects, technologyStack, media, motivation, cvType, grade, workDirection, isEnabled, lastUpdated) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
       );
-      const now = new Date().toISOString();
       stmt.run(
         name,
         position,
@@ -94,11 +94,30 @@ module.exports = {
           if (err) {
             reject(err);
           } else {
-            resolve();
+            const insertedId = stmt.lastID;
+            resolve({
+              id: insertedId,
+              name,
+              position,
+              email,
+              socials,
+              description,
+              experience,
+              education,
+              projects,
+              technologyStack,
+              media,
+              motivation,
+              cvType,
+              grade,
+              workDirection,
+              isEnabled,
+              lastUpdated: now,
+            });
+            stmt.finalize();
           }
         },
       );
-      stmt.finalize();
     });
   },
 
@@ -109,9 +128,9 @@ module.exports = {
         if (err) {
           reject(err);
         } else {
-          resolve();
+          resolve({ id });
+          stmt.finalize();
         }
-        stmt.finalize();
       });
     });
   },
@@ -135,12 +154,12 @@ module.exports = {
     isEnabled,
   ) => {
     return new Promise((resolve, reject) => {
+      const now = new Date().toISOString();
       const stmt = db.prepare(`
         UPDATE users 
         SET name = ?, position = ?, email = ?, socials = ?, description = ?, experience = ?, education = ?, projects = ?, technologyStack = ?, media = ?, motivation = ?, cvType = ?, grade = ?, workDirection = ?, isEnabled = ?, lastUpdated = ?
         WHERE id = ?
       `);
-      const now = new Date().toISOString();
       stmt.run(
         name,
         position,
@@ -163,11 +182,29 @@ module.exports = {
           if (err) {
             reject(err);
           } else {
-            resolve();
+            resolve({
+              id,
+              name,
+              position,
+              email,
+              socials,
+              description,
+              experience,
+              education,
+              projects,
+              technologyStack,
+              media,
+              motivation,
+              cvType,
+              grade,
+              workDirection,
+              isEnabled,
+              lastUpdated: now, // Include lastUpdated field in the response
+            });
+            stmt.finalize();
           }
         },
       );
-      stmt.finalize();
     });
   },
 

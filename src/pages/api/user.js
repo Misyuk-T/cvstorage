@@ -47,7 +47,7 @@ const handler = async (req, res) => {
         const relativePath = path.relative(workingDirectory, absolutePath);
 
         try {
-          await Users.create(
+          const newUser = await Users.create(
             name,
             position,
             email,
@@ -65,7 +65,7 @@ const handler = async (req, res) => {
             isEnabled,
           );
 
-          res.status(201).json({ message: "User created successfully" });
+          res.status(201).json(newUser);
         } catch (error) {
           console.error("Error creating user:", error.message);
           res.status(500).json({ error: "Internal Server Error" });

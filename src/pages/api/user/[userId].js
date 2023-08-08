@@ -64,7 +64,7 @@ const handler = async (req, res) => {
         const workingDirectory = process.cwd();
         const relativePath = path.relative(workingDirectory, absolutePath);
 
-        await Users.update(
+        const updatedUser = await Users.update(
           id,
           name,
           position,
@@ -83,7 +83,7 @@ const handler = async (req, res) => {
           isEnabled,
         );
 
-        res.status(200).json({ message: "User updated successfully" });
+        res.status(200).json(updatedUser);
       } catch (error) {
         console.error("Error updating user:", error.message);
         res.status(500).json({ error: "Internal Server Error" });
@@ -93,9 +93,9 @@ const handler = async (req, res) => {
     case "DELETE":
       try {
         await deleteUserMedia(id);
-        await Users.deleteById(id);
+        const deletedUser = await Users.deleteById(id);
 
-        res.status(200).json({ message: "User deleted successfully" });
+        res.status(200).json(deletedUser);
       } catch (error) {
         console.error("Error deleting user:", error.message);
         res.status(500).json({ error: "Internal Server Error" });
