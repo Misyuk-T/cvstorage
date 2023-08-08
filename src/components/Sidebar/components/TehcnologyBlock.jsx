@@ -32,7 +32,6 @@ const TechnologyBlock = ({ technologies }) => {
   });
 
   const handleClick = (value) => {
-    console.log(value);
     if (selectedTechnology && !value) {
       setSelectedTechnology(null);
     } else {

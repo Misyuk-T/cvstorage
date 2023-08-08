@@ -46,10 +46,11 @@ module.exports = {
         if (err) {
           reject(err);
         } else {
-          resolve();
+          const insertedId = stmt.lastID;
+          stmt.finalize();
+          resolve({ id: insertedId, name, type });
         }
       });
-      stmt.finalize();
     });
   },
 
@@ -60,10 +61,10 @@ module.exports = {
         if (err) {
           reject(err);
         } else {
-          resolve();
+          stmt.finalize();
+          resolve({ id });
         }
       });
-      stmt.finalize();
     });
   },
 
@@ -76,10 +77,10 @@ module.exports = {
         if (err) {
           reject(err);
         } else {
-          resolve();
+          stmt.finalize();
+          resolve({ id, name, type });
         }
       });
-      stmt.finalize();
     });
   },
 };

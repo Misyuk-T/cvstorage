@@ -10,6 +10,7 @@ import {
   updateTechnology,
   deleteTechnology,
 } from "@/actions/technologies";
+import useTechnologiesStore from "@/store/technologiesStore";
 import schema from "@/helpers/technologyValidation";
 import { technologyTypes } from "@/helpers/constants";
 
@@ -22,6 +23,12 @@ const defaultValues = {
 };
 
 const TechnologyForm = ({ initialValues = defaultValues, onComplete }) => {
+  const {
+    addTechnology: addStoreTechnology,
+    updateTechnology: updateStoreTechnology,
+    deleteTechnology: deleteStoreTechnology,
+  } = useTechnologiesStore();
+
   const [isLoading, setIsLoading] = useState(false);
 
   const {
@@ -42,9 +49,13 @@ const TechnologyForm = ({ initialValues = defaultValues, onComplete }) => {
       const { name, type } = data;
 
       if (initialValues.id) {
-        await updateTechnology(initialValues.id, name, type);
+        await updateTechnology(initialValues.id, name, type).then((data) => {
+          updateStoreTechnology({ ...data, id: +data.id });
+        });
       } else {
-        await createTechnology({ name, type });
+        await createTechnology({ name, type }).then((data) => {
+          addStoreTechnology(data);
+        });
       }
       onComplete && onComplete();
       setIsLoading(false);
@@ -58,7 +69,9 @@ const TechnologyForm = ({ initialValues = defaultValues, onComplete }) => {
     setIsLoading(true);
 
     try {
-      await deleteTechnology(initialValues.id);
+      await deleteTechnology(initialValues.id).then((data) => {
+        deleteStoreTechnology(+data.id);
+      });
       setIsLoading(false);
       reset();
       onComplete && onComplete();

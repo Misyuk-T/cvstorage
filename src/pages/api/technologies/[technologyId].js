@@ -24,8 +24,8 @@ const handler = async (req, res) => {
 
       if (name && type) {
         try {
-          await Technologies.update(id, name, type);
-          res.status(200).json({ message: "Technology updated successfully" });
+          const updatedTechnology = await Technologies.update(id, name, type);
+          res.status(200).json(updatedTechnology);
         } catch (error) {
           console.error("Error updating technology:", error.message);
           res.status(500).json({ error: "Internal Server Error" });
@@ -37,8 +37,8 @@ const handler = async (req, res) => {
 
     case "DELETE":
       try {
-        await Technologies.deleteById(id);
-        res.status(200).json({ message: "Technology deleted successfully" });
+        const deletedTechnology = await Technologies.deleteById(id);
+        res.status(200).json(deletedTechnology);
       } catch (error) {
         console.error("Error deleting technology:", error.message);
         res.status(500).json({ error: "Internal Server Error" });

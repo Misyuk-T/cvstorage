@@ -15,8 +15,8 @@ const handler = async (req, res) => {
 
       if (name && type) {
         try {
-          await Technologies.create(name, type);
-          res.status(201).json({ message: "Technology created successfully" });
+          const newTechnology = await Technologies.create(name, type);
+          res.status(201).json(newTechnology);
         } catch (error) {
           console.error("Error creating technology:", error.message);
           res.status(500).json({ error: "Internal Server Error" });

@@ -1,5 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, Flex, Text, VStack, Button } from "@chakra-ui/react";
+
+import useTechnologiesStore from "@/store/technologiesStore";
+import useUsersStore from "@/store/usersStore";
+import useProjectsStore from "@/store/projectsStore";
+
+import { getAllTechnologies } from "@/actions/technologies";
+import { getAllUsers } from "@/actions/user";
+import { getAllProjects } from "@/actions/projects";
 
 import TechnologyBlock from "@/components/Sidebar/components/TehcnologyBlock";
 import ProjectBlock from "@/components/Sidebar/components/ProjectBlock";
@@ -11,7 +19,11 @@ const TABS = [
   { key: "technologies", label: "Technologies" },
 ];
 
-const Sidebar = ({ technologies, users, projects }) => {
+const Sidebar = () => {
+  const { technologies, setTechnologies } = useTechnologiesStore();
+  const { users, setUsers } = useUsersStore();
+  const { projects, setProjects } = useProjectsStore();
+
   const [selectedTab, setSelectedTab] = useState("");
 
   const hardTypeTechnologies = technologies.filter(
@@ -24,6 +36,8 @@ const Sidebar = ({ technologies, users, projects }) => {
 
   const renderBlock = () => {
     switch (selectedTab) {
+      case "technologies":
+        return <TechnologyBlock technologies={technologies} />;
       case "projects":
         return (
           <ProjectBlock
@@ -31,8 +45,6 @@ const Sidebar = ({ technologies, users, projects }) => {
             technologies={hardTypeTechnologies}
           />
         );
-      case "technologies":
-        return <TechnologyBlock technologies={technologies} />;
       default:
         return (
           <UsersBlock
@@ -43,6 +55,24 @@ const Sidebar = ({ technologies, users, projects }) => {
         );
     }
   };
+
+  const fetchData = async () => {
+    try {
+      const technologiesData = await getAllTechnologies();
+      const usersData = await getAllUsers();
+      const projectsData = await getAllProjects();
+
+      setTechnologies(technologiesData);
+      setUsers(usersData);
+      setProjects(projectsData);
+    } catch (error) {
+      console.error("Error fetching data:", error.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   return (
     <Flex h="100vh">

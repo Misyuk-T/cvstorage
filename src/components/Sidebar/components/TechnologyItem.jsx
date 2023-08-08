@@ -33,7 +33,7 @@ const TechnologyItem = ({ technology, onClick, isActive }) => {
       borderRadius={5}
       background={backgroundColor}
       color="black"
-      fontWeight={600}
+      fontWeight={500}
       _hover={{
         background: isActive ? "red.300" : "green.100",
       }}
