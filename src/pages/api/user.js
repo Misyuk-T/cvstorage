@@ -65,7 +65,7 @@ const handler = async (req, res) => {
             cvType,
             grade,
             workDirection,
-            isEnabled,
+            isEnabled === "true" ? 1 : 0,
           );
 
           res.status(201).json(newUser);

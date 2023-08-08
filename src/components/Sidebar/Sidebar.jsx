@@ -34,8 +34,6 @@ const Sidebar = () => {
     setSelectedTab(tab);
   };
 
-  console.log("users", users);
-
   const renderBlock = () => {
     switch (selectedTab) {
       case "technologies":

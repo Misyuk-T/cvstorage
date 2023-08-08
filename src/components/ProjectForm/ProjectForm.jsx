@@ -60,8 +60,6 @@ const ProjectForm = ({ initialValues, technologies, onComplete }) => {
       (technology) => technology.value,
     );
 
-    console.log(data.nda);
-
     const updatedData = {
       ...data,
       nda: data.nda ? 1 : 0,
@@ -101,8 +99,6 @@ const ProjectForm = ({ initialValues, technologies, onComplete }) => {
       reset(initialValues);
     }
   }, [initialValues]);
-
-  console.log(getValues("nda"), 'getValues("nda")');
 
   return (
     <Box as="form" onSubmit={handleSubmit(onSubmit)}>

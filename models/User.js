@@ -88,7 +88,7 @@ module.exports = {
         cvType,
         grade,
         workDirection,
-        isEnabled === "true" ? 1 : 0,
+        isEnabled,
         now,
         (err) => {
           if (err) {
@@ -175,7 +175,7 @@ module.exports = {
         cvType,
         grade,
         workDirection,
-        isEnabled === "true" ? 1 : 0,
+        isEnabled,
         now,
         id,
         (err) => {

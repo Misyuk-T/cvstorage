@@ -24,8 +24,6 @@ const FileUploadField = ({ name, register, onChange, imagePreview, error }) => {
     onChange(name, file);
   };
 
-  console.log(imagePreviewPath, "imagePreviewPath");
-
   const handleClearFile = () => {
     onChange(name, null);
   };

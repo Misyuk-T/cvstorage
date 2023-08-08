@@ -157,12 +157,10 @@ const UserForm = ({
 
       if (initialValues.id) {
         await updateUser(initialValues.id, formData).then((data) => {
-          console.log("updated", data);
           updateStoreUser({ ...data, id: +data.id });
         });
       } else {
         await createUser(formData).then((data) => {
-          console.log("created", data);
           addStoreUser(data);
         });
       }
