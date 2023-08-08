@@ -1,6 +1,7 @@
 import * as path from "path";
 import Users from "models/User";
 import { parseForm } from "@/helpers/parseForm";
+import { formatPath } from "@/helpers/formatPath";
 
 const initializeApp = () => {
   Users.createTable();
@@ -44,7 +45,9 @@ const handler = async (req, res) => {
         const absolutePath =
           (mediaFile && mediaFile[0]?.filepath) || "public/default_avatar.png";
         const workingDirectory = process.cwd();
-        const relativePath = path.relative(workingDirectory, absolutePath);
+        const relativePath = formatPath(
+          path.relative(workingDirectory, absolutePath),
+        );
 
         try {
           const newUser = await Users.create(

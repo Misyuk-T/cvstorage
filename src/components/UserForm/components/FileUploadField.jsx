@@ -15,7 +15,7 @@ const FileUploadField = ({ name, register, onChange, imagePreview, error }) => {
   const isInitialPath = imagePreview?.includes("public");
   const imagePreviewPath =
     imagePreview && isInitialPath
-      ? `/${imagePreview.split("\\").slice(1).join("/")}`
+      ? `/${imagePreview.split("/").slice(1).join("/")}`
       : defaultImagePreviewPath;
 
   const handleFileChange = (event) => {
@@ -24,7 +24,6 @@ const FileUploadField = ({ name, register, onChange, imagePreview, error }) => {
     onChange(name, file);
   };
 
-  console.log(imagePreview, "imagePreview");
   console.log(imagePreviewPath, "imagePreviewPath");
 
   const handleClearFile = () => {

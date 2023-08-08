@@ -1,4 +1,4 @@
-import path, { join } from "path";
+import path from "path";
 import { mkdir, stat } from "fs/promises";
 import formidable from "formidable";
 import mime from "mime";
@@ -6,7 +6,12 @@ import fs from "fs";
 
 export const parseForm = async (req, userId) => {
   return new Promise(async (resolve, reject) => {
-    const uploadDir = join(process.cwd(), `public/uploads/${userId}`);
+    const uploadDir = path.join(
+      process.cwd(),
+      "public",
+      "uploads",
+      userId.toString(),
+    );
 
     try {
       await stat(uploadDir);
