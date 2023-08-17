@@ -334,6 +334,49 @@ const UserForm = ({
 
         <Stack gap={8} mt={5}>
           <FormControl
+            id="socials"
+            isInvalid={errors.socials}
+            isRequired={socialsFields.length > 0}
+          >
+            <Stack
+              gap={5}
+              p={5}
+              pt={8}
+              borderRadius={5}
+              border="2px solid"
+              borderColor="gray.300"
+              position="relative"
+            >
+              <FormLabel
+                fontSize={17}
+                backgroundColor="white"
+                position="absolute"
+                top={-4}
+                p={1}
+                px={2}
+                fontWeight={600}
+              >
+                information Block
+              </FormLabel>
+
+              {socialsFields.map((field, index) => (
+                <SocialField
+                  key={field.id}
+                  index={index}
+                  field={field}
+                  removeSocial={removeSocial}
+                  register={register}
+                  errors={errors}
+                />
+              ))}
+
+              <Button onClick={() => appendSocial({ platform: "", url: "" })}>
+                Add information Item
+              </Button>
+            </Stack>
+          </FormControl>
+
+          <FormControl
             id="technologyStack"
             isInvalid={errors.technologyStack}
             isRequired={technologyFields.length > 0}
@@ -383,49 +426,6 @@ const UserForm = ({
                 }
               >
                 Add Technology Item
-              </Button>
-            </Stack>
-          </FormControl>
-
-          <FormControl
-            id="socials"
-            isInvalid={errors.socials}
-            isRequired={socialsFields.length > 0}
-          >
-            <Stack
-              gap={5}
-              p={5}
-              pt={8}
-              borderRadius={5}
-              border="2px solid"
-              borderColor="gray.300"
-              position="relative"
-            >
-              <FormLabel
-                fontSize={17}
-                backgroundColor="white"
-                position="absolute"
-                top={-4}
-                p={1}
-                px={2}
-                fontWeight={600}
-              >
-                Socials Block
-              </FormLabel>
-
-              {socialsFields.map((field, index) => (
-                <SocialField
-                  key={field.id}
-                  index={index}
-                  field={field}
-                  removeSocial={removeSocial}
-                  register={register}
-                  errors={errors}
-                />
-              ))}
-
-              <Button onClick={() => appendSocial({ platform: "", url: "" })}>
-                Add Social Item
               </Button>
             </Stack>
           </FormControl>

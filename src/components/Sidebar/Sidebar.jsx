@@ -1,13 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Box, Flex, Text, VStack, Button } from "@chakra-ui/react";
 
 import useTechnologiesStore from "@/store/technologiesStore";
 import useUsersStore from "@/store/usersStore";
 import useProjectsStore from "@/store/projectsStore";
-
-import { getAllTechnologies } from "@/actions/technologies";
-import { getAllUsers } from "@/actions/user";
-import { getAllProjects } from "@/actions/projects";
 
 import TechnologyBlock from "@/components/Sidebar/components/TehcnologyBlock";
 import ProjectBlock from "@/components/Sidebar/components/ProjectBlock";
@@ -20,9 +16,9 @@ const TABS = [
 ];
 
 const Sidebar = () => {
-  const { technologies, setTechnologies } = useTechnologiesStore();
-  const { users, setUsers } = useUsersStore();
-  const { projects, setProjects } = useProjectsStore();
+  const { technologies } = useTechnologiesStore();
+  const { users } = useUsersStore();
+  const { projects } = useProjectsStore();
 
   const [selectedTab, setSelectedTab] = useState("");
 
@@ -55,24 +51,6 @@ const Sidebar = () => {
         );
     }
   };
-
-  const fetchData = async () => {
-    try {
-      const technologiesData = await getAllTechnologies();
-      const usersData = await getAllUsers();
-      const projectsData = await getAllProjects();
-
-      setTechnologies(technologiesData);
-      setUsers(usersData);
-      setProjects(projectsData);
-    } catch (error) {
-      console.error("Error fetching data:", error.message);
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
 
   return (
     <Flex h="100vh">

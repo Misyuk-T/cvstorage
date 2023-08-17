@@ -10,7 +10,7 @@ const schema = yup.object().shape({
   socials: yup.array().of(
     yup.object().shape({
       platform: yup.string().required("Platform is required"),
-      url: yup.string().url("Invalid URL").required("URL is required"),
+      url: yup.string().required("URL is required"),
     }),
   ),
   technologyStack: yup.array().of(

@@ -13,10 +13,12 @@ import {
   Text,
   Table,
   Box,
+  Link,
 } from "@chakra-ui/react";
 
 import { workDirectionOptions } from "@/helpers/constants";
 import { extractDate } from "@/helpers/date";
+import { encodeToBase64 } from "next/dist/build/webpack/loaders/utils";
 
 const UserList = ({ users, onCloseForm, onSelect, selectedUser }) => {
   const [selectedTab, setSelectedTab] = useState(0);
@@ -79,6 +81,15 @@ const UserList = ({ users, onCloseForm, onSelect, selectedUser }) => {
             bg={isActive ? "green.400" : "tomato"}
           />
         </Td>
+        <Td>
+          <Link
+            color="blue"
+            href={`/user/${encodeToBase64(user.id)}`}
+            target="_blank"
+          >
+            User preview
+          </Link>
+        </Td>
       </Tr>
     );
   };
@@ -111,6 +122,9 @@ const UserList = ({ users, onCloseForm, onSelect, selectedUser }) => {
                 </Th>
                 <Th>
                   <Text fontSize="14px">Active</Text>
+                </Th>
+                <Th>
+                  <Text fontSize="14px">Preview</Text>
                 </Th>
               </Tr>
             </Thead>

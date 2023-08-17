@@ -16,7 +16,7 @@ const SocialField = ({ index, field, removeSocial, register, errors }) => {
         <Input
           type="text"
           name={`socials[${index}].platform`}
-          placeholder="Platform"
+          placeholder="Title"
           {...register(`socials[${index}].platform`)}
           isInvalid={platformError}
           borderColor="gray.300"
@@ -26,7 +26,7 @@ const SocialField = ({ index, field, removeSocial, register, errors }) => {
         <Input
           type="text"
           name={`socials[${index}].url`}
-          placeholder="URL"
+          placeholder="Description"
           {...register(`socials[${index}].url`)}
           isInvalid={urlError}
           borderColor="gray.300"
