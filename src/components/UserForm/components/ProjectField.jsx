@@ -29,6 +29,7 @@ const ProjectField = ({
   projects,
   index,
   value,
+  selectedProjects,
 }) => {
   const initialProjects = getIntersectedProject(value, projects);
   const formattedData = initialProjects && {
@@ -38,7 +39,14 @@ const ProjectField = ({
 
   const [selectedProject, setSelectedProject] = useState(formattedData);
 
-  const formattedOptions = transformProjectsToSelect(projects);
+  const formattedOptions = transformProjectsToSelect(
+    projects.filter((project) =>
+      selectedProjects.every(
+        (selectedProject) =>
+          selectedProject.projectId !== project.id.toString(),
+      ),
+    ),
+  );
 
   const handleProjectSelect = (selectedOption) => {
     setSelectedProject(selectedOption);

@@ -416,6 +416,7 @@ const UserForm = ({
                     <UserTechnologyStackField
                       key={field.id}
                       control={control}
+                      selectedTechnologies={getValues("technologyStack")}
                       register={register}
                       setValue={setValue}
                       errors={errors}
@@ -568,6 +569,7 @@ const UserForm = ({
                 value={getValues(`projects[${index}].projectId`)}
                 errors={errors?.projects?.[index]}
                 removeProject={removeProject}
+                selectedProjects={getValues("projects")}
                 projects={projects}
               />
             ))}

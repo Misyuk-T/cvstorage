@@ -30,6 +30,7 @@ const UserTechnologyStackField = ({
   technologies,
   index,
   value,
+  selectedTechnologies,
 }) => {
   const initialTechnology = getIntersectedTechnology(
     value.technologyId,
@@ -41,7 +42,13 @@ const UserTechnologyStackField = ({
   };
   const [selectedTechnology, setSelectedTechnology] = useState(formattedData);
 
-  const formattedOptions = transformTechnologiesToSelect(technologies);
+  const formattedOptions = transformTechnologiesToSelect(
+    technologies.filter((tech) =>
+      selectedTechnologies.every(
+        (selectedTech) => selectedTech.technologyId !== tech.id.toString(),
+      ),
+    ),
+  );
   const isClientSide = typeof window !== "undefined";
 
   const handleTechnologySelect = (selectedOption) => {
