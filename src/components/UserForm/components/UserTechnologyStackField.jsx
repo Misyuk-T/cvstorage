@@ -61,10 +61,10 @@ const UserTechnologyStackField = ({
     <FormControl
       id={`technologyStack[${index}]`}
       isInvalid={errors?.technology?.[index]}
-      width="48%"
+      width="31%"
     >
       <Flex gap={3}>
-        <Stack w="100%" gap={3}>
+        <Stack w="100%" gap={1}>
           <Controller
             name={`technologyStack[${index}].technologyId`}
             control={control}
@@ -86,10 +86,26 @@ const UserTechnologyStackField = ({
                   option: (styles) => ({
                     ...styles,
                     cursor: "pointer",
+                    fontSize: "14px",
                   }),
                   control: (styles) => ({
                     ...styles,
                     cursor: "pointer",
+                    padding: 0,
+                    fontSize: "14px",
+                    minHeight: "32px",
+                    height: "32px",
+                  }),
+                  valueContainer: (styles) => ({
+                    ...styles,
+                    minHeight: "32px",
+                    height: "32px",
+                    marginBottom: "4px",
+                  }),
+                  indicatorsContainer: (styles) => ({
+                    ...styles,
+                    minHeight: "32px",
+                    height: "32px",
                   }),
                 }}
               />
@@ -112,9 +128,10 @@ const UserTechnologyStackField = ({
                     <SliderFilledTrack />
                   </SliderTrack>
                   <SliderThumb
-                    w={12}
-                    h={6}
+                    w={8}
+                    h={5}
                     borderRadius={2}
+                    fontSize="12px"
                     border="2px solid"
                     borderColor="blue.300"
                   >
@@ -127,6 +144,7 @@ const UserTechnologyStackField = ({
         </Stack>
 
         <IconButton
+          size="sm"
           colorScheme="red"
           flexShrink={0}
           onClick={handleDeleteTechnology}

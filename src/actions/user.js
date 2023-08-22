@@ -1,10 +1,10 @@
-import axios from "axios";
-
-const BASE_URL = "http://localhost:3000/api/user";
+import { instance } from "./axios";
+import { toast } from "react-toastify";
 
 export const createUser = async (userData) => {
   try {
-    const response = await axios.post(BASE_URL, userData);
+    const response = await instance.post("/api/user", userData);
+    toast.success("User created successfully");
     return response.data;
   } catch (error) {
     console.error("Error creating user:", error);
@@ -14,7 +14,8 @@ export const createUser = async (userData) => {
 
 export const updateUser = async (userId, userData) => {
   try {
-    const response = await axios.put(`${BASE_URL}/${userId}`, userData);
+    const response = await instance.put(`/api/user/${userId}`, userData);
+    toast.success("User updated successfully");
     return response.data;
   } catch (error) {
     console.error("Error updating user:", error);
@@ -24,7 +25,8 @@ export const updateUser = async (userId, userData) => {
 
 export const deleteUser = async (userId) => {
   try {
-    const response = await axios.delete(`${BASE_URL}/${userId}`);
+    const response = await instance.delete(`/api/user/${userId}`);
+    toast.success("User deleted successfully");
     return response.data;
   } catch (error) {
     console.error("Error deleting user:", error);
@@ -34,7 +36,7 @@ export const deleteUser = async (userId) => {
 
 export const getAllUsers = async () => {
   try {
-    const response = await axios.get(BASE_URL);
+    const response = await instance.get("/api/user");
     return response.data;
   } catch (error) {
     console.error("Error fetching users:", error);
@@ -44,7 +46,7 @@ export const getAllUsers = async () => {
 
 export const getUserById = async (userId) => {
   try {
-    const response = await axios.get(`${BASE_URL}/${userId}`);
+    const response = await instance.get(`/api/user/${userId}`);
     return response.data;
   } catch (error) {
     console.error("Error fetching user:", error);

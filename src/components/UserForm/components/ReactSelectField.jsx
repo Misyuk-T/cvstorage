@@ -10,37 +10,64 @@ const ReactSelectField = ({
   label,
   options,
   defaultValue = null,
+  disabled = false,
 }) => {
   const {
-    field: { value, onChange, onBlur },
+    field: { value, onChange },
     fieldState: { error },
-  } = useController({ control, name, defaultValue });
+  } = useController({ control, name, defaultValue: defaultValue });
   const isClientSide = typeof window !== "undefined";
 
   return (
-    <FormControl id={name} isInvalid={!!error} isRequired>
+    <FormControl
+      id={name}
+      isInvalid={!!error}
+      defaultValue={defaultValue}
+      isRequired
+    >
       <FormLabel>{label}</FormLabel>
       <Select
+        isDisabled={disabled}
         name={name}
+        defaultValue={defaultValue}
         options={options}
         instanceId={`id${name}`}
-        value={options.find((option) => option.value === value)}
+        value={options.find((option) => option.value === value) || null}
         onChange={(selectedOption) => onChange(selectedOption.value)}
-        onBlur={onBlur}
         menuPortalTarget={isClientSide && document.body}
         styles={{
           menuPortal: (base) => ({ ...base, zIndex: 100 }),
           option: (styles) => ({
             ...styles,
             cursor: "pointer",
+            fontSize: "14px",
           }),
           control: (styles) => ({
             ...styles,
             cursor: "pointer",
+            padding: 0,
+            fontSize: "14px",
+            minHeight: "32px",
+            height: "32px",
+          }),
+          valueContainer: (styles) => ({
+            ...styles,
+            minHeight: "32px",
+            height: "32px",
+            marginBottom: "4px",
+          }),
+          indicatorsContainer: (styles) => ({
+            ...styles,
+            minHeight: "32px",
+            height: "32px",
           }),
         }}
       />
-      {error && <FormErrorMessage>{error.message}</FormErrorMessage>}
+      {error && (
+        <FormErrorMessage position="absolute" fontSize="12px" bottom="-17px">
+          {error.message}
+        </FormErrorMessage>
+      )}
     </FormControl>
   );
 };

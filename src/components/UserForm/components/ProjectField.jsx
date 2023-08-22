@@ -74,6 +74,33 @@ const ProjectField = ({
                     }
                     isClearable
                     placeholder="Select a project"
+                    styles={{
+                      menuPortal: (base) => ({ ...base, zIndex: 100 }),
+                      option: (styles) => ({
+                        ...styles,
+                        cursor: "pointer",
+                        fontSize: "14px",
+                      }),
+                      control: (styles) => ({
+                        ...styles,
+                        cursor: "pointer",
+                        padding: 0,
+                        fontSize: "14px",
+                        minHeight: "32px",
+                        height: "32px",
+                      }),
+                      valueContainer: (styles) => ({
+                        ...styles,
+                        minHeight: "32px",
+                        height: "32px",
+                        marginBottom: "4px",
+                      }),
+                      indicatorsContainer: (styles) => ({
+                        ...styles,
+                        minHeight: "32px",
+                        height: "32px",
+                      }),
+                    }}
                   />
                 )}
               />
@@ -81,6 +108,7 @@ const ProjectField = ({
 
             <Input
               {...register(`projects[${index}].role`)}
+              size="sm"
               placeholder="User Role"
               isRequired
               defaultValue={selectedProject?.role}
@@ -89,12 +117,14 @@ const ProjectField = ({
 
           <Textarea
             {...register(`projects[${index}].achievements`)}
+            size="sm"
             placeholder="Achievements"
             isRequired
             defaultValue={selectedProject?.achievements}
           />
         </Stack>
         <IconButton
+          size="sm"
           colorScheme="red"
           flexShrink={0}
           onClick={handleDeleteProject}

@@ -3,10 +3,7 @@ import * as yup from "yup";
 const schema = yup.object().shape({
   name: yup.string().required("Name is required"),
   position: yup.string().required("Position is required"),
-  email: yup
-    .string()
-    .email("Invalid email address")
-    .required("Email is required"),
+  email: yup.string().email("Invalid email address"),
   socials: yup.array().of(
     yup.object().shape({
       platform: yup.string().required("Platform is required"),
@@ -30,7 +27,8 @@ const schema = yup.object().shape({
   ),
   education: yup.array().of(
     yup.object().shape({
-      rank: yup.string().required("Rank is required"),
+      rank: yup.string().required("Title is required"),
+      timePeriod: yup.string().required("Time is required"),
       description: yup.string().required("Education description is required"),
     }),
   ),

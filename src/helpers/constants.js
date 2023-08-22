@@ -1,7 +1,7 @@
 export const cvTypeOptions = [
-  { label: "first", value: "first" },
-  { label: "second", value: "second" },
-  { label: "third", value: "third" },
+  { label: "Dark Blue & Green", value: "1" },
+  { label: "second", value: "2" },
+  { label: "third", value: "3" },
 ];
 
 export const gradeOptions = [

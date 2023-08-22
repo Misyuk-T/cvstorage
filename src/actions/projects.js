@@ -1,13 +1,13 @@
-import axios from "axios";
-
-const API_URL = "http://localhost:3000/api/projects";
+import { instance } from "./axios";
+import { toast } from "react-toastify";
 
 export const createProject = async (projectData) => {
   try {
-    const response = await axios.post(API_URL, {
+    const response = await instance.post("/api/projects", {
       ...projectData,
       technologyStack: JSON.stringify(projectData.technologyStack),
     });
+    toast.success("Project created successfully");
     return {
       ...response.data,
       technologyStack: JSON.parse(response.data.technologyStack),
@@ -20,7 +20,7 @@ export const createProject = async (projectData) => {
 
 export const getProject = async (projectId) => {
   try {
-    const response = await axios.get(`${API_URL}?id=${projectId}`);
+    const response = await instance.get(`/api/projects?id=${projectId}`);
     return response.data;
   } catch (error) {
     console.error("Error getting project:", error);
@@ -30,8 +30,7 @@ export const getProject = async (projectId) => {
 
 export const getAllProjects = async () => {
   try {
-    const response = await axios.get(API_URL);
-
+    const response = await instance.get("/api/projects");
     return response.data;
   } catch (error) {
     console.error("Error getting projects:", error);
@@ -41,7 +40,8 @@ export const getAllProjects = async () => {
 
 export const deleteProject = async (projectId) => {
   try {
-    const response = await axios.delete(`${API_URL}/${projectId}`);
+    const response = await instance.delete(`/api/projects/${projectId}`);
+    toast.success("Project deleted successfully");
     return response.data;
   } catch (error) {
     console.error("Error deleting project:", error);
@@ -51,10 +51,11 @@ export const deleteProject = async (projectId) => {
 
 export const updateProject = async (projectId, projectData) => {
   try {
-    const response = await axios.put(`${API_URL}/${projectId}`, {
+    const response = await instance.put(`/api/projects/${projectId}`, {
       ...projectData,
       technologyStack: JSON.stringify(projectData.technologyStack),
     });
+    toast.success("Project updated successfully");
     return {
       ...response.data,
       technologyStack: JSON.parse(response.data.technologyStack),

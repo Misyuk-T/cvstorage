@@ -53,7 +53,7 @@ const Sidebar = () => {
   };
 
   return (
-    <Flex h="100vh">
+    <Flex h="100vh" w="100%">
       <Box
         w="250px"
         bg="gray.200"

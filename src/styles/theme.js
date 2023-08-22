@@ -20,6 +20,14 @@ const theme = extendTheme({
         ".rcs-inner-handle": {
           backgroundColor: "gray.400 !important",
         },
+
+        ".ScrollbarsCustom-Scroller": {
+          paddingRight: "10px",
+        },
+
+        ".trackYVisible .ScrollbarsCustom-Scroller": {
+          paddingRight: 0,
+        },
       },
     },
   },

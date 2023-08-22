@@ -1,4 +1,11 @@
-import { Input, Flex, IconButton, Stack, Text } from "@chakra-ui/react";
+import {
+  Input,
+  Flex,
+  IconButton,
+  Stack,
+  Textarea,
+  Text,
+} from "@chakra-ui/react";
 import { DeleteIcon } from "@chakra-ui/icons";
 
 const EducationField = ({
@@ -18,41 +25,51 @@ const EducationField = ({
   };
 
   return (
-    <Stack>
-      <Flex key={field.id} gap={3} mb={3}>
-        <Input
-          type="text"
-          name={`education[${index}].rank`}
-          placeholder="Rank"
-          {...register(`education[${index}].rank`)}
-          isInvalid={rankError}
-          isRequired
-        />
-
-        <Input
-          type="text"
+    <Flex gap={3} w="100%" key={field.id}>
+      <Stack w="100%" align="center" justify="space-between">
+        <Flex gap={3} w="100%">
+          <Input
+            size="sm"
+            type="text"
+            name={`education[${index}].rank`}
+            placeholder="Title"
+            {...register(`education[${index}].rank`)}
+            isInvalid={rankError}
+            isRequired
+          />
+          <Input
+            size="sm"
+            type="text"
+            name={`education[${index}].timePeriod`}
+            placeholder="Time Period"
+            {...register(`education[${index}].timePeriod`)}
+          />
+        </Flex>
+        <Textarea
+          size="sm"
           name={`education[${index}].description`}
           placeholder="Description"
           {...register(`education[${index}].description`)}
           isInvalid={descriptionError}
           isRequired
         />
+      </Stack>
 
-        <IconButton
-          colorScheme="red"
-          flexShrink={0}
-          onClick={handleRemove}
-          icon={<DeleteIcon />}
-          aria-label="delete"
-        />
-      </Flex>
+      <IconButton
+        size="sm"
+        colorScheme="red"
+        flexShrink={0}
+        onClick={handleRemove}
+        icon={<DeleteIcon />}
+        aria-label="delete"
+      />
 
       {existingError && (
         <Text color="red" fontSize="sm">
           {existingError.message}
         </Text>
       )}
-    </Stack>
+    </Flex>
   );
 };
 

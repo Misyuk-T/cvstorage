@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { ChakraProvider } from "@chakra-ui/react";
+import { ChakraProvider, Container } from "@chakra-ui/react";
 import { ToastContainer } from "react-toastify";
 import { Scrollbar } from "react-scrollbars-custom";
 
@@ -41,8 +41,14 @@ const MyApp = ({ Component, pageProps }) => {
   return (
     <ChakraProvider theme={theme}>
       <Scrollbar style={{ width: "100vw", height: "100vh" }}>
-        <Component {...pageProps} />
-        <ToastContainer position="top-right" autoClose={5000} theme="dark" />
+        <Container maxW={{ xl: "1280px" }} w="100%" p={0} centerContent>
+          <Component {...pageProps} />
+          <ToastContainer
+            position="bottom-center"
+            autoClose={2000}
+            theme="light"
+          />
+        </Container>
       </Scrollbar>
     </ChakraProvider>
   );

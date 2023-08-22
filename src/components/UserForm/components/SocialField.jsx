@@ -12,7 +12,7 @@ const SocialField = ({ index, field, removeSocial, register, errors }) => {
 
   return (
     <Stack key={field.id}>
-      <Flex w="100%" gap={3} mb={3}>
+      <Flex w="100%" gap={3}>
         <Input
           type="text"
           name={`socials[${index}].platform`}
@@ -20,6 +20,7 @@ const SocialField = ({ index, field, removeSocial, register, errors }) => {
           {...register(`socials[${index}].platform`)}
           isInvalid={platformError}
           borderColor="gray.300"
+          size="sm"
           isRequired
         />
 
@@ -30,6 +31,7 @@ const SocialField = ({ index, field, removeSocial, register, errors }) => {
           {...register(`socials[${index}].url`)}
           isInvalid={urlError}
           borderColor="gray.300"
+          size="sm"
           isRequired
         />
 
@@ -39,6 +41,7 @@ const SocialField = ({ index, field, removeSocial, register, errors }) => {
           onClick={handleRemove}
           icon={<DeleteIcon />}
           aria-label="delete"
+          size="sm"
         />
       </Flex>
 

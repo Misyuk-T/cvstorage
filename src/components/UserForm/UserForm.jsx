@@ -15,6 +15,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import useUsersStore from "@/store/usersStore";
 import { createUser, deleteUser, updateUser } from "@/actions/user";
 import schema from "@/helpers/userValidation";
+import { scrollToTop } from "@/helpers/scrollTo";
 import {
   cvTypeOptions,
   gradeOptions,
@@ -36,7 +37,7 @@ const defaultValues = {
   email: "",
   description: "",
   isEnabled: 1,
-  cvType: "",
+  cvType: cvTypeOptions[0].value,
   motivation: "",
   grade: "",
   workDirection: "",
@@ -61,6 +62,7 @@ const UserForm = ({
   } = useUsersStore();
 
   const [isLoading, setIsLoading] = useState(false);
+  const [isDeleteLoading, setIsDeleteLoading] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(initialValues.media);
 
@@ -169,19 +171,24 @@ const UserForm = ({
       setIsLoading(false);
     }
 
+    reset();
+    setImagePreview("");
+    scrollToTop();
     onComplete && onComplete();
   };
 
   const handleDelete = async () => {
-    setIsLoading(true);
+    setIsDeleteLoading(true);
     try {
       await deleteUser(initialValues.id).then((data) => {
         deleteStoreUser(+data.id);
       });
-      setIsLoading(false);
+      setIsDeleteLoading(false);
     } catch (error) {
-      setIsLoading(false);
+      setIsDeleteLoading(false);
     }
+
+    onComplete && onComplete();
   };
 
   useEffect(() => {
@@ -224,7 +231,6 @@ const UserForm = ({
               name="grade"
               label="Grade"
               options={gradeOptions}
-              defaultValue={gradeOptions[0].value}
             />
 
             <ReactSelectField
@@ -232,7 +238,6 @@ const UserForm = ({
               name="workDirection"
               label="Work Direction"
               options={workDirectionOptions}
-              defaultValue={workDirectionOptions[0].value}
             />
 
             <ReactSelectField
@@ -240,7 +245,8 @@ const UserForm = ({
               name="cvType"
               label="CV Type"
               options={cvTypeOptions}
-              defaultValue={cvTypeOptions[0].value}
+              defaultValue={cvTypeOptions[0]}
+              disabled
             />
 
             <FormControl
@@ -305,7 +311,6 @@ const UserForm = ({
                   label="Email"
                   register={register}
                   errors={errors}
-                  isRequired
                   placeHolder="example@exm.com"
                 />
 
@@ -339,7 +344,7 @@ const UserForm = ({
             isRequired={socialsFields.length > 0}
           >
             <Stack
-              gap={5}
+              gap={3}
               p={5}
               pt={8}
               borderRadius={5}
@@ -370,7 +375,10 @@ const UserForm = ({
                 />
               ))}
 
-              <Button onClick={() => appendSocial({ platform: "", url: "" })}>
+              <Button
+                size="sm"
+                onClick={() => appendSocial({ platform: "", url: "" })}
+              >
                 Add information Item
               </Button>
             </Stack>
@@ -403,7 +411,7 @@ const UserForm = ({
               </FormLabel>
 
               {technologyFields.length && (
-                <Flex flexWrap="wrap" justifyContent="space-between" gap={5}>
+                <Flex flexWrap="wrap" gap={5}>
                   {technologyFields.map((field, index) => (
                     <UserTechnologyStackField
                       key={field.id}
@@ -421,6 +429,7 @@ const UserForm = ({
               )}
 
               <Button
+                size="sm"
                 onClick={() =>
                   appendTechnology({ technologyId: "", level: 50 })
                 }
@@ -466,6 +475,7 @@ const UserForm = ({
                 />
               ))}
               <Button
+                size="sm"
                 onClick={() =>
                   appendExperience({
                     companyName: "",
@@ -485,7 +495,7 @@ const UserForm = ({
             isRequired={educationFields.length > 0}
           >
             <Stack
-              gap={5}
+              gap={4}
               p={5}
               pt={8}
               borderRadius={5}
@@ -516,6 +526,7 @@ const UserForm = ({
               ))}
 
               <Button
+                size="sm"
                 onClick={() => appendEducation({ rank: "", description: "" })}
               >
                 Add Education Item
@@ -560,7 +571,9 @@ const UserForm = ({
                 projects={projects}
               />
             ))}
-            <Button onClick={() => appendProject({})}>Add Project Item</Button>
+            <Button size="sm" onClick={() => appendProject({})}>
+              Add Project Item
+            </Button>
           </Stack>
         </Stack>
 
@@ -582,14 +595,14 @@ const UserForm = ({
             px={2}
             fontWeight={600}
           >
-            Motivation / Conclusion
+            Achivements / Conclusion
           </FormLabel>
           <FormField
             name="motivation"
             register={register}
             errors={errors}
             isTextarea={true}
-            placeHolder="Briefly explain motivation or career objectives"
+            placeHolder="Briefly explain motivation, career objectives or achivements"
           />
         </Stack>
 
@@ -599,9 +612,9 @@ const UserForm = ({
               colorScheme="red"
               variant="outline"
               onClick={handleDelete}
-              isLoading={isLoading}
+              isLoading={isDeleteLoading}
               width={initialValues.id ? "calc(50% - 10px)" : "100%"}
-              loadingText="Deleting"
+              isDisabled={isLoading}
             >
               Delete
             </Button>
@@ -612,8 +625,7 @@ const UserForm = ({
             width={initialValues.id ? "calc(50% - 10px)" : "100%"}
             colorScheme="green"
             isLoading={isLoading}
-            loadingText="Submitting"
-            isDisabled={!isDirty}
+            isDisabled={!isDirty || isDeleteLoading}
           >
             {initialValues.id ? "Update CV" : "Save CV"}
           </Button>

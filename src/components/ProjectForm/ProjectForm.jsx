@@ -40,6 +40,7 @@ const ProjectForm = ({ initialValues, technologies, onComplete }) => {
   } = useProjectsStore();
 
   const [isLoading, setIsLoading] = useState(false);
+  const [isDeleteLoading, setIsDeleteLoading] = useState(false);
 
   const {
     register,
@@ -47,7 +48,6 @@ const ProjectForm = ({ initialValues, technologies, onComplete }) => {
     formState: { errors, isValid, isDirty },
     reset,
     control,
-    getValues,
   } = useForm({
     resolver: yupResolver(schema),
     defaultValues: initialValues || defaultValues,
@@ -83,15 +83,14 @@ const ProjectForm = ({ initialValues, technologies, onComplete }) => {
   };
 
   const handleDelete = async () => {
-    setIsLoading(true);
+    setIsDeleteLoading(true);
 
     await deleteProject(initialValues.id).then((data) => {
       deleteStoreProject(+data.id);
     });
     reset();
     onComplete && onComplete();
-
-    setIsLoading(false);
+    setIsDeleteLoading(false);
   };
 
   useEffect(() => {
@@ -167,17 +166,17 @@ const ProjectForm = ({ initialValues, technologies, onComplete }) => {
             colorScheme="red"
             onClick={handleDelete}
             variant="outline"
-            isLoading={isLoading}
+            isLoading={isDeleteLoading}
           >
             Delete Project
           </Button>
         )}
 
         <Button
-          isDisabled={!isValid || !isDirty}
+          isDisabled={!isValid || !isDirty || isDeleteLoading}
           type="submit"
           isLoading={isLoading}
-          loadingText="Creating"
+          loadingText={initialValues ? "Updating" : "Creating"}
           colorScheme="green"
         >
           {initialValues ? "Update Project" : "Create Project"}

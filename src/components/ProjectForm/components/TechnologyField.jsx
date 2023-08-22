@@ -21,6 +21,33 @@ const TechnologyField = ({ control, technologyOptions, errors }) => {
             options={options}
             isMulti
             placeholder="Select..."
+            styles={{
+              menuPortal: (base) => ({ ...base, zIndex: 100 }),
+              option: (styles) => ({
+                ...styles,
+                cursor: "pointer",
+                fontSize: "14px",
+              }),
+              control: (styles) => ({
+                ...styles,
+                cursor: "pointer",
+                padding: 0,
+                fontSize: "14px",
+                minHeight: "32px",
+                height: "32px",
+              }),
+              valueContainer: (styles) => ({
+                ...styles,
+                minHeight: "32px",
+                height: "32px",
+                marginBottom: "4px",
+              }),
+              indicatorsContainer: (styles) => ({
+                ...styles,
+                minHeight: "32px",
+                height: "32px",
+              }),
+            }}
           />
         )}
       />

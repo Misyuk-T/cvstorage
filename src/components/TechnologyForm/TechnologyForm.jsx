@@ -23,13 +23,8 @@ const defaultValues = {
 };
 
 const TechnologyForm = ({ initialValues = defaultValues, onComplete }) => {
-  const {
-    addTechnology: addStoreTechnology,
-    updateTechnology: updateStoreTechnology,
-    deleteTechnology: deleteStoreTechnology,
-  } = useTechnologiesStore();
-
   const [isLoading, setIsLoading] = useState(false);
+  const [isDeleteLoading, setIsDeleteLoading] = useState(false);
 
   const {
     control,
@@ -41,6 +36,12 @@ const TechnologyForm = ({ initialValues = defaultValues, onComplete }) => {
     resolver: yupResolver(schema),
     defaultValues: initialValues || {},
   });
+
+  const {
+    addTechnology: addStoreTechnology,
+    updateTechnology: updateStoreTechnology,
+    deleteTechnology: deleteStoreTechnology,
+  } = useTechnologiesStore();
 
   const onSubmitForm = async (data) => {
     setIsLoading(true);
@@ -57,26 +58,31 @@ const TechnologyForm = ({ initialValues = defaultValues, onComplete }) => {
           addStoreTechnology(data);
         });
       }
+
       onComplete && onComplete();
       setIsLoading(false);
-      reset(defaultValues);
+      reset({
+        name: "",
+        type,
+      });
     } catch (error) {
       setIsLoading(false);
     }
   };
 
   const handleDelete = async () => {
-    setIsLoading(true);
+    setIsDeleteLoading(true);
 
     try {
       await deleteTechnology(initialValues.id).then((data) => {
         deleteStoreTechnology(+data.id);
       });
-      setIsLoading(false);
+
+      setIsDeleteLoading(false);
       reset();
       onComplete && onComplete();
     } catch (error) {
-      setIsLoading(false);
+      setIsDeleteLoading(false);
     }
   };
 
@@ -115,7 +121,8 @@ const TechnologyForm = ({ initialValues = defaultValues, onComplete }) => {
               colorScheme="red"
               onClick={handleDelete}
               variant="outline"
-              isLoading={isLoading}
+              isLoading={isDeleteLoading}
+              isDisabled={isLoading}
             >
               Delete Technology
             </Button>
@@ -124,9 +131,8 @@ const TechnologyForm = ({ initialValues = defaultValues, onComplete }) => {
           <Button
             type="submit"
             colorScheme="green"
-            isDisabled={!isValid || !isDirty}
-            isLoading={isLoading}
-            loadingText="Submitting"
+            isDisabled={!isValid || !isDirty || isDeleteLoading}
+            loadingText={initialValues.id ? "Updating" : "Creating"}
           >
             {initialValues.id ? "Update Technology" : "Create Technology"}
           </Button>

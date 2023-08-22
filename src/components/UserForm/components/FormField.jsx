@@ -29,6 +29,7 @@ const FormField = ({
           type={type}
           name={name}
           resize="block"
+          size="sm"
           {...register(name)}
         />
       ) : (
@@ -36,6 +37,7 @@ const FormField = ({
           type={type}
           placeholder={placeHolder}
           name={name}
+          size="sm"
           {...register(name)}
         />
       )}

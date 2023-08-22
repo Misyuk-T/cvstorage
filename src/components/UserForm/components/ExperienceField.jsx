@@ -25,11 +25,12 @@ const ExperienceField = ({
   };
 
   return (
-    <Stack key={field.id} mb={3}>
+    <Stack key={field.id} mb={1}>
       <Flex gap={3} w="100%">
         <Stack gap={3} w="100%">
           <Flex gap={3}>
             <Input
+              size="sm"
               type="text"
               name={`experience[${index}].companyName`}
               placeholder="Company Name"
@@ -39,6 +40,7 @@ const ExperienceField = ({
             />
 
             <Input
+              size="sm"
               type="text"
               name={`experience[${index}].timePeriod`}
               placeholder="Time Period"
@@ -49,6 +51,7 @@ const ExperienceField = ({
           </Flex>
 
           <Textarea
+            size="sm"
             type="text"
             name={`experience[${index}].description`}
             placeholder="Description"
@@ -58,6 +61,7 @@ const ExperienceField = ({
         </Stack>
 
         <IconButton
+          size="sm"
           colorScheme="red"
           icon={<DeleteIcon />}
           flexShrink={0}
