@@ -188,6 +188,12 @@ const ProjectBlock = ({ technologies, projects }) => {
               />
             </Box>
           )}
+
+          {!projects.length && (
+            <Text fontSize="xl" textAlign="center" mt={10}>
+              Empty Results...
+            </Text>
+          )}
         </TabPanel>
       </TabPanels>
     </Tabs>

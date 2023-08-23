@@ -116,7 +116,7 @@ const TechnologyForm = ({ initialValues = defaultValues, onComplete }) => {
         </Flex>
 
         <Flex gap={10} justifyContent="flex-end">
-          {initialValues && (
+          {initialValues.id && (
             <Button
               colorScheme="red"
               onClick={handleDelete}

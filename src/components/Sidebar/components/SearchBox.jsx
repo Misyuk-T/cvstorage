@@ -7,6 +7,7 @@ import { SearchIcon } from "@chakra-ui/icons";
 const SearchBox = ({ formattedData, handleSelect }) => {
   return (
     <Box
+      position="relative"
       sx={{
         input: {
           padding: "10px 10px 10px 40px",
@@ -15,6 +16,12 @@ const SearchBox = ({ formattedData, handleSelect }) => {
           "& ~ span": {
             margin: "0 10px",
           },
+        },
+        "& .react-search-box-dropdown": {
+          position: "absolute",
+          width: "100%",
+          top: "32px",
+          zIndex: "101",
         },
       }}
     >

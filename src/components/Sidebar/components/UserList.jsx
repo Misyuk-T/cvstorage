@@ -67,9 +67,6 @@ const UserList = ({ users, onCloseForm, onSelect, selectedUser }) => {
           <Text fontFamily="Roboto Slab">{user.grade}</Text>
         </Td>
         <Td>
-          <Text fontFamily="Roboto Slab">{user.cvType}</Text>
-        </Td>
-        <Td>
           <Text fontFamily="Roboto Slab">{extractDate(user.lastUpdated)}</Text>
         </Td>
         <Td>
@@ -114,9 +111,7 @@ const UserList = ({ users, onCloseForm, onSelect, selectedUser }) => {
                 <Th>
                   <Text fontSize="14px">Grade</Text>
                 </Th>
-                <Th>
-                  <Text fontSize="14px">CV Type</Text>
-                </Th>
+
                 <Th>
                   <Text fontSize="14px">Last Updated</Text>
                 </Th>
@@ -152,9 +147,6 @@ const UserList = ({ users, onCloseForm, onSelect, selectedUser }) => {
                   </Th>
                   <Th>
                     <Text fontSize="14px">Grade</Text>
-                  </Th>
-                  <Th>
-                    <Text fontSize="14px">CV Type</Text>
                   </Th>
                   <Th>
                     <Text fontSize="14px">Last Updated</Text>

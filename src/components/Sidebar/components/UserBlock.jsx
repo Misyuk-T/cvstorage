@@ -1,6 +1,8 @@
-import { useState } from "react";
+import React, { useState } from "react";
+import Select from "react-select";
 import {
   Box,
+  Stack,
   Tab,
   TabList,
   TabPanel,
@@ -8,18 +10,22 @@ import {
   Tabs,
   Text,
 } from "@chakra-ui/react";
-
 import { scrollToTop } from "@/helpers/scrollTo";
-import { transformUserToSearch } from "@/helpers/transformData";
-
+import {
+  transformTechnologiesToSelect,
+  transformUserToSearch,
+} from "@/helpers/transformData";
 import UserForm from "@/components/UserForm/UserForm";
 import SearchBox from "@/components/Sidebar/components/SearchBox";
 import UserList from "@/components/Sidebar/components/UserList";
 
 const UsersBlock = ({ technologies, projects, users }) => {
   const [selectedUser, setSelectedUser] = useState(null);
+  const [selectedTechnologies, setSelectedTechnologies] = useState([]);
 
   const formattedData = transformUserToSearch(users);
+  const hardSkills = technologies.filter((tech) => tech.type === "hardSkill");
+  const hardSkillsOptions = transformTechnologiesToSelect(hardSkills);
 
   const handleSelect = (value, id = "") => {
     const selectedId = id || +value?.item.key;
@@ -32,6 +38,12 @@ const UsersBlock = ({ technologies, projects, users }) => {
   const handleClose = () => {
     setSelectedUser(null);
   };
+
+  const filteredUsers = users.filter((user) =>
+    selectedTechnologies.every((selectedTech) =>
+      user.technologyStack.some((tech) => tech.technologyId === selectedTech),
+    ),
+  );
 
   return (
     <Tabs variant="enclosed" isFitted>
@@ -50,15 +62,34 @@ const UsersBlock = ({ technologies, projects, users }) => {
             Select user for update:
           </Text>
 
-          <Box mb={8}>
-            <SearchBox
-              formattedData={formattedData}
-              handleSelect={handleSelect}
-            />
-          </Box>
+          <Stack gap={5}>
+            <Box>
+              <SearchBox
+                formattedData={formattedData}
+                handleSelect={handleSelect}
+              />
+            </Box>
+
+            <Box mb={8}>
+              <Select
+                isMulti
+                options={hardSkillsOptions}
+                value={selectedTechnologies.map((techId) =>
+                  hardSkillsOptions.find((tech) => tech.value === techId),
+                )}
+                onChange={(selectedOptions) => {
+                  handleClose();
+                  setSelectedTechnologies(
+                    selectedOptions.map((option) => option.value),
+                  );
+                }}
+                placeholder="Filter by technologies"
+              />
+            </Box>
+          </Stack>
 
           <UserList
-            users={users}
+            users={filteredUsers}
             onCloseForm={handleClose}
             onSelect={handleSelect}
             selectedUser={selectedUser}

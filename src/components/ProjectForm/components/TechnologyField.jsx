@@ -32,20 +32,14 @@ const TechnologyField = ({ control, technologyOptions, errors }) => {
                 ...styles,
                 cursor: "pointer",
                 padding: 0,
-                fontSize: "14px",
-                minHeight: "32px",
-                height: "32px",
               }),
               valueContainer: (styles) => ({
                 ...styles,
-                minHeight: "32px",
-                height: "32px",
                 marginBottom: "4px",
+                margin: 0,
               }),
               indicatorsContainer: (styles) => ({
                 ...styles,
-                minHeight: "32px",
-                height: "32px",
               }),
             }}
           />

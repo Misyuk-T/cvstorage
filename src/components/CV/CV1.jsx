@@ -269,19 +269,38 @@ const CV1 = ({ user, technologies, projects }) => {
                   {user.education.map((item) => (
                     <View key={item.rank}>
                       <View
-                        style={{ flexDirection: "row", alignItems: "center" }}
+                        style={{
+                          flexDirection: "row",
+                          alignItems: "center",
+                          justifyContent: "space-between",
+                        }}
                       >
-                        <Text
-                          style={{
-                            ...styles.textSmall,
-                            color: "#091543",
-                            marginRight: 8,
-                            fontWeight: 600,
-                            opacity: 0.9,
-                          }}
+                        <View
+                          style={{ flexDirection: "row", alignItems: "center" }}
                         >
-                          •
-                        </Text>
+                          <Text
+                            style={{
+                              ...styles.textSmall,
+                              color: "#091543",
+                              marginRight: 8,
+                              fontWeight: 600,
+                              opacity: 0.9,
+                            }}
+                          >
+                            •
+                          </Text>
+                          <Text
+                            style={{
+                              ...styles.textSmall,
+                              color: "#091543",
+                              fontWeight: 600,
+                              opacity: 0.9,
+                              fontSize: 11,
+                            }}
+                          >
+                            {item.rank}
+                          </Text>
+                        </View>
                         <Text
                           style={{
                             ...styles.textSmall,
@@ -291,7 +310,7 @@ const CV1 = ({ user, technologies, projects }) => {
                             fontSize: 11,
                           }}
                         >
-                          {item.rank}
+                          {item.timePeriod}
                         </Text>
                       </View>
                       <Text
@@ -336,7 +355,7 @@ const CV1 = ({ user, technologies, projects }) => {
                   <View style={{ ...styles.extraLine }} />
                 </View>
                 <View style={{ ...styles.flex, flexWrap: "wrap", gap: 10 }}>
-                  {user.experience.map((item, index) => (
+                  {user.experience.map((item) => (
                     <View key={item.companyName}>
                       <View
                         style={{
@@ -484,18 +503,26 @@ const CV1 = ({ user, technologies, projects }) => {
                   padding: 20,
                   borderRadius: 5,
                   backgroundColor: "#dedede",
+                  gap: 5,
                 }}
               >
-                <Text
-                  style={{
-                    ...styles.textBold,
-                    color: "#091543",
-                    fontSize: 16,
-                  }}
-                >
-                  {project.nda === 1 ? "*" : project.projectName}
-                </Text>
-                <View style={{ marginTop: 5 }}>
+                {project.nda === 1 ? (
+                  <Text style={{ color: "red", fontSize: 11 }}>
+                    * This project is under NDA
+                  </Text>
+                ) : (
+                  <Text
+                    style={{
+                      ...styles.textBold,
+                      color: "#091543",
+                      fontSize: 16,
+                    }}
+                  >
+                    {project.projectName}
+                  </Text>
+                )}
+
+                <View>
                   <Text
                     style={{
                       ...styles.textSmall,
@@ -506,7 +533,7 @@ const CV1 = ({ user, technologies, projects }) => {
                     {project.description}
                   </Text>
                 </View>
-                <View style={{ marginTop: 8 }}>
+                <View>
                   <Text style={{ ...styles.textSmall, color: "#091543" }}>
                     <Text
                       style={{
@@ -559,8 +586,8 @@ const CV1 = ({ user, technologies, projects }) => {
                   {project.achievements}
                 </Text>
 
-                {project.link && (
-                  <View style={{ marginTop: 8 }}>
+                {project.link && project.nda === 0 && (
+                  <View>
                     <Text style={{ ...styles.textSmall, color: "#091543" }}>
                       <Text
                         style={{
@@ -570,15 +597,7 @@ const CV1 = ({ user, technologies, projects }) => {
                       >
                         Link:{" "}
                       </Text>
-                      {project.nda === 1 ? "*" : project.link}
-                    </Text>
-                  </View>
-                )}
-
-                {project.nda === 1 && (
-                  <View style={{ marginTop: 8 }}>
-                    <Text style={{ color: "red", fontSize: 11 }}>
-                      * This project is under NDA
+                      {project.link}
                     </Text>
                   </View>
                 )}
