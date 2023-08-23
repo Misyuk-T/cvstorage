@@ -27,6 +27,7 @@ jobs:
   # Build job
   build:
     runs-on: ubuntu-latest
+    secrets: inherit
     env:
       BASE_URL: ${{ secrets.BASE_URL }}
       KINDE_CLIENT_ID: ${{ secrets.KINDE_CLIENT_ID }}
@@ -35,6 +36,7 @@ jobs:
       KINDE_SITE_URL: ${{ secrets.KINDE_SITE_URL }}
       KINDE_POST_LOGOUT_REDIRECT_URL: ${{ secrets.KINDE_POST_LOGOUT_REDIRECT_URL }}
       KINDE_POST_LOGIN_REDIRECT_URL: ${{ secrets.KINDE_POST_LOGIN_REDIRECT_URL }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v3
