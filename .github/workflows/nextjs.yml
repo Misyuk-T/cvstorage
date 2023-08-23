@@ -86,6 +86,9 @@ jobs:
         run: |
          echo "BASE_URL: $BASE_URL"
          echo "KINDE_CLIENT_ID: $KINDE_CLIENT_ID"
+         echo "BASE_URL: ${{ vars.BASE_URL }}"
+         echo ${{ vars.KINDE_CLIENT_ID }} 'secrets.BASE_URL'
+         echo ${{ secrets.KINDE_SITE_URL }} 'secrets.KINDE_SITE_URL'
       - name: Build with Next.js
         run: ${{ steps.detect-package-manager.outputs.runner }} next build
         env:
