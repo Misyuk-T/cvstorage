@@ -27,7 +27,6 @@ jobs:
   # Build job
   build:
     runs-on: ubuntu-latest
-    secrets: inherit
     env:
       BASE_URL: ${{ secrets.BASE_URL }}
       KINDE_CLIENT_ID: ${{ secrets.KINDE_CLIENT_ID }}
