@@ -1,5 +1,4 @@
 # Sample workflow for building and deploying a Next.js site to GitHub Pages
-#
 # To get started with Next.js see: https://nextjs.org/docs/getting-started
 #
 name: Deploy Next.js site to Pages
@@ -28,7 +27,6 @@ jobs:
   # Build job
   build:
     runs-on: ubuntu-latest
-    secrets: inherit
     env:
       BASE_URL: ${{ secrets.BASE_URL }}
       KINDE_CLIENT_ID: ${{ secrets.KINDE_CLIENT_ID }}
