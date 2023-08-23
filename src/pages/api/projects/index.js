@@ -1,4 +1,5 @@
 import Projects from "models/Projects";
+import { isValidClientSecret } from "@/helpers/isValidClientSecret";
 
 const initializeApp = () => {
   Projects.createTable();
@@ -28,6 +29,10 @@ const handler = async (req, res) => {
     case "POST":
       const { projectName, technologyStack, description, teamSize, link, nda } =
         req.body;
+
+      if (!isValidClientSecret(headers.authorization)) {
+        return res.status(401).json({ error: "Unauthorized" });
+      }
 
       try {
         const newProject = await Projects.create(

@@ -2,6 +2,7 @@ import * as path from "path";
 import Users from "models/User";
 import { parseForm } from "@/helpers/parseForm";
 import { formatPath } from "@/helpers/formatPath";
+import { isValidClientSecret } from "@/helpers/isValidClientSecret";
 
 const initializeApp = () => {
   Users.createTable();
@@ -14,9 +15,13 @@ export const config = {
 };
 
 const handler = async (req, res) => {
-  const { method } = req;
+  const { method, headers } = req;
 
   await initializeApp();
+
+  if (!isValidClientSecret(headers.authorization)) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
 
   switch (method) {
     case "POST":

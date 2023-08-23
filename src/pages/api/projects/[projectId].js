@@ -1,8 +1,13 @@
 import Projects from "models/Projects";
+import { isValidClientSecret } from "@/helpers/isValidClientSecret";
 
 const handler = async (req, res) => {
-  const { method, query } = req;
+  const { method, query, headers } = req;
   const id = query.projectId;
+
+  if (!isValidClientSecret(headers.authorization)) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
 
   switch (method) {
     case "GET":

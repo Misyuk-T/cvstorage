@@ -88,6 +88,22 @@ const Sidebar = () => {
               {tab.label}
             </Button>
           ))}
+
+          <Button
+            width="100%"
+            mt={5}
+            as="a"
+            href="/api/auth/logout"
+            variant="outline"
+            background="white"
+            _hover={{
+              background: "red.100",
+            }}
+            border="1px solid"
+            borderColor="gray.400"
+          >
+            Sign Out
+          </Button>
         </VStack>
       </Box>
 

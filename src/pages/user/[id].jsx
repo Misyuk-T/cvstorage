@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import Head from "next/head";
 import { PDFViewer } from "@react-pdf/renderer";
 import { useRouter } from "next/router";
 import { decodeFromBase64 } from "next/dist/build/webpack/loaders/utils";
@@ -14,6 +15,7 @@ import useTechnologiesStore from "@/store/technologiesStore";
 import useProjectsStore from "@/store/projectsStore";
 
 import CV1 from "@/components/CV/CV1";
+import Loader from "@/components/Loader/Loader";
 
 const UserPage = () => {
   const { technologies } = useTechnologiesStore();
@@ -46,19 +48,30 @@ const UserPage = () => {
 
   return (
     <Box>
-      {user && (
-        <PDFViewer
-          style={{
-            height: "100vh",
-            width: "100vw",
-          }}
-        >
-          <CV1
-            user={user}
-            technologies={intersectedTechnologies}
-            projects={intersectedProjects}
-          />
-        </PDFViewer>
+      {user ? (
+        user.isEnabled === 1 ? (
+          <Box>
+            <Head>
+              <title>{user?.name || "CV Storage"}</title>
+            </Head>
+            <PDFViewer
+              style={{
+                height: "100vh",
+                width: "100vw",
+              }}
+            >
+              <CV1
+                user={user}
+                technologies={intersectedTechnologies}
+                projects={intersectedProjects}
+              />
+            </PDFViewer>
+          </Box>
+        ) : (
+          <Box> This user is not active </Box>
+        )
+      ) : (
+        <Loader />
       )}
     </Box>
   );

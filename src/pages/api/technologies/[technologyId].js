@@ -1,8 +1,13 @@
 import Technologies from "models/Technologies";
+import { isValidClientSecret } from "@/helpers/isValidClientSecret";
 
 const handler = async (req, res) => {
-  const { method, query } = req;
+  const { method, query, headers } = req;
   const id = query.technologyId;
+
+  if (!isValidClientSecret(headers.authorization)) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
 
   switch (method) {
     case "GET":

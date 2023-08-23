@@ -3,8 +3,15 @@ import { toast } from "react-toastify";
 
 import { Stack, Text } from "@chakra-ui/react";
 
+const BASE_URL = process.env.BASE_URL;
+const CLIENT_SECRET = process.env.KINDE_CLIENT_SECRET;
+
 export const instance = axios.create({
-  baseURL: "http://localhost:3000",
+  baseURL: BASE_URL,
+  headers: {
+    Authorization: `${CLIENT_SECRET}`,
+    Accept: "application/json",
+  },
 });
 
 instance.interceptors.response.use(null, (error) => {

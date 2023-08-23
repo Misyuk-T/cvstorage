@@ -3,6 +3,7 @@ import path from "path";
 import Users from "models/User";
 import { deleteUserMedia, parseForm } from "@/helpers/parseForm";
 import { formatPath } from "@/helpers/formatPath";
+import { isValidClientSecret } from "@/helpers/isValidClientSecret";
 
 export const config = {
   api: {
@@ -11,7 +12,7 @@ export const config = {
 };
 
 const handler = async (req, res) => {
-  const { method, query } = req;
+  const { method, query, headers } = req;
   const id = query.userId;
 
   switch (method) {
@@ -39,6 +40,10 @@ const handler = async (req, res) => {
 
     case "PUT":
       try {
+        if (!isValidClientSecret(headers.authorization)) {
+          return res.status(401).json({ error: "Unauthorized" });
+        }
+
         const parsedForm = await parseForm(req, id);
 
         const { fields, files } = parsedForm;
@@ -96,6 +101,10 @@ const handler = async (req, res) => {
       break;
 
     case "DELETE":
+      if (!isValidClientSecret(headers.authorization)) {
+        return res.status(401).json({ error: "Unauthorized" });
+      }
+
       try {
         await deleteUserMedia(id);
         const deletedUser = await Users.deleteById(id);

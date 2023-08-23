@@ -1,4 +1,5 @@
 import Technologies from "models/Technologies";
+import { isValidClientSecret } from "@/helpers/isValidClientSecret";
 
 const initializeApp = () => {
   Technologies.createTable();
@@ -7,11 +8,15 @@ const initializeApp = () => {
 const handler = async (req, res) => {
   await initializeApp();
 
-  const { method, body } = req;
+  const { method, body, headers } = req;
 
   switch (method) {
     case "POST":
       const { name, type } = body;
+
+      if (!isValidClientSecret(headers.authorization)) {
+        return res.status(401).json({ error: "Unauthorized" });
+      }
 
       if (name && type) {
         try {
