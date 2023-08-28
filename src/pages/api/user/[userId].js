@@ -16,6 +16,16 @@ const handler = async (req, res) => {
   const id = query.userId;
 
   switch (method) {
+    case "OPTIONS":
+      res.setHeader("Access-Control-Allow-Origin", "*");
+      res.setHeader("Access-Control-Allow-Methods", "GET, PUT, DELETE");
+      res.setHeader(
+        "Access-Control-Allow-Headers",
+        "Authorization, Content-Type",
+      );
+      res.status(204).end();
+      break;
+
     case "GET":
       try {
         const user = await Users.findById(id);

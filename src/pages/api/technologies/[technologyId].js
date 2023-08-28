@@ -10,6 +10,16 @@ const handler = async (req, res) => {
   }
 
   switch (method) {
+    case "OPTIONS":
+      res.setHeader("Access-Control-Allow-Origin", "*");
+      res.setHeader("Access-Control-Allow-Methods", "GET, PUT, DELETE");
+      res.setHeader(
+        "Access-Control-Allow-Headers",
+        "Authorization, Content-Type",
+      );
+      res.status(204).end();
+      break;
+
     case "GET":
       try {
         const technology = await Technologies.findById(id);

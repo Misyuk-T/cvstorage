@@ -24,6 +24,16 @@ const handler = async (req, res) => {
   }
 
   switch (method) {
+    case "OPTIONS":
+      res.setHeader("Access-Control-Allow-Origin", "*");
+      res.setHeader("Access-Control-Allow-Methods", "GET, POST");
+      res.setHeader(
+        "Access-Control-Allow-Headers",
+        "Authorization, Content-Type",
+      );
+      res.status(204).end();
+      break;
+
     case "POST":
       try {
         const nextUserID = await Users.getNextUserID();

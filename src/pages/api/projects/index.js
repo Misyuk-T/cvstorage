@@ -9,6 +9,16 @@ const handler = async (req, res) => {
   await initializeApp();
 
   switch (req.method) {
+    case "OPTIONS":
+      res.setHeader("Access-Control-Allow-Origin", "*");
+      res.setHeader("Access-Control-Allow-Methods", "GET, POST");
+      res.setHeader(
+        "Access-Control-Allow-Headers",
+        "Authorization, Content-Type",
+      );
+      res.status(204).end();
+      break;
+
     case "GET":
       try {
         const projects = await Projects.findAll();
