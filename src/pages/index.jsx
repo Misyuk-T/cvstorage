@@ -5,11 +5,9 @@ import ProtectedRoute from "@/components/ProtectedRoute/ProtectedRoute";
 
 const Home = () => {
   return (
-    <Box color="black">
-      <ProtectedRoute>
-        <Sidebar />
-      </ProtectedRoute>
-    </Box>
+    <ProtectedRoute>
+      <Sidebar />
+    </ProtectedRoute>
   );
 };
 
