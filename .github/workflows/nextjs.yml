@@ -27,19 +27,9 @@ jobs:
   # Build job
   build:
     runs-on: ubuntu-latest
-
-    env:
-      BASE_URL: ${{ secrets.BASE_URL }}
-      KINDE_CLIENT_ID: ${{ secrets.KINDE_CLIENT_ID }}
-      KINDE_CLIENT_SECRET: ${{ secrets.KINDE_CLIENT_SECRET }}
-      KINDE_ISSUER_URL: ${{ secrets.KINDE_ISSUER_URL }}
-      KINDE_SITE_URL: ${{ secrets.KINDE_SITE_URL }}
-      KINDE_POST_LOGOUT_REDIRECT_URL: ${{ secrets.KINDE_POST_LOGOUT_REDIRECT_URL }}
-      KINDE_POST_LOGIN_REDIRECT_URL: ${{ secrets.KINDE_POST_LOGIN_REDIRECT_URL }}
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-        secrets: inherit
       - name: Detect package manager
         id: detect-package-manager
         run: |
@@ -82,27 +72,18 @@ jobs:
             ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json', '**/yarn.lock') }}-
       - name: Install dependencies
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
-      - name: Debug
+      - name: Create env
         run: |
-         echo "BASE_URL: $BASE_URL"
-         echo "KINDE_CLIENT_ID: $KINDE_CLIENT_ID"
-         echo "BASE_URL: ${{ vars.BASE_URL }}"
-         echo ${{ vars.KINDE_CLIENT_ID }} 'secrets.BASE_URL'
-         echo ${{ secrets.KINDE_SITE_URL }} 'secrets.KINDE_SITE_URL'
+          touch .env.local
+          echo BASE_URL=${{ secrets.BASE_URL }} >> .env.local
+          echo KINDE_CLIENT_ID=${{ secrets.KINDE_CLIENT_ID }} >> .env.local
+          echo KINDE_CLIENT_SECRET=${{ secrets.KINDE_CLIENT_SECRET }} >> .env.local
+          echo KINDE_ISSUER_URL=${{ secrets.KINDE_ISSUER_URL }} >> .env.local
+          echo KINDE_SITE_URL=${{ secrets.KINDE_SITE_URL }} >> .env.local
+          echo KINDE_POST_LOGOUT_REDIRECT_URL=${{ secrets.KINDE_POST_LOGOUT_REDIRECT_URL }} >> .env.local
+          echo KINDE_POST_LOGIN_REDIRECT_URL=${{ secrets.KINDE_POST_LOGIN_REDIRECT_URL }} >> .env.local
       - name: Build with Next.js
         run: ${{ steps.detect-package-manager.outputs.runner }} next build
-        env:
-          BASE_URL: ${{ secrets.BASE_URL }}
-          KINDE_CLIENT_ID: ${{ secrets.KINDE_CLIENT_ID }}
-          KINDE_CLIENT_SECRET: ${{ secrets.KINDE_CLIENT_SECRET }}
-          KINDE_ISSUER_URL: ${{ secrets.KINDE_ISSUER_URL }}
-          KINDE_SITE_URL: ${{ secrets.KINDE_SITE_URL }}
-          KINDE_POST_LOGOUT_REDIRECT_URL: ${{ secrets.KINDE_POST_LOGOUT_REDIRECT_URL }}
-          KINDE_POST_LOGIN_REDIRECT_URL: ${{ secrets.KINDE_POST_LOGIN_REDIRECT_URL }}
-      - name: Debug
-        run: |
-         echo "BASE_URL: ${{ secrets.BASE_URL }}"
-         echo ${{ secrets.BASE_URL }} 'secrets.BASE_URL'
       - name: Static HTML export with Next.js
         run: ${{ steps.detect-package-manager.outputs.runner }} next export
       - name: Upload artifact
