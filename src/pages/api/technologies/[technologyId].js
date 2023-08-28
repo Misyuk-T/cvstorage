@@ -1,8 +1,9 @@
-import Technologies from "models/Technologies";
 import { isValidClientSecret } from "@/helpers/isValidClientSecret";
 
+import { findById, update, deleteById } from "models/Technologies";
+
 const handler = async (req, res) => {
-  const { method, query, headers } = req;
+  const { method, query, headers, body } = req;
   const id = query.technologyId;
 
   if (!isValidClientSecret(headers.authorization)) {
@@ -26,7 +27,7 @@ const handler = async (req, res) => {
 
     case "GET":
       try {
-        const technology = await Technologies.findById(id);
+        const technology = await findById(id);
         if (technology) {
           res.status(200).json(technology);
         } else {
@@ -39,11 +40,11 @@ const handler = async (req, res) => {
       break;
 
     case "PUT":
-      const { name, type } = req.body;
+      const { name, type } = body;
 
       if (name && type) {
         try {
-          const updatedTechnology = await Technologies.update(id, name, type);
+          const updatedTechnology = await update(id, name, type);
           res.status(200).json(updatedTechnology);
         } catch (error) {
           console.error("Error updating technology:", error.message);
@@ -56,7 +57,7 @@ const handler = async (req, res) => {
 
     case "DELETE":
       try {
-        const deletedTechnology = await Technologies.deleteById(id);
+        const deletedTechnology = await deleteById(id);
         res.status(200).json(deletedTechnology);
       } catch (error) {
         console.error("Error deleting technology:", error.message);

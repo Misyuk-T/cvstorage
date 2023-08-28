@@ -1,223 +1,117 @@
-const db = require("../database");
+import { sql } from "@vercel/postgres";
 
-module.exports = {
-  createTable: () => {
-    db.run(`
-      CREATE TABLE IF NOT EXISTS users (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        name TEXT,
-        position TEXT,
-        email TEXT,
-        socials TEXT,
-        description TEXT,
-        experience TEXT,
-        education TEXT,
-        projects TEXT,
-        technologyStack TEXT,
-        media TEXT,
-        motivation TEXT,
-        cvType TEXT,
-        grade TEXT,
-        workDirection TEXT,
-        isEnabled INTEGER DEFAULT 1,
-        lastUpdated DATE DEFAULT (datetime('now','localtime'))
-      )
-    `);
-  },
+export const createTable = async () => {
+  await sql`
+    CREATE TABLE IF NOT EXISTS users (
+      id SERIAL PRIMARY KEY,
+      name TEXT,
+      position TEXT,
+      email TEXT,
+      socials JSONB,
+      description TEXT,
+      experience JSONB,
+      education JSONB,
+      projects JSONB,
+      technologyStack JSONB,
+      media TEXT,
+      motivation TEXT,
+      cvType TEXT,
+      grade TEXT,
+      workDirection TEXT,
+      isEnabled INTEGER DEFAULT 1,
+      lastUpdated TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+    )
+  `;
+};
 
-  findAll: () => {
-    return new Promise((resolve, reject) => {
-      db.all("SELECT * FROM users", (err, rows) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(rows);
-        }
-      });
-    });
-  },
+export const findAll = async () => {
+  const { rows } = await sql`SELECT * FROM users`;
+  return rows;
+};
 
-  findById: (id) => {
-    return new Promise((resolve, reject) => {
-      const stmt = db.prepare("SELECT * FROM users WHERE id = ?");
-      stmt.get(id, (err, row) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(row);
-        }
-      });
-      stmt.finalize();
-    });
-  },
+export const findById = async (id) => {
+  const { rows } = await sql`
+    SELECT * FROM users
+    WHERE id = ${id}
+  `;
+  return rows[0];
+};
 
-  create: (
-    name,
-    position,
-    email,
-    socials,
-    description,
-    experience,
-    education,
-    projects,
-    technologyStack,
-    media,
-    motivation,
-    cvType,
-    grade,
-    workDirection,
-    isEnabled,
-  ) => {
-    return new Promise((resolve, reject) => {
-      const now = new Date().toISOString();
-      const stmt = db.prepare(
-        "INSERT INTO users (name, position, email, socials, description, experience, education, projects, technologyStack, media, motivation, cvType, grade, workDirection, isEnabled, lastUpdated) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-      );
-      stmt.run(
-        name,
-        position,
-        email,
-        JSON.stringify(socials),
-        description,
-        JSON.stringify(experience),
-        JSON.stringify(education),
-        JSON.stringify(projects),
-        JSON.stringify(technologyStack),
-        media,
-        motivation,
-        cvType,
-        grade,
-        workDirection,
-        isEnabled,
-        now,
-        (err) => {
-          if (err) {
-            reject(err);
-          } else {
-            const insertedId = stmt.lastID;
-            resolve({
-              id: insertedId,
-              name,
-              position,
-              email,
-              socials,
-              description,
-              experience,
-              education,
-              projects,
-              technologyStack,
-              media,
-              motivation,
-              cvType,
-              grade,
-              workDirection,
-              isEnabled,
-              lastUpdated: now,
-            });
-            stmt.finalize();
-          }
-        },
-      );
-    });
-  },
+export const create = async (
+  name,
+  position,
+  email,
+  socials,
+  description,
+  experience,
+  education,
+  projects,
+  technologyStack,
+  media,
+  motivation,
+  cvType,
+  grade,
+  workDirection,
+  isEnabled,
+) => {
+  const { rows } = await sql`
+    INSERT INTO users (
+      name, position, email, socials, description, experience,
+      education, projects, technologyStack, media, motivation,
+      cvType, grade, workDirection, isEnabled
+    )
+    VALUES (
+      ${name}, ${position}, ${email}, ${socials}, ${description}, ${experience},
+      ${education}, ${projects}, ${technologyStack}, ${media}, ${motivation},
+      ${cvType}, ${grade}, ${workDirection}, ${isEnabled}
+    )
+    RETURNING *
+  `;
+  return rows[0];
+};
 
-  deleteById: (id) => {
-    return new Promise((resolve, reject) => {
-      const stmt = db.prepare("DELETE FROM users WHERE id = ?");
-      stmt.run(id, (err) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve({ id });
-          stmt.finalize();
-        }
-      });
-    });
-  },
+export const deleteById = async (id) => {
+  await sql`
+    DELETE FROM users
+    WHERE id = ${id}
+  `;
+  return { id };
+};
 
-  update: (
-    id,
-    name,
-    position,
-    email,
-    socials,
-    description,
-    experience,
-    education,
-    projects,
-    technologyStack,
-    media,
-    motivation,
-    cvType,
-    grade,
-    workDirection,
-    isEnabled,
-  ) => {
-    return new Promise((resolve, reject) => {
-      const now = new Date().toISOString();
-      const stmt = db.prepare(`
-        UPDATE users 
-        SET name = ?, position = ?, email = ?, socials = ?, description = ?, experience = ?, education = ?, projects = ?, technologyStack = ?, media = ?, motivation = ?, cvType = ?, grade = ?, workDirection = ?, isEnabled = ?, lastUpdated = ?
-        WHERE id = ?
-      `);
-      stmt.run(
-        name,
-        position,
-        email,
-        JSON.stringify(socials),
-        description,
-        JSON.stringify(experience),
-        JSON.stringify(education),
-        JSON.stringify(projects),
-        JSON.stringify(technologyStack),
-        media,
-        motivation,
-        cvType,
-        grade,
-        workDirection,
-        isEnabled,
-        now,
-        id,
-        (err) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve({
-              id,
-              name,
-              position,
-              email,
-              socials,
-              description,
-              experience,
-              education,
-              projects,
-              technologyStack,
-              media,
-              motivation,
-              cvType,
-              grade,
-              workDirection,
-              isEnabled,
-              lastUpdated: now, // Include lastUpdated field in the response
-            });
-            stmt.finalize();
-          }
-        },
-      );
-    });
-  },
+export const update = async (
+  id,
+  name,
+  position,
+  email,
+  socials,
+  description,
+  experience,
+  education,
+  projects,
+  technologyStack,
+  media,
+  motivation,
+  cvType,
+  grade,
+  workDirection,
+  isEnabled,
+) => {
+  const { rows } = await sql`
+    UPDATE users
+    SET name = ${name}, position = ${position}, email = ${email},
+        socials = ${socials}, description = ${description},
+        experience = ${experience}, education = ${education},
+        projects = ${projects}, technologyStack = ${technologyStack},
+        media = ${media}, motivation = ${motivation},
+        cvType = ${cvType}, grade = ${grade},
+        workDirection = ${workDirection}, isEnabled = ${isEnabled}
+    WHERE id = ${id}
+    RETURNING *
+  `;
+  return rows[0];
+};
 
-  getNextUserID() {
-    return new Promise((resolve, reject) => {
-      db.get("SELECT MAX(id) AS maxId FROM users", (err, row) => {
-        if (err) {
-          reject(err);
-        } else {
-          const nextID = row.maxId ? row.maxId + 1 : 1;
-          resolve(nextID);
-        }
-      });
-    });
-  },
+export const getNextUserID = async () => {
+  const { rows } = await sql`SELECT MAX(id) AS maxId FROM users`;
+  return rows[0].maxId ? rows[0].maxId + 1 : 1;
 };

@@ -1,11 +1,14 @@
 import * as path from "path";
-import Users from "models/User";
+import { sql } from "@vercel/postgres";
+
+import { createTable, getNextUserID, create } from "models/User";
+
 import { parseForm } from "@/helpers/parseForm";
 import { formatPath } from "@/helpers/formatPath";
 import { isValidClientSecret } from "@/helpers/isValidClientSecret";
 
-const initializeApp = () => {
-  Users.createTable();
+const initializeApp = async () => {
+  await createTable();
 };
 
 export const config = {
@@ -40,25 +43,25 @@ const handler = async (req, res) => {
 
     case "POST":
       try {
-        const nextUserID = await Users.getNextUserID();
+        const nextUserID = await getNextUserID();
         const parsedForm = await parseForm(req, nextUserID);
         const { fields, files } = parsedForm;
 
         const {
-          name: [name],
-          email: [email],
-          position: [position],
-          socials: [socials],
-          description: [description],
-          experience: [experience],
-          education: [education],
-          projects: [projects],
-          technologyStack: [technologyStack],
-          motivation: [motivation],
-          cvType: [cvType],
-          grade: [grade],
-          workDirection: [workDirection],
-          isEnabled: [isEnabled],
+          name,
+          position,
+          email,
+          socials,
+          description,
+          experience,
+          education,
+          projects,
+          technologyStack,
+          motivation,
+          cvType,
+          grade,
+          workDirection,
+          isEnabled,
         } = fields;
         const mediaFile = files?.media;
         const absolutePath =
@@ -69,16 +72,16 @@ const handler = async (req, res) => {
         );
 
         try {
-          const newUser = await Users.create(
+          const newUser = await create(
             name,
             position,
             email,
-            JSON.parse(socials),
+            socials,
             description,
-            JSON.parse(experience),
-            JSON.parse(education),
-            JSON.parse(projects),
-            JSON.parse(technologyStack),
+            experience,
+            education,
+            projects,
+            technologyStack,
             relativePath,
             motivation,
             cvType,
@@ -100,8 +103,8 @@ const handler = async (req, res) => {
 
     case "GET":
       try {
-        const users = await Users.findAll();
-        const parsedUsers = users.map((user) => ({
+        const { rows } = await sql`SELECT * FROM users`;
+        const users = rows.map((user) => ({
           ...user,
           socials: JSON.parse(user.socials),
           experience: JSON.parse(user.experience),
@@ -109,7 +112,7 @@ const handler = async (req, res) => {
           projects: JSON.parse(user.projects),
           technologyStack: JSON.parse(user.technologyStack),
         }));
-        res.status(200).json(parsedUsers);
+        res.status(200).json(users);
       } catch (error) {
         console.error("Error fetching users:", error.message);
         res.status(500).json({ error: "Internal Server Error" });

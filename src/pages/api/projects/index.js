@@ -1,8 +1,9 @@
-import Projects from "models/Projects";
+import { createTable, findAll, create } from "models/Projects";
+
 import { isValidClientSecret } from "@/helpers/isValidClientSecret";
 
-const initializeApp = () => {
-  Projects.createTable();
+const initializeApp = async () => {
+  await createTable();
 };
 
 const handler = async (req, res) => {
@@ -25,7 +26,7 @@ const handler = async (req, res) => {
 
     case "GET":
       try {
-        const projects = await Projects.findAll();
+        const projects = await findAll();
         const formattedData = projects.map((item) => {
           return {
             ...item,
@@ -43,15 +44,16 @@ const handler = async (req, res) => {
     case "POST":
       const { projectName, technologyStack, description, teamSize, link, nda } =
         req.body;
+      const headers = req.headers;
 
       if (!isValidClientSecret(headers.authorization)) {
         return res.status(401).json({ error: "Unauthorized" });
       }
 
       try {
-        const newProject = await Projects.create(
+        const newProject = await create(
           projectName,
-          technologyStack,
+          JSON.stringify(technologyStack),
           description,
           teamSize,
           link,

@@ -1,8 +1,9 @@
-import Technologies from "models/Technologies";
+import { createTable, findAll, create } from "models/Technologies";
+
 import { isValidClientSecret } from "@/helpers/isValidClientSecret";
 
-const initializeApp = () => {
-  Technologies.createTable();
+const initializeApp = async () => {
+  await createTable();
 };
 
 const handler = async (req, res) => {
@@ -34,7 +35,7 @@ const handler = async (req, res) => {
 
       if (name && type) {
         try {
-          const newTechnology = await Technologies.create(name, type);
+          const newTechnology = await create(name, type);
           res.status(201).json(newTechnology);
         } catch (error) {
           console.error("Error creating technology:", error.message);
@@ -47,7 +48,7 @@ const handler = async (req, res) => {
 
     case "GET":
       try {
-        const technologies = await Technologies.findAll();
+        const technologies = await findAll();
         res.status(200).json(technologies);
       } catch (error) {
         console.error("Error fetching technologies:", error.message);

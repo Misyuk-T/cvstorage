@@ -1,4 +1,8 @@
-import Projects from "models/Projects";
+import {
+  findById,
+  deleteById,
+  update as updateProject,
+} from "/models/Projects";
 import { isValidClientSecret } from "@/helpers/isValidClientSecret";
 
 const handler = async (req, res) => {
@@ -26,7 +30,7 @@ const handler = async (req, res) => {
 
     case "GET":
       try {
-        const project = await Projects.findById(id);
+        const project = await findById(id);
         if (project) {
           res.status(200).json({
             ...project,
@@ -43,7 +47,7 @@ const handler = async (req, res) => {
 
     case "DELETE":
       try {
-        const deletedProject = await Projects.deleteById(id);
+        const deletedProject = await deleteById(id);
         res.status(200).json(deletedProject);
       } catch (error) {
         console.error("Error deleting project:", error.message);
@@ -56,10 +60,10 @@ const handler = async (req, res) => {
         req.body;
 
       try {
-        const updatedProject = await Projects.update(
+        const updatedProject = await updateProject(
           id,
           projectName,
-          technologyStack,
+          JSON.stringify(technologyStack),
           description,
           teamSize,
           link,

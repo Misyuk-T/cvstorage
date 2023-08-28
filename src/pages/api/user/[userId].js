@@ -1,6 +1,7 @@
 import path from "path";
 
-import Users from "models/User";
+import { findById, deleteById, update } from "models/User";
+
 import { deleteUserMedia, parseForm } from "@/helpers/parseForm";
 import { formatPath } from "@/helpers/formatPath";
 import { isValidClientSecret } from "@/helpers/isValidClientSecret";
@@ -32,7 +33,7 @@ const handler = async (req, res) => {
 
     case "GET":
       try {
-        const user = await Users.findById(id);
+        const user = await findById(id);
 
         if (user) {
           res.status(200).json({
@@ -63,20 +64,20 @@ const handler = async (req, res) => {
         const { fields, files } = parsedForm;
 
         const {
-          name: [name],
-          email: [email],
-          position: [position],
-          socials: [socials],
-          description: [description],
-          experience: [experience],
-          education: [education],
-          projects: [projects],
-          technologyStack: [technologyStack],
-          motivation: [motivation],
-          cvType: [cvType],
-          grade: [grade],
-          workDirection: [workDirection],
-          isEnabled: [isEnabled],
+          name,
+          email,
+          position,
+          socials,
+          description,
+          experience,
+          education,
+          projects,
+          technologyStack,
+          motivation,
+          cvType,
+          grade,
+          workDirection,
+          isEnabled,
         } = fields;
         const mediaFile = files?.media;
         const absolutePath =
@@ -88,7 +89,7 @@ const handler = async (req, res) => {
           path.relative(workingDirectory, absolutePath),
         );
 
-        const updatedUser = await Users.update(
+        const updatedUser = await update(
           id,
           name,
           position,
@@ -121,9 +122,9 @@ const handler = async (req, res) => {
 
       try {
         await deleteUserMedia(id);
-        const deletedUser = await Users.deleteById(id);
+        await deleteById(id);
 
-        res.status(200).json(deletedUser);
+        res.status(200).json({ id });
       } catch (error) {
         console.error("Error deleting user:", error.message);
         res.status(500).json({ error: "Internal Server Error" });
