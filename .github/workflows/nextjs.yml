@@ -52,6 +52,16 @@ jobs:
         with:
           node-version: "18.15.0"
           cache: ${{ steps.detect-package-manager.outputs.manager }}
+      - name: Create env
+        run: |
+          touch .env.local
+          echo BASE_URL=${{ secrets.BASE_URL }} >> .env.local
+          echo KINDE_CLIENT_ID=${{ secrets.KINDE_CLIENT_ID }} >> .env.local
+          echo KINDE_CLIENT_SECRET=${{ secrets.KINDE_CLIENT_SECRET }} >> .env.local
+          echo KINDE_ISSUER_URL=${{ secrets.KINDE_ISSUER_URL }} >> .env.local
+          echo KINDE_SITE_URL=${{ secrets.KINDE_SITE_URL }} >> .env.local
+          echo KINDE_POST_LOGOUT_REDIRECT_URL=${{ secrets.KINDE_POST_LOGOUT_REDIRECT_URL }} >> .env.local
+          echo KINDE_POST_LOGIN_REDIRECT_URL=${{ secrets.KINDE_POST_LOGIN_REDIRECT_URL }} >> .env.local
       - name: Setup Pages
         uses: actions/configure-pages@v3
         with:
@@ -72,16 +82,6 @@ jobs:
             ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json', '**/yarn.lock') }}-
       - name: Install dependencies
         run: ${{ steps.detect-package-manager.outputs.manager }} ${{ steps.detect-package-manager.outputs.command }}
-      - name: Create env
-        run: |
-          touch .env.local
-          echo BASE_URL=${{ secrets.BASE_URL }} >> .env.local
-          echo KINDE_CLIENT_ID=${{ secrets.KINDE_CLIENT_ID }} >> .env.local
-          echo KINDE_CLIENT_SECRET=${{ secrets.KINDE_CLIENT_SECRET }} >> .env.local
-          echo KINDE_ISSUER_URL=${{ secrets.KINDE_ISSUER_URL }} >> .env.local
-          echo KINDE_SITE_URL=${{ secrets.KINDE_SITE_URL }} >> .env.local
-          echo KINDE_POST_LOGOUT_REDIRECT_URL=${{ secrets.KINDE_POST_LOGOUT_REDIRECT_URL }} >> .env.local
-          echo KINDE_POST_LOGIN_REDIRECT_URL=${{ secrets.KINDE_POST_LOGIN_REDIRECT_URL }} >> .env.local
       - name: Build with Next.js
         run: ${{ steps.detect-package-manager.outputs.runner }} next build
       - name: Static HTML export with Next.js

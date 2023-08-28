@@ -8,6 +8,8 @@ const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, isLoading } = useKindeAuth();
   const router = useRouter();
 
+  console.log(isAuthenticated, isLoading, " isAuthenticated, isLoading");
+
   useLayoutEffect(() => {
     if (!isLoading && !isAuthenticated) {
       router.replace("/api/auth/login");
