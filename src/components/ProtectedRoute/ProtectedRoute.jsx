@@ -8,8 +8,6 @@ const ProtectedRoute = ({ children }) => {
   const { isAuthenticated, isLoading } = useKindeAuth();
   const router = useRouter();
 
-  console.log(isAuthenticated, isLoading, " isAuthenticated, isLoading");
-
   useLayoutEffect(() => {
     if (!isLoading && !isAuthenticated) {
       router.replace("/api/auth/login");
@@ -17,7 +15,13 @@ const ProtectedRoute = ({ children }) => {
   }, [isLoading, isAuthenticated, router]);
 
   if (isLoading) {
-    return <Loader />;
+    return (
+      <div>
+        <Loader />
+        {(isAuthenticated, "isAuthenticated")}
+        {(isLoading, "isLoading")}
+      </div>
+    );
   }
 
   return isAuthenticated ? children : <div />;

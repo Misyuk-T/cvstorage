@@ -1,6 +1,6 @@
 import Sidebar from "@/components/Sidebar/Sidebar";
 import ProtectedRoute from "@/components/ProtectedRoute/ProtectedRoute";
-import { Box } from "@chakra-ui/react";
+import { Box, Stack, Text } from "@chakra-ui/react";
 
 const Home = () => {
   const env = process.env.BASE_URL;
@@ -15,13 +15,20 @@ const Home = () => {
 
   return (
     <Box color="black">
-      {env} - base url
-      {KINDE_CLIENT_ID} - KINDE_CLIENT_ID
-      {KINDE_CLIENT_SECRET} - KINDE_CLIENT_SECRET
-      {KINDE_ISSUER_URL} - KINDE_ISSUER_URL
-      {KINDE_SITE_URL} - KINDE_SITE_URL
-      {KINDE_POST_LOGOUT_REDIRECT_URL} - KINDE_POST_LOGOUT_REDIRECT_URL
-      {KINDE_POST_LOGIN_REDIRECT_URL} - KINDE_POST_LOGIN_REDIRECT_URL
+      <Stack>
+        <Text> {env} - base url </Text>
+        <Text>{KINDE_CLIENT_ID} - KINDE_CLIENT_ID </Text>
+        <Text> {KINDE_CLIENT_SECRET} - KINDE_CLIENT_SECRET </Text>
+        <Text> {KINDE_ISSUER_URL} - KINDE_ISSUER_URL </Text>
+        <Text>{KINDE_SITE_URL} - KINDE_SITE_URL </Text>
+        <Text>
+          {KINDE_POST_LOGOUT_REDIRECT_URL} - KINDE_POST_LOGOUT_REDIRECT_URL{" "}
+        </Text>
+        <Text>
+          {KINDE_POST_LOGIN_REDIRECT_URL} - KINDE_POST_LOGIN_REDIRECT_URL{" "}
+        </Text>
+      </Stack>
+
       <ProtectedRoute>
         <Sidebar />
       </ProtectedRoute>
