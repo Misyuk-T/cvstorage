@@ -47,8 +47,7 @@ const handler = async (req, res) => {
 
     case "GET":
       try {
-        // const technologies = await Technologies.findAll();
-        const technologies = ["lego", "toy"];
+        const technologies = await Technologies.findAll();
         res.status(200).json(technologies);
       } catch (error) {
         console.error("Error fetching technologies:", error.message);
