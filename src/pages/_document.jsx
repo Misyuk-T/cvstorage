@@ -5,7 +5,7 @@ const Document = () => {
   return (
     <Html lang="en">
       <Head>
-        <title>CV Storage</title>
+        <title>CV Storage dev</title>
         <link rel="shortcut icon" href="/favicon.png" />
       </Head>
       <body>
