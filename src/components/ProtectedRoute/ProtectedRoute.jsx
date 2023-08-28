@@ -15,7 +15,13 @@ const ProtectedRoute = ({ children }) => {
   }, [isLoading, isAuthenticated, router]);
 
   if (isLoading) {
-    return <Loader />;
+    return (
+      <div>
+        <Loader />
+        {(isAuthenticated, "isAuthenticated")}
+        {(isLoading, "isLoading")}
+      </div>
+    );
   }
 
   return isAuthenticated ? children : <div />;
