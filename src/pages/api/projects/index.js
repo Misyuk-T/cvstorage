@@ -53,7 +53,7 @@ const handler = async (req, res) => {
       try {
         const newProject = await create(
           projectName,
-          JSON.stringify(technologyStack),
+          technologyStack,
           description,
           teamSize,
           link,

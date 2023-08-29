@@ -64,20 +64,20 @@ const handler = async (req, res) => {
         const { fields, files } = parsedForm;
 
         const {
-          name,
-          email,
-          position,
-          socials,
-          description,
-          experience,
-          education,
-          projects,
-          technologyStack,
-          motivation,
-          cvType,
-          grade,
-          workDirection,
-          isEnabled,
+          name: [name],
+          email: [email],
+          position: [position],
+          socials: [socials],
+          description: [description],
+          experience: [experience],
+          education: [education],
+          projects: [projects],
+          technologyStack: [technologyStack],
+          motivation: [motivation],
+          cvType: [cvType],
+          grade: [grade],
+          workDirection: [workDirection],
+          isEnabled: [isEnabled],
         } = fields;
         const mediaFile = files?.media;
         const absolutePath =

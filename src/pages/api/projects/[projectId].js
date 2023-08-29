@@ -63,7 +63,7 @@ const handler = async (req, res) => {
         const updatedProject = await updateProject(
           id,
           projectName,
-          JSON.stringify(technologyStack),
+          technologyStack,
           description,
           teamSize,
           link,
