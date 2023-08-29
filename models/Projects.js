@@ -36,7 +36,7 @@ export const create = async (
   nda,
 ) => {
   const { rows } = await sql`
-    INSERT INTO projects (projectName, technologyStack, description, teamSize, link, nda)
+    INSERT INTO projects ("projectName", "technologyStack", "description", "teamSize", "link", "nda")
     VALUES (${projectName}, ${technologyStack}, ${description}, ${teamSize}, ${link}, ${nda})
     RETURNING *
   `;
