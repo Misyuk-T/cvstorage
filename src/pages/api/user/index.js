@@ -1,10 +1,8 @@
-import * as path from "path";
 import { sql } from "@vercel/postgres";
 
 import { createTable, getNextUserID, create } from "models/User";
 
 import { parseForm } from "@/helpers/parseForm";
-import { formatPath } from "@/helpers/formatPath";
 import { isValidClientSecret } from "@/helpers/isValidClientSecret";
 
 const initializeApp = async () => {
@@ -21,6 +19,11 @@ const handler = async (req, res) => {
   const { method, headers } = req;
 
   await initializeApp();
+
+  const nextUserID = await getNextUserID();
+  const parsedForm = await parseForm(req, nextUserID);
+
+  console.log(parsedForm, "parsedForm");
 
   switch (method) {
     case "OPTIONS":
@@ -45,7 +48,7 @@ const handler = async (req, res) => {
       try {
         const nextUserID = await getNextUserID();
         const parsedForm = await parseForm(req, nextUserID);
-        const { fields, files } = parsedForm;
+        const { fields } = parsedForm;
 
         const {
           name: [name],
@@ -62,14 +65,8 @@ const handler = async (req, res) => {
           grade: [grade],
           workDirection: [workDirection],
           isEnabled: [isEnabled],
+          media: [media],
         } = fields;
-        const mediaFile = files?.media;
-        const absolutePath =
-          (mediaFile && mediaFile[0]?.filepath) || "public/default_avatar.png";
-        const workingDirectory = process.cwd();
-        const relativePath = formatPath(
-          path.relative(workingDirectory, absolutePath),
-        );
 
         try {
           const newUser = await create(
@@ -82,7 +79,7 @@ const handler = async (req, res) => {
             JSON.parse(education),
             JSON.parse(projects),
             JSON.parse(technologyStack),
-            relativePath,
+            media,
             motivation,
             cvType,
             grade,
