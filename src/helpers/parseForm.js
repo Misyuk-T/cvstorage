@@ -1,60 +1,62 @@
-import path from "path";
-import { mkdir, stat } from "fs/promises";
+import { Storage } from "@google-cloud/storage";
 import formidable from "formidable";
-import mime from "mime";
-import fs from "fs";
+
+const storage = new Storage({
+  projectId: process.env.PROJECT_ID,
+  credentials: {
+    client_email: process.env.CLIENT_EMAIL,
+    private_key: process.env.PRIVATE_KEY,
+  },
+});
 
 export const parseForm = async (req, userId) => {
   return new Promise(async (resolve, reject) => {
-    const uploadDir = path.join(
-      process.cwd(),
-      "public",
-      "uploads",
-      userId.toString(),
-    );
-
-    try {
-      await stat(uploadDir);
-    } catch (e) {
-      if (e.code === "ENOENT") {
-        await mkdir(uploadDir, { recursive: true });
-      } else {
-        console.error(e);
-        reject(e);
-        return;
-      }
-    }
-
     const form = formidable({
       maxFiles: 1,
-      uploadDir,
-      filename: (_name, _ext, part) => {
-        return `${part.name || "unknown"}.${
-          mime.getExtension(part.mimetype || "") || "unknown"
-        }`;
-      },
-      filter: (part) => {
-        return (
-          part.name === "media" && (part.mimetype?.includes("image") || false)
-        );
-      },
     });
 
-    await form.parse(req, function (err, fields, files) {
+    const files = {};
+    const fields = {};
+
+    form.on("fileBegin", function (name, file) {
+      if (name === "media" && file.type.includes("image")) {
+        const fileExtension = file.name.split(".").pop();
+        const uniqueFileName = `${userId}-${Date.now()}.${fileExtension}`;
+        const bucket = storage.bucket(process.env.BUCKET_NAME);
+        const fileUpload = bucket.file(uniqueFileName);
+        file.path = fileUpload.createWriteStream();
+        files.media = fileUpload;
+      }
+    });
+
+    form.on("field", function (name, value) {
+      fields[name] = value;
+    });
+
+    form.parse(req, function (err) {
       if (err) {
         reject(err);
-      } else resolve({ fields, files });
+      } else {
+        console.log("fields", { ...fields, media: files.media?.name || "" });
+        resolve({
+          fields: { ...fields, media: files.media?.name || "" },
+        });
+      }
     });
   });
 };
 
-export const deleteUserMedia = async (id) => {
-  const folderPath = path.join(process.cwd(), "uploads", id.toString());
+export const deleteUserMedia = async (userId) => {
+  const bucket = storage.bucket(process.env.BUCKET_NAME);
 
   try {
-    await fs.rm(folderPath, { recursive: true });
+    const [files] = await bucket.getFiles({
+      prefix: `${userId}-`,
+    });
+
+    await Promise.all(files.map((file) => file.delete()));
   } catch (error) {
     console.error("Error deleting user media:", error.message);
-    throw error; // Rethrow the error to be caught in the calling function if needed.
+    throw error;
   }
 };

@@ -132,7 +132,7 @@ const handler = async (req, res) => {
       break;
 
     default:
-      res.status(406).json({ error: "Method Not Allowed" });
+      res.status(405).json({ error: "Method Not Allowed" });
       break;
   }
 };

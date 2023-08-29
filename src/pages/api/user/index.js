@@ -22,10 +22,6 @@ const handler = async (req, res) => {
 
   await initializeApp();
 
-  if (!isValidClientSecret(headers.authorization)) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
-
   switch (method) {
     case "OPTIONS":
       res.setHeader("Access-Control-Allow-Origin", "*");
@@ -42,6 +38,10 @@ const handler = async (req, res) => {
       break;
 
     case "POST":
+      if (!isValidClientSecret(headers.authorization)) {
+        return res.status(401).json({ error: "Unauthorized" });
+      }
+
       try {
         const nextUserID = await getNextUserID();
         const parsedForm = await parseForm(req, nextUserID);
@@ -102,6 +102,10 @@ const handler = async (req, res) => {
       break;
 
     case "GET":
+      if (!isValidClientSecret(headers.authorization)) {
+        return res.status(401).json({ error: "Unauthorized" });
+      }
+
       try {
         const { rows } = await sql`SELECT * FROM users`;
         const users = rows.map((user) => ({
@@ -120,7 +124,7 @@ const handler = async (req, res) => {
       break;
 
     default:
-      res.status(406).json({ error: "Method Not Allowed" });
+      res.status(405).json({ error: "Method Not Allowed" });
       break;
   }
 };
