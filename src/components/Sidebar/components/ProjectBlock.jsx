@@ -41,9 +41,9 @@ const ProjectBlock = ({ technologies, projects }) => {
   const [selectedProject, setSelectedProject] = useState(null);
 
   const formattedData = transformProjectsToSearch(projects);
-  const sortedProjects = projects.sort((a, b) =>
-    a.projectName.localeCompare(b.projectName),
-  );
+  const sortedProjects = projects
+    ? projects.sort((a, b) => a.projectName.localeCompare(b.projectName))
+    : [];
 
   const handleClose = () => {
     setSelectedProject(null);
