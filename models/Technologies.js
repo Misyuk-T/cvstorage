@@ -25,7 +25,7 @@ export const findById = async (id) => {
 
 export const create = async (name, type) => {
   const { rows } = await sql`
-    INSERT INTO technologies (name, type)
+    INSERT INTO technologies ("name", "type")
     VALUES (${name}, ${type})
     RETURNING *
   `;
@@ -43,7 +43,7 @@ export const deleteById = async (id) => {
 export const update = async (id, name, type) => {
   const { rows } = await sql`
     UPDATE technologies
-    SET name = ${name}, type = ${type}
+    SET "name" = ${name}, "type" = ${type}
     WHERE id = ${id}
     RETURNING *
   `;

@@ -56,9 +56,9 @@ export const create = async (
 ) => {
   const { rows } = await sql`
     INSERT INTO users (
-      name, position, email, socials, description, experience,
-      education, projects, technologyStack, media, motivation,
-      cvType, grade, workDirection, isEnabled
+      "name", "position", "email", "socials", "description", "experience",
+      "education", "projects", "technologyStack", "media", "motivation",
+      "cvType", "grade", "workDirection", "isEnabled"
     )
     VALUES (
       ${name}, ${position}, ${email}, ${socials}, ${description}, ${experience},
@@ -98,13 +98,13 @@ export const update = async (
 ) => {
   const { rows } = await sql`
     UPDATE users
-    SET name = ${name}, position = ${position}, email = ${email},
-        socials = ${socials}, description = ${description},
-        experience = ${experience}, education = ${education},
-        projects = ${projects}, technologyStack = ${technologyStack},
-        media = ${media}, motivation = ${motivation},
-        cvType = ${cvType}, grade = ${grade},
-        workDirection = ${workDirection}, isEnabled = ${isEnabled}
+    SET "name" = ${name}, "position" = ${position}, "email" = ${email},
+        "socials" = ${socials}, "description" = ${description},
+        "experience" = ${experience}, "education" = ${education},
+        "projects" = ${projects}, "technologyStack" = ${technologyStack},
+        "media" = ${media}, "motivation" = ${motivation},
+        "cvType" = ${cvType}, "grade" = ${grade},
+        "workDirection" = ${workDirection}, "isEnabled" = ${isEnabled}
     WHERE id = ${id}
     RETURNING *
   `;

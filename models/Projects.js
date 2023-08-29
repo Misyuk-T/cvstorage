@@ -62,7 +62,7 @@ export const update = async (
 ) => {
   const { rows } = await sql`
     UPDATE projects
-    SET projectName = ${projectName}, technologyStack = ${technologyStack}, description = ${description}, teamSize = ${teamSize}, link = ${link}, nda = ${nda}
+    SET "projectName" = ${projectName}, "technologyStack" = ${technologyStack}, "description" = ${description}, "teamSize" = ${teamSize}, "link" = ${link}, "nda" = ${nda}
     WHERE id = ${id}
     RETURNING *
   `;
