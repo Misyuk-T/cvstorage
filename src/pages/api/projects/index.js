@@ -28,9 +28,11 @@ const handler = async (req, res) => {
       try {
         const projects = await findAll();
         const formattedData = projects.map((item) => {
+          const technologies = item.technologyStack;
+
           return {
             ...item,
-            technologyStack: JSON.parse(item.technologyStack),
+            technologyStack: technologies ? JSON.parse(technologies) : [],
           };
         });
 
