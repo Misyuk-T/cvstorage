@@ -16,24 +16,17 @@ export const parseForm = async (req, userId) => {
     });
 
     const files = {};
-    const fields = {};
 
     form.on("fileBegin", function (name, file) {
-      if (name === "media" && file.type.includes("image")) {
-        const fileExtension = file.name.split(".").pop();
-        const uniqueFileName = `${userId}-${Date.now()}.${fileExtension}`;
-        const bucket = storage.bucket(process.env.BUCKET_NAME);
-        const fileUpload = bucket.file(uniqueFileName);
-        file.path = fileUpload.createWriteStream();
-        files.media = fileUpload;
-      }
+      const fileExtension = file.name.split(".").pop();
+      const uniqueFileName = `${userId}-${Date.now()}.${fileExtension}`;
+      const bucket = storage.bucket(process.env.BUCKET_NAME);
+      const fileUpload = bucket.file(uniqueFileName);
+      file.path = fileUpload.createWriteStream();
+      files.media = fileUpload;
     });
 
-    form.on("field", function (name, value) {
-      fields[name] = value;
-    });
-
-    form.parse(req, function (err) {
+    form.parse(req, async function (err, fields) {
       if (err) {
         reject(err);
       } else {
