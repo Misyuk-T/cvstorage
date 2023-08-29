@@ -39,7 +39,9 @@ const handler = async (req, res) => {
         res.status(200).json(formattedData);
       } catch (error) {
         console.error("Error fetching projects:", error.message);
-        res.status(500).json({ error: "Internal Server Error" });
+        res
+          .status(500)
+          .json({ error: `Internal Server Error: ${error.message}` });
       }
       break;
 
@@ -64,7 +66,9 @@ const handler = async (req, res) => {
         res.status(201).json(newProject);
       } catch (error) {
         console.error("Error creating project:", error.message);
-        res.status(500).json({ error: "Internal Server Error" });
+        res
+          .status(500)
+          .json({ error: `Internal Server Error: ${error.message}` });
       }
       break;
 
