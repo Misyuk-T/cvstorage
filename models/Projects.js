@@ -3,13 +3,13 @@ import { sql } from "@vercel/postgres";
 export const createTable = async () => {
   await sql`
     CREATE TABLE IF NOT EXISTS projects (
-      id SERIAL PRIMARY KEY,
-      projectName TEXT,
-      technologyStack TEXT,
-      description TEXT,
-      teamSize INTEGER,
-      link TEXT,
-      nda INTEGER DEFAULT 1
+      "id" SERIAL PRIMARY KEY,
+      "projectName" TEXT,
+      "technologyStack" TEXT,
+      "description" TEXT,
+      "teamSize" INTEGER,
+      "link" TEXT,
+      "nda" INTEGER DEFAULT 1
     )
   `;
 };

@@ -3,23 +3,23 @@ import { sql } from "@vercel/postgres";
 export const createTable = async () => {
   await sql`
     CREATE TABLE IF NOT EXISTS users (
-      id SERIAL PRIMARY KEY,
-      name TEXT,
-      position TEXT,
-      email TEXT,
-      socials JSONB,
-      description TEXT,
-      experience JSONB,
-      education JSONB,
-      projects JSONB,
-      technologyStack JSONB,
-      media TEXT,
-      motivation TEXT,
-      cvType TEXT,
-      grade TEXT,
-      workDirection TEXT,
-      isEnabled INTEGER DEFAULT 1,
-      lastUpdated TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+      "id" SERIAL PRIMARY KEY,
+      "name" TEXT,
+      "position" TEXT,
+      "email" TEXT,
+      "socials" JSONB,
+      "description" TEXT,
+      "experience" JSONB,
+      "education" JSONB,
+      "projects" JSONB,
+      "technologyStack" JSONB,
+      "media" TEXT,
+      "motivation" TEXT,
+      "cvType" TEXT,
+      "grade" TEXT,
+      "workDirection" TEXT,
+      "isEnabled" INTEGER DEFAULT 1,
+      "lastUpdated" TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
     )
   `;
 };

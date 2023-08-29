@@ -3,9 +3,9 @@ import { sql } from "@vercel/postgres";
 export const createTable = async () => {
   await sql`
     CREATE TABLE IF NOT EXISTS technologies (
-      id SERIAL PRIMARY KEY,
-      name TEXT,
-      type TEXT
+      "id" SERIAL PRIMARY KEY,
+      "name" TEXT,
+      "type" TEXT
     )
   `;
 };
