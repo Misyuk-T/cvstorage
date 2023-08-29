@@ -31,7 +31,7 @@ const handler = async (req, res) => {
       res.setHeader("Access-Control-Allow-Origin", "*");
       res.setHeader(
         "Access-Control-Allow-Methods",
-        "GET,OPTIONS,PATCH,DELETE,POST,PUT",
+        "GET, OPTIONS, PATCH, DELETE, POST, PUT",
       );
       res.setHeader("Access-Control-Allow-Credentials", "true");
       res.setHeader(
@@ -120,7 +120,7 @@ const handler = async (req, res) => {
       break;
 
     default:
-      res.status(405).json({ error: "Method Not Allowed" });
+      res.status(406).json({ error: "Method Not Allowed" });
       break;
   }
 };
