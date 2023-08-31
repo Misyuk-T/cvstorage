@@ -1,8 +1,7 @@
 import { sql } from "@vercel/postgres";
 
-import { createTable, getNextUserID, create } from "models/User";
+import { createTable, create } from "models/User";
 
-import { parseForm } from "@/helpers/parseForm";
 import { isValidClientSecret } from "@/helpers/isValidClientSecret";
 
 const initializeApp = async () => {
@@ -19,11 +18,6 @@ const handler = async (req, res) => {
   const { method, headers } = req;
 
   await initializeApp();
-
-  const nextUserID = await getNextUserID();
-  const parsedForm = await parseForm(req, nextUserID);
-
-  console.log(parsedForm, "parsedForm");
 
   switch (method) {
     case "OPTIONS":
@@ -45,55 +39,44 @@ const handler = async (req, res) => {
         return res.status(401).json({ error: "Unauthorized" });
       }
 
+      const {
+        name,
+        email,
+        position,
+        socials,
+        description,
+        experience,
+        education,
+        projects,
+        technologyStack,
+        motivation,
+        cvType,
+        grade,
+        workDirection,
+        isEnabled,
+      } = req.body;
+
       try {
-        const nextUserID = await getNextUserID();
-        const parsedForm = await parseForm(req, nextUserID);
-        const { fields } = parsedForm;
+        const newUser = await create(
+          name,
+          position,
+          email,
+          JSON.parse(socials),
+          description,
+          JSON.parse(experience),
+          JSON.parse(education),
+          JSON.parse(projects),
+          JSON.parse(technologyStack),
+          motivation,
+          cvType,
+          grade,
+          workDirection,
+          isEnabled === "true" ? 1 : 0,
+        );
 
-        const {
-          name: [name],
-          email: [email],
-          position: [position],
-          socials: [socials],
-          description: [description],
-          experience: [experience],
-          education: [education],
-          projects: [projects],
-          technologyStack: [technologyStack],
-          motivation: [motivation],
-          cvType: [cvType],
-          grade: [grade],
-          workDirection: [workDirection],
-          isEnabled: [isEnabled],
-          media: [media],
-        } = fields;
-
-        try {
-          const newUser = await create(
-            name,
-            position,
-            email,
-            JSON.parse(socials),
-            description,
-            JSON.parse(experience),
-            JSON.parse(education),
-            JSON.parse(projects),
-            JSON.parse(technologyStack),
-            media,
-            motivation,
-            cvType,
-            grade,
-            workDirection,
-            isEnabled === "true" ? 1 : 0,
-          );
-
-          res.status(201).json(newUser);
-        } catch (error) {
-          console.error("Error creating user:", error.message);
-          res.status(500).json({ error: "Internal Server Error" });
-        }
+        res.status(201).json(newUser);
       } catch (error) {
-        console.error("Error processing file upload:", error);
+        console.error("Error creating user:", error.message);
         res.status(500).json({ error: "Internal Server Error" });
       }
       break;

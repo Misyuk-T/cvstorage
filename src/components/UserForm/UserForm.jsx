@@ -22,7 +22,6 @@ import {
   workDirectionOptions,
 } from "/src/helpers/constants";
 
-import FileUploadField from "./components/FileUploadField";
 import ReactSelectField from "@/components/UserForm/components/ReactSelectField";
 import ProjectField from "./components/ProjectField";
 import EducationField from "./components/EducationField";
@@ -41,7 +40,6 @@ const defaultValues = {
   motivation: "",
   grade: "",
   workDirection: "",
-  media: "",
   socials: [],
   experience: [],
   education: [],
@@ -63,8 +61,6 @@ const UserForm = ({
 
   const [isLoading, setIsLoading] = useState(false);
   const [isDeleteLoading, setIsDeleteLoading] = useState(false);
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [imagePreview, setImagePreview] = useState(initialValues.media);
 
   const {
     register,
@@ -124,32 +120,16 @@ const UserForm = ({
     name: "technologyStack",
   });
 
-  const handleFileChange = (name, file) => {
-    setSelectedFile({ name, file });
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result);
-      };
-      reader.readAsDataURL(file);
-    } else {
-      setImagePreview(null);
-    }
-  };
-
   const onSubmitForm = async (data) => {
     setIsLoading(true);
 
     const updatedData = {
       ...data,
-      media: selectedFile ? selectedFile.file : initialValues.media,
     };
 
     try {
       const formData = new FormData();
       for (const key in updatedData) {
-        if (key === "media" && updatedData[key] === "") continue;
-
         if (Array.isArray(updatedData[key])) {
           formData.append(key, JSON.stringify(updatedData[key]));
         } else {
@@ -172,7 +152,6 @@ const UserForm = ({
     }
 
     reset();
-    setImagePreview("");
     scrollToTop();
     onComplete && onComplete();
   };
@@ -192,7 +171,6 @@ const UserForm = ({
   };
 
   useEffect(() => {
-    setImagePreview(initialValues.media);
     reset({ ...initialValues, isEnabled: initialValues.isEnabled === 1 });
   }, [initialValues]);
 
@@ -285,16 +263,6 @@ const UserForm = ({
             About
           </Text>
           <Flex gap={10} alignItems="flex-start">
-            <Box mt="32px">
-              <FileUploadField
-                name="media"
-                register={register}
-                onChange={handleFileChange}
-                imagePreview={imagePreview}
-                error={errors}
-              />
-            </Box>
-
             <Stack justifyContent="space-between" w="100%" gap={3}>
               <Flex gap={5} w="100%">
                 <FormField

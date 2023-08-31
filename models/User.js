@@ -13,7 +13,6 @@ export const createTable = async () => {
       "education" JSONB,
       "projects" JSONB,
       "technologyStack" JSONB,
-      "media" TEXT,
       "motivation" TEXT,
       "cvType" TEXT,
       "grade" TEXT,
@@ -47,7 +46,6 @@ export const create = async (
   education,
   projects,
   technologyStack,
-  media,
   motivation,
   cvType,
   grade,
@@ -57,12 +55,12 @@ export const create = async (
   const { rows } = await sql`
     INSERT INTO users (
       "name", "position", "email", "socials", "description", "experience",
-      "education", "projects", "technologyStack", "media", "motivation",
+      "education", "projects", "technologyStack", "motivation",
       "cvType", "grade", "workDirection", "isEnabled"
     )
     VALUES (
       ${name}, ${position}, ${email}, ${socials}, ${description}, ${experience},
-      ${education}, ${projects}, ${technologyStack}, ${media}, ${motivation},
+      ${education}, ${projects}, ${technologyStack}, ${motivation},
       ${cvType}, ${grade}, ${workDirection}, ${isEnabled}
     )
     RETURNING *
@@ -89,7 +87,6 @@ export const update = async (
   education,
   projects,
   technologyStack,
-  media,
   motivation,
   cvType,
   grade,
@@ -101,8 +98,7 @@ export const update = async (
     SET "name" = ${name}, "position" = ${position}, "email" = ${email},
         "socials" = ${socials}, "description" = ${description},
         "experience" = ${experience}, "education" = ${education},
-        "projects" = ${projects}, "technologyStack" = ${technologyStack},
-        "media" = ${media}, "motivation" = ${motivation},
+        "projects" = ${projects}, "technologyStack" = ${technologyStack}, "motivation" = ${motivation},
         "cvType" = ${cvType}, "grade" = ${grade},
         "workDirection" = ${workDirection}, "isEnabled" = ${isEnabled}
     WHERE id = ${id}

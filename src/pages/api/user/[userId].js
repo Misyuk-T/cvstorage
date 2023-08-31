@@ -1,9 +1,5 @@
-import path from "path";
-
 import { findById, deleteById, update } from "models/User";
 
-import { deleteUserMedia, parseForm } from "@/helpers/parseForm";
-import { formatPath } from "@/helpers/formatPath";
 import { isValidClientSecret } from "@/helpers/isValidClientSecret";
 
 export const config = {
@@ -59,35 +55,22 @@ const handler = async (req, res) => {
           return res.status(401).json({ error: "Unauthorized" });
         }
 
-        const parsedForm = await parseForm(req, id);
-
-        const { fields, files } = parsedForm;
-
         const {
-          name: [name],
-          email: [email],
-          position: [position],
-          socials: [socials],
-          description: [description],
-          experience: [experience],
-          education: [education],
-          projects: [projects],
-          technologyStack: [technologyStack],
-          motivation: [motivation],
-          cvType: [cvType],
-          grade: [grade],
-          workDirection: [workDirection],
-          isEnabled: [isEnabled],
-        } = fields;
-        const mediaFile = files?.media;
-        const absolutePath =
-          (mediaFile && mediaFile[0]?.filepath) ||
-          fields.media[0] ||
-          "public/default_avatar.png";
-        const workingDirectory = process.cwd();
-        const relativePath = formatPath(
-          path.relative(workingDirectory, absolutePath),
-        );
+          name,
+          email,
+          position,
+          socials,
+          description,
+          experience,
+          education,
+          projects,
+          technologyStack,
+          motivation,
+          cvType,
+          grade,
+          workDirection,
+          isEnabled,
+        } = req.body;
 
         const updatedUser = await update(
           id,
@@ -100,7 +83,6 @@ const handler = async (req, res) => {
           JSON.parse(education),
           JSON.parse(projects),
           JSON.parse(technologyStack),
-          relativePath,
           motivation,
           cvType,
           grade,
@@ -121,7 +103,6 @@ const handler = async (req, res) => {
       }
 
       try {
-        await deleteUserMedia(id);
         await deleteById(id);
 
         res.status(200).json({ id });
