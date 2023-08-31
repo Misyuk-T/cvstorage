@@ -123,26 +123,13 @@ const UserForm = ({
   const onSubmitForm = async (data) => {
     setIsLoading(true);
 
-    const updatedData = {
-      ...data,
-    };
-
     try {
-      const formData = new FormData();
-      for (const key in updatedData) {
-        if (Array.isArray(updatedData[key])) {
-          formData.append(key, JSON.stringify(updatedData[key]));
-        } else {
-          formData.append(key, updatedData[key]);
-        }
-      }
-
       if (initialValues.id) {
-        await updateUser(initialValues.id, formData).then((data) => {
+        await updateUser(initialValues.id, data).then((data) => {
           updateStoreUser({ ...data, id: +data.id });
         });
       } else {
-        await createUser(formData).then((data) => {
+        await createUser(data).then((data) => {
           addStoreUser(data);
         });
       }

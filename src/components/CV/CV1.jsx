@@ -1,5 +1,5 @@
 import React from "react";
-import { Document, Page, Text, View, Image } from "@react-pdf/renderer";
+import { Document, Page, Text, View } from "@react-pdf/renderer";
 
 import { styles } from "./styles";
 
@@ -23,7 +23,6 @@ const splitArrayByType = (inputArray) => {
 };
 
 const CV1 = ({ user, technologies, projects }) => {
-  const formattedMedia = user.media.replace("public", "");
   const groupedTechnologies = splitArrayByType(technologies);
   const technologyCore = Object.entries(groupedTechnologies.otherTypes);
 
@@ -113,14 +112,6 @@ const CV1 = ({ user, technologies, projects }) => {
             >
               {user.position}
             </Text>
-          </View>
-
-          <View style={{ ...styles.imageContainer }}>
-            <Image
-              style={{ ...styles.image }}
-              src={formattedMedia}
-              alt="avatar"
-            />
           </View>
         </View>
 
