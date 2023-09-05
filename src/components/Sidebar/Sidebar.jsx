@@ -12,7 +12,7 @@ import UsersBlock from "@/components/Sidebar/components/UserBlock";
 const TABS = [
   { key: "users", label: "Users" },
   { key: "projects", label: "Projects" },
-  { key: "technologies", label: "Technologies" },
+  { key: "skills", label: "Skills" },
 ];
 
 const Sidebar = () => {
@@ -32,7 +32,7 @@ const Sidebar = () => {
 
   const renderBlock = () => {
     switch (selectedTab) {
-      case "technologies":
+      case "skills":
         return <TechnologyBlock technologies={technologies} />;
       case "projects":
         return (

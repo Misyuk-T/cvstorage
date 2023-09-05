@@ -22,11 +22,8 @@ import {
   workDirectionOptions,
 } from "/src/helpers/constants";
 
-import FileUploadField from "./components/FileUploadField";
 import ReactSelectField from "@/components/UserForm/components/ReactSelectField";
 import ProjectField from "./components/ProjectField";
-import EducationField from "./components/EducationField";
-import ExperienceField from "./components/ExperienceField";
 import SocialField from "./components/SocialField";
 import FormField from "./components/FormField";
 import UserTechnologyStackField from "@/components/UserForm/components/UserTechnologyStackField";
@@ -34,19 +31,24 @@ import UserTechnologyStackField from "@/components/UserForm/components/UserTechn
 const defaultValues = {
   name: "",
   position: "",
-  email: "",
+  experience: "",
   description: "",
   isEnabled: 1,
   cvType: cvTypeOptions[0].value,
-  motivation: "",
   grade: "",
   workDirection: "",
-  media: "",
   socials: [],
-  experience: [],
-  education: [],
   projects: [],
-  technologyStack: [],
+  softSkills: [],
+  languages: [],
+  hardSkills: [],
+  experienceSkills: [],
+};
+
+const getFilteredSkills = (type, technologies) => {
+  return technologies.filter((item) => {
+    return item.type === type;
+  });
 };
 
 const UserForm = ({
@@ -60,12 +62,6 @@ const UserForm = ({
     updateUser: updateStoreUser,
     deleteUser: deleteStoreUser,
   } = useUsersStore();
-
-  const [isLoading, setIsLoading] = useState(false);
-  const [isDeleteLoading, setIsDeleteLoading] = useState(false);
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [imagePreview, setImagePreview] = useState(initialValues.media);
-
   const {
     register,
     handleSubmit,
@@ -79,6 +75,10 @@ const UserForm = ({
     defaultValues: initialValues,
   });
 
+  const [isLoading, setIsLoading] = useState(false);
+  const [isDeleteLoading, setIsDeleteLoading] = useState(false);
+  const [availableSkills, setAvailableSkills] = useState();
+
   const {
     fields: socialsFields,
     append: appendSocial,
@@ -86,24 +86,6 @@ const UserForm = ({
   } = useFieldArray({
     control,
     name: "socials",
-  });
-
-  const {
-    fields: educationFields,
-    append: appendEducation,
-    remove: removeEducation,
-  } = useFieldArray({
-    control,
-    name: "education",
-  });
-
-  const {
-    fields: experienceFields,
-    append: appendExperience,
-    remove: removeExperience,
-  } = useFieldArray({
-    control,
-    name: "experience",
   });
 
   const {
@@ -116,53 +98,63 @@ const UserForm = ({
   });
 
   const {
-    fields: technologyFields,
-    append: appendTechnology,
-    remove: removeTechnology,
+    fields: softSkillsFields,
+    append: appendSoftSkill,
+    remove: removeSoftSkill,
   } = useFieldArray({
     control,
-    name: "technologyStack",
+    name: "softSkills",
   });
 
-  const handleFileChange = (name, file) => {
-    setSelectedFile({ name, file });
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImagePreview(reader.result);
-      };
-      reader.readAsDataURL(file);
-    } else {
-      setImagePreview(null);
-    }
+  const {
+    fields: languagesFields,
+    append: appendLanguageSkill,
+    remove: removeLanguageSkill,
+  } = useFieldArray({
+    control,
+    name: "languages",
+  });
+
+  const {
+    fields: hardSkillsFields,
+    append: appendHardSkill,
+    remove: removeHardSkill,
+  } = useFieldArray({
+    control,
+    name: "hardSkills",
+  });
+
+  const {
+    fields: experienceSkillsFields,
+    append: appendExperienceSkill,
+    remove: removeExperienceSkill,
+  } = useFieldArray({
+    control,
+    name: "experienceSkills",
+  });
+
+  const handleSelectSkill = (type) => {
+    const selectedSkills = getValues(type);
+
+    const availSkills = technologies.filter((tech) =>
+      selectedSkills.every(
+        (selectedTech) => selectedTech.technologyId !== tech.id.toString(),
+      ),
+    );
+
+    setAvailableSkills(availSkills);
   };
 
   const onSubmitForm = async (data) => {
     setIsLoading(true);
 
-    const updatedData = {
-      ...data,
-      media: selectedFile ? selectedFile.file : initialValues.media,
-    };
-
     try {
-      const formData = new FormData();
-      for (const key in updatedData) {
-        if (key === "media" && updatedData[key] === "") continue;
-
-        if (Array.isArray(updatedData[key])) {
-          formData.append(key, JSON.stringify(updatedData[key]));
-        } else {
-          formData.append(key, updatedData[key]);
-        }
-      }
-
       if (initialValues.id) {
-        await updateUser(initialValues.id, formData).then((data) => {
+        await updateUser(initialValues.id, data).then((data) => {
           updateStoreUser({ ...data, id: +data.id });
         });
       } else {
-        await createUser(formData).then((data) => {
+        await createUser(data).then((data) => {
           addStoreUser(data);
         });
       }
@@ -172,7 +164,6 @@ const UserForm = ({
     }
 
     reset();
-    setImagePreview("");
     scrollToTop();
     onComplete && onComplete();
   };
@@ -192,7 +183,6 @@ const UserForm = ({
   };
 
   useEffect(() => {
-    setImagePreview(initialValues.media);
     reset({ ...initialValues, isEnabled: initialValues.isEnabled === 1 });
   }, [initialValues]);
 
@@ -285,16 +275,6 @@ const UserForm = ({
             About
           </Text>
           <Flex gap={10} alignItems="flex-start">
-            <Box mt="32px">
-              <FileUploadField
-                name="media"
-                register={register}
-                onChange={handleFileChange}
-                imagePreview={imagePreview}
-                error={errors}
-              />
-            </Box>
-
             <Stack justifyContent="space-between" w="100%" gap={3}>
               <Flex gap={5} w="100%">
                 <FormField
@@ -307,11 +287,12 @@ const UserForm = ({
                 />
 
                 <FormField
-                  name="email"
-                  label="Email"
+                  name="experience"
+                  label="Experience"
                   register={register}
                   errors={errors}
-                  placeHolder="example@exm.com"
+                  placeHolder="2 years 6 month"
+                  isRequired
                 />
 
                 <FormField
@@ -330,7 +311,7 @@ const UserForm = ({
                 register={register}
                 errors={errors}
                 isTextarea={true}
-                placeHolder="Short information about user"
+                placeHolder="Information about user"
                 isRequired
               />
             </Stack>
@@ -361,7 +342,7 @@ const UserForm = ({
                 px={2}
                 fontWeight={600}
               >
-                information Block
+                information
               </FormLabel>
 
               {socialsFields.map((field, index) => (
@@ -385,9 +366,9 @@ const UserForm = ({
           </FormControl>
 
           <FormControl
-            id="technologyStack"
-            isInvalid={errors.technologyStack}
-            isRequired={technologyFields.length > 0}
+            id="hardSkills"
+            isInvalid={errors.hardSkills}
+            isRequired={hardSkillsFields.length > 0}
           >
             <Stack
               gap={5}
@@ -407,21 +388,26 @@ const UserForm = ({
                 px={2}
                 fontWeight={600}
               >
-                Technology Block
+                Hard Skills
               </FormLabel>
 
-              {technologyFields.length && (
+              {hardSkillsFields.length && (
                 <Flex flexWrap="wrap" gap={5}>
-                  {technologyFields.map((field, index) => (
+                  {hardSkillsFields.map((field, index) => (
                     <UserTechnologyStackField
                       key={field.id}
                       control={control}
-                      selectedTechnologies={getValues("technologyStack")}
                       register={register}
                       setValue={setValue}
                       errors={errors}
-                      removeTechnologies={() => removeTechnology(index)}
-                      technologies={technologies}
+                      removeTechnologies={() => removeHardSkill(index)}
+                      onSelect={handleSelectSkill}
+                      technologies={getFilteredSkills(
+                        "hardSkill",
+                        availableSkills || technologies,
+                        getValues("hardSkills"),
+                      )}
+                      skillsType="hardSkills"
                       index={index}
                       value={field}
                     />
@@ -431,28 +417,28 @@ const UserForm = ({
 
               <Button
                 size="sm"
-                onClick={() =>
-                  appendTechnology({ technologyId: "", level: 50 })
-                }
+                onClick={() => {
+                  appendHardSkill({ technologyId: "", level: 50 });
+                }}
               >
-                Add Technology Item
+                Add Hard Skill Item
               </Button>
             </Stack>
           </FormControl>
 
           <FormControl
-            id="experience"
-            isInvalid={errors.experience}
-            isRequired={experienceFields.length > 0}
+            id="experienceSkills"
+            isInvalid={errors.experienceSkills}
+            isRequired={experienceSkillsFields.length > 0}
           >
             <Stack
               gap={5}
               p={5}
               pt={8}
-              position="relative"
               borderRadius={5}
               border="2px solid"
               borderColor="gray.300"
+              position="relative"
             >
               <FormLabel
                 fontSize={17}
@@ -463,46 +449,57 @@ const UserForm = ({
                 px={2}
                 fontWeight={600}
               >
-                Experience Block
+                Experience Skills
               </FormLabel>
-              {experienceFields.map((field, index) => (
-                <ExperienceField
-                  key={field.id}
-                  index={index}
-                  field={field}
-                  removeExperience={removeExperience}
-                  register={register}
-                  errors={errors}
-                />
-              ))}
+
+              {experienceSkillsFields.length && (
+                <Flex flexWrap="wrap" gap={5}>
+                  {experienceSkillsFields.map((field, index) => (
+                    <UserTechnologyStackField
+                      key={field.id}
+                      control={control}
+                      register={register}
+                      setValue={setValue}
+                      errors={errors}
+                      skillsType="experienceSkills"
+                      removeTechnologies={() => removeExperienceSkill(index)}
+                      onSelect={handleSelectSkill}
+                      technologies={getFilteredSkills(
+                        "hardSkill",
+                        availableSkills || technologies,
+                        getValues("experienceSkills"),
+                      )}
+                      index={index}
+                      value={field}
+                    />
+                  ))}
+                </Flex>
+              )}
+
               <Button
                 size="sm"
-                onClick={() =>
-                  appendExperience({
-                    companyName: "",
-                    timePeriod: "",
-                    description: "",
-                  })
-                }
+                onClick={() => {
+                  appendExperienceSkill({ technologyId: "", level: 50 });
+                }}
               >
-                Add Experience Item
+                Add Experience Skill Item
               </Button>
             </Stack>
           </FormControl>
 
           <FormControl
-            id="education"
-            isInvalid={errors.education}
-            isRequired={educationFields.length > 0}
+            id="languages"
+            isInvalid={errors.languages}
+            isRequired={languagesFields.length > 0}
           >
             <Stack
-              gap={4}
+              gap={5}
               p={5}
               pt={8}
               borderRadius={5}
               border="2px solid"
-              position="relative"
               borderColor="gray.300"
+              position="relative"
             >
               <FormLabel
                 fontSize={17}
@@ -513,24 +510,102 @@ const UserForm = ({
                 px={2}
                 fontWeight={600}
               >
-                Education Block
+                Languages
               </FormLabel>
-              {educationFields.map((field, index) => (
-                <EducationField
-                  key={field.id}
-                  index={index}
-                  field={field}
-                  removeEducation={removeEducation}
-                  register={register}
-                  errors={errors}
-                />
-              ))}
+
+              {languagesFields.length && (
+                <Flex flexWrap="wrap" gap={5}>
+                  {languagesFields.map((field, index) => (
+                    <UserTechnologyStackField
+                      key={field.id}
+                      control={control}
+                      register={register}
+                      setValue={setValue}
+                      errors={errors}
+                      onSelect={handleSelectSkill}
+                      removeTechnologies={() => removeLanguageSkill(index)}
+                      technologies={getFilteredSkills(
+                        "language",
+                        availableSkills || technologies,
+                        getValues("languages"),
+                      )}
+                      skillsType="languages"
+                      index={index}
+                      value={field}
+                      showSlider
+                    />
+                  ))}
+                </Flex>
+              )}
 
               <Button
                 size="sm"
-                onClick={() => appendEducation({ rank: "", description: "" })}
+                onClick={() => {
+                  appendLanguageSkill({ technologyId: "", level: 50 });
+                }}
               >
-                Add Education Item
+                Add Language Item
+              </Button>
+            </Stack>
+          </FormControl>
+
+          <FormControl
+            id="softSkills"
+            isInvalid={errors.softSkills}
+            isRequired={softSkillsFields.length > 0}
+          >
+            <Stack
+              gap={5}
+              p={5}
+              pt={8}
+              borderRadius={5}
+              border="2px solid"
+              borderColor="gray.300"
+              position="relative"
+            >
+              <FormLabel
+                fontSize={17}
+                backgroundColor="white"
+                position="absolute"
+                top={-4}
+                p={1}
+                px={2}
+                fontWeight={600}
+              >
+                Soft Skills
+              </FormLabel>
+
+              {softSkillsFields.length && (
+                <Flex flexWrap="wrap" gap={5}>
+                  {softSkillsFields.map((field, index) => (
+                    <UserTechnologyStackField
+                      key={field.id}
+                      control={control}
+                      register={register}
+                      setValue={setValue}
+                      errors={errors}
+                      onSelect={handleSelectSkill}
+                      removeTechnologies={() => removeSoftSkill(index)}
+                      technologies={getFilteredSkills(
+                        "softSkill",
+                        availableSkills || technologies,
+                        getValues("softSkills"),
+                      )}
+                      skillsType="softSkills"
+                      index={index}
+                      value={field}
+                    />
+                  ))}
+                </Flex>
+              )}
+
+              <Button
+                size="sm"
+                onClick={() => {
+                  appendSoftSkill({ technologyId: "", level: 50 });
+                }}
+              >
+                Add Soft Skill Item
               </Button>
             </Stack>
           </FormControl>
@@ -555,7 +630,7 @@ const UserForm = ({
               m={0}
             >
               <FormLabel fontSize={17} m={0} fontWeight={600}>
-                Projects Block
+                Projects
               </FormLabel>
             </FormControl>
 
@@ -577,35 +652,6 @@ const UserForm = ({
               Add Project Item
             </Button>
           </Stack>
-        </Stack>
-
-        <Stack
-          gap={5}
-          p={5}
-          pt={6}
-          borderRadius={5}
-          border="2px solid"
-          position="relative"
-          borderColor="gray.300"
-        >
-          <FormLabel
-            fontSize={17}
-            backgroundColor="white"
-            position="absolute"
-            top={-4}
-            p={1}
-            px={2}
-            fontWeight={600}
-          >
-            Achivements / Conclusion
-          </FormLabel>
-          <FormField
-            name="motivation"
-            register={register}
-            errors={errors}
-            isTextarea={true}
-            placeHolder="Briefly explain motivation, career objectives or achivements"
-          />
         </Stack>
 
         <Flex mt={5} gap={5}>

@@ -1,5 +1,5 @@
 export const cvTypeOptions = [
-  { label: "Dark Blue & Green", value: "1" },
+  { label: "Green & Yellow", value: "1" },
   { label: "second", value: "2" },
   { label: "third", value: "3" },
 ];

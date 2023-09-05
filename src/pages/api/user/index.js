@@ -1,23 +1,16 @@
-import * as path from "path";
 import Users from "models/User";
-import { parseForm } from "@/helpers/parseForm";
-import { formatPath } from "@/helpers/formatPath";
 import { isValidClientSecret } from "@/helpers/isValidClientSecret";
-
-const initializeApp = () => {
-  Users.createTable();
-};
 
 export const config = {
   api: {
-    bodyParser: false,
+    bodyParser: true,
   },
 };
 
 const handler = async (req, res) => {
-  const { method, headers } = req;
+  Users.createTable();
 
-  await initializeApp();
+  const { method, headers, body } = req;
 
   if (!isValidClientSecret(headers.authorization)) {
     return res.status(401).json({ error: "Unauthorized" });
@@ -40,60 +33,58 @@ const handler = async (req, res) => {
 
     case "POST":
       try {
-        const nextUserID = await Users.getNextUserID();
-        const parsedForm = await parseForm(req, nextUserID);
-        const { fields, files } = parsedForm;
-
         const {
-          name: [name],
-          email: [email],
-          position: [position],
-          socials: [socials],
-          description: [description],
-          experience: [experience],
-          education: [education],
-          projects: [projects],
-          technologyStack: [technologyStack],
-          motivation: [motivation],
-          cvType: [cvType],
-          grade: [grade],
-          workDirection: [workDirection],
-          isEnabled: [isEnabled],
-        } = fields;
-        const mediaFile = files?.media;
-        const absolutePath =
-          (mediaFile && mediaFile[0]?.filepath) || "public/default_avatar.png";
-        const workingDirectory = process.cwd();
-        const relativePath = formatPath(
-          path.relative(workingDirectory, absolutePath),
-        );
+          name,
+          position,
+          experience,
+          socials,
+          description,
+          projects,
+          softSkills,
+          languages,
+          hardSkills,
+          experienceSkills,
+          cvType,
+          grade,
+          workDirection,
+          isEnabled,
+        } = body;
+
+        console.log(body, "body");
 
         try {
           const newUser = await Users.create(
             name,
             position,
-            email,
-            JSON.parse(socials),
+            experience,
+            JSON.stringify(socials),
             description,
-            JSON.parse(experience),
-            JSON.parse(education),
-            JSON.parse(projects),
-            JSON.parse(technologyStack),
-            relativePath,
-            motivation,
+            JSON.stringify(projects),
+            JSON.stringify(softSkills),
+            JSON.stringify(languages),
+            JSON.stringify(hardSkills),
+            JSON.stringify(experienceSkills),
             cvType,
             grade,
             workDirection,
             isEnabled === "true" ? 1 : 0,
           );
 
-          res.status(201).json(newUser);
+          res.status(201).json({
+            ...newUser,
+            socials: JSON.parse(newUser.socials),
+            projects: JSON.parse(newUser.projects),
+            softSkills: JSON.parse(newUser.softSkills),
+            languages: JSON.parse(newUser.languages),
+            hardSkills: JSON.parse(newUser.hardSkills),
+            experienceSkills: JSON.parse(newUser.experienceSkills),
+          });
         } catch (error) {
           console.error("Error creating user:", error.message);
           res.status(500).json({ error: "Internal Server Error" });
         }
       } catch (error) {
-        console.error("Error processing file upload:", error);
+        console.error("Error processing request:", error);
         res.status(500).json({ error: "Internal Server Error" });
       }
       break;
@@ -104,10 +95,11 @@ const handler = async (req, res) => {
         const parsedUsers = users.map((user) => ({
           ...user,
           socials: JSON.parse(user.socials),
-          experience: JSON.parse(user.experience),
-          education: JSON.parse(user.education),
           projects: JSON.parse(user.projects),
-          technologyStack: JSON.parse(user.technologyStack),
+          softSkills: JSON.parse(user.softSkills),
+          languages: JSON.parse(user.languages),
+          hardSkills: JSON.parse(user.hardSkills),
+          experienceSkills: JSON.parse(user.experienceSkills),
         }));
         res.status(200).json(parsedUsers);
       } catch (error) {

@@ -18,6 +18,17 @@ import { DeleteIcon } from "@chakra-ui/icons";
 
 import { transformTechnologiesToSelect } from "@/helpers/transformData";
 
+const sliderValueToLanguageLevel = {
+  0: "A0",
+  15: "A1",
+  30: "A2",
+  45: "B1",
+  60: "B2",
+  75: "C1",
+  90: "C2",
+  100: "Native",
+};
+
 const getIntersectedTechnology = (id, technologies) => {
   return technologies.find((item) => item.id === +id);
 };
@@ -30,7 +41,9 @@ const UserTechnologyStackField = ({
   technologies,
   index,
   value,
-  selectedTechnologies,
+  showSlider = false,
+  skillsType,
+  onSelect,
 }) => {
   const initialTechnology = getIntersectedTechnology(
     value.technologyId,
@@ -42,21 +55,16 @@ const UserTechnologyStackField = ({
   };
   const [selectedTechnology, setSelectedTechnology] = useState(formattedData);
 
-  const formattedOptions = transformTechnologiesToSelect(
-    technologies.filter((tech) =>
-      selectedTechnologies.every(
-        (selectedTech) => selectedTech.technologyId !== tech.id.toString(),
-      ),
-    ),
-  );
+  const formattedOptions = transformTechnologiesToSelect(technologies);
   const isClientSide = typeof window !== "undefined";
 
   const handleTechnologySelect = (selectedOption) => {
     setSelectedTechnology(selectedOption);
     setValue(
-      `technologyStack[${index}].technologyId`,
+      `${skillsType}[${index}].technologyId`,
       selectedOption?.value.toString(),
     );
+    onSelect(skillsType);
   };
 
   const handleDeleteTechnology = () => {
@@ -86,7 +94,7 @@ const UserTechnologyStackField = ({
                   handleTechnologySelect(selectedOption)
                 }
                 isClearable
-                placeholder="Select a technology"
+                placeholder="Select skill"
                 menuPortalTarget={isClientSide && document.body}
                 styles={{
                   menuPortal: (base) => ({ ...base, zIndex: 100 }),
@@ -123,29 +131,33 @@ const UserTechnologyStackField = ({
             <Controller
               name={`technologyStack[${index}].level`}
               control={control}
-              defaultValue={50}
-              render={({ field }) => (
-                <Slider
-                  {...field}
-                  aria-label={`slider-ex-${index}`}
-                  step={10}
-                  onChange={(val) => field.onChange(val.toString())}
-                >
-                  <SliderTrack>
-                    <SliderFilledTrack />
-                  </SliderTrack>
-                  <SliderThumb
-                    w={8}
-                    h={5}
-                    borderRadius={2}
-                    fontSize="12px"
-                    border="2px solid"
-                    borderColor="blue.300"
+              defaultValue={45}
+              render={({ field }) =>
+                showSlider ? (
+                  <Slider
+                    {...field}
+                    aria-label={`slider-ex-${index}`}
+                    step={15}
+                    onChange={(val) => field.onChange(val.toString())}
                   >
-                    {field.value}%
-                  </SliderThumb>
-                </Slider>
-              )}
+                    <SliderTrack>
+                      <SliderFilledTrack />
+                    </SliderTrack>
+                    <SliderThumb
+                      w={10}
+                      h={5}
+                      borderRadius={2}
+                      fontSize="12px"
+                      border="2px solid"
+                      borderColor="blue.300"
+                    >
+                      {sliderValueToLanguageLevel[field.value]}
+                    </SliderThumb>
+                  </Slider>
+                ) : (
+                  <div />
+                )
+              }
             />
           </Box>
         </Stack>

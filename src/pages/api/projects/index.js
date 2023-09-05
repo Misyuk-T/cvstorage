@@ -1,12 +1,10 @@
 import Projects from "models/Projects";
 import { isValidClientSecret } from "@/helpers/isValidClientSecret";
 
-const initializeApp = () => {
-  Projects.createTable();
-};
-
 const handler = async (req, res) => {
-  await initializeApp();
+  Projects.createTable();
+
+  const { headers } = req;
 
   switch (req.method) {
     case "OPTIONS":

@@ -98,7 +98,7 @@ const TechnologyForm = ({ initialValues = defaultValues, onComplete }) => {
         <Flex gap={5}>
           <FormField
             name="name"
-            label="Technology Name"
+            label="Skill Name"
             register={register}
             errors={errors}
             placeHolder="Name"
@@ -107,7 +107,7 @@ const TechnologyForm = ({ initialValues = defaultValues, onComplete }) => {
 
           <ReactSelectField
             name="type"
-            label="Technology Type"
+            label="Skill Type"
             control={control}
             errors={errors}
             options={technologyTypes}

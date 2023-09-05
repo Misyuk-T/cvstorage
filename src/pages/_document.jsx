@@ -1,5 +1,4 @@
 import { Html, Head, Main, NextScript } from "next/document";
-import { Analytics } from "@vercel/analytics/react";
 
 const Document = () => {
   return (
@@ -11,7 +10,6 @@ const Document = () => {
       <body>
         <Main />
         <NextScript />
-        <Analytics />
       </body>
     </Html>
   );

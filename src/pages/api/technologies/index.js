@@ -1,14 +1,10 @@
 import Technologies from "models/Technologies";
 import { isValidClientSecret } from "@/helpers/isValidClientSecret";
 
-const initializeApp = () => {
-  Technologies.createTable();
-};
-
 const handler = async (req, res) => {
-  await initializeApp();
-
   const { method, body, headers } = req;
+
+  Technologies.createTable();
 
   switch (method) {
     case "OPTIONS":
