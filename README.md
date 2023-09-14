@@ -22,7 +22,7 @@ After that open http://localhost:3000
 
 ### Build
 
-To run the development server, use following commands inside root folder:
+To run the build server, use following commands inside root folder:
 
 ```bash
 yarn
