@@ -27,7 +27,7 @@ const SocialField = ({ index, field, removeSocial, register, errors }) => {
         <Input
           type="text"
           name={`socials[${index}].url`}
-          placeholder="Description"
+          placeholder="URL"
           {...register(`socials[${index}].url`)}
           isInvalid={urlError}
           borderColor="gray.300"

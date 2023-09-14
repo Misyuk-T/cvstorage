@@ -30,3 +30,14 @@ export const technologyTypes = [
   { value: "softSkill", label: "Soft Skill" },
   { value: "language", label: "Language" },
 ];
+
+export const sliderValueToLanguageLevel = {
+  0: "A0",
+  15: "A1",
+  30: "A2",
+  45: "B1",
+  60: "B2",
+  75: "C1",
+  90: "C2",
+  100: "Native",
+};

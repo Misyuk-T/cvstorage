@@ -25,9 +25,21 @@ const UserPage = () => {
   const router = useRouter();
 
   const { id } = router.query;
-  const intersectedTechnologies = getIntersectedTechnologies(
+  const intersectedHardSkills = getIntersectedTechnologies(
     technologies,
-    user?.technologyStack,
+    user?.hardSkills,
+  );
+  const intersectedExperienceSkills = getIntersectedTechnologies(
+    technologies,
+    user?.experienceSkills,
+  );
+  const intersectedSoftSkills = getIntersectedTechnologies(
+    technologies,
+    user?.softSkills,
+  );
+  const intersectedLanguages = getIntersectedTechnologies(
+    technologies,
+    user?.languages,
   );
   const intersectedProjects = getIntersectedProjects(
     projects,
@@ -62,7 +74,10 @@ const UserPage = () => {
             >
               <CV1
                 user={user}
-                technologies={intersectedTechnologies}
+                hardSkills={intersectedHardSkills}
+                experienceSkills={intersectedExperienceSkills}
+                softSkills={intersectedSoftSkills}
+                languages={intersectedLanguages}
                 projects={intersectedProjects}
               />
             </PDFViewer>

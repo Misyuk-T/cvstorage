@@ -67,7 +67,7 @@ const handler = async (req, res) => {
             cvType,
             grade,
             workDirection,
-            isEnabled === "true" ? 1 : 0,
+            isEnabled ? 1 : 0,
           );
 
           res.status(201).json({

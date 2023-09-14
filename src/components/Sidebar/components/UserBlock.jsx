@@ -41,7 +41,9 @@ const UsersBlock = ({ technologies, projects, users }) => {
 
   const filteredUsers = users.filter((user) =>
     selectedTechnologies.every((selectedTech) =>
-      user.technologyStack.some((tech) => tech.technologyId === selectedTech),
+      [...user.experienceSkills, ...user.hardSkills].some(
+        (tech) => tech.technologyId === selectedTech,
+      ),
     ),
   );
 

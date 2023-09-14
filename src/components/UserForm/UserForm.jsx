@@ -342,7 +342,7 @@ const UserForm = ({
                 px={2}
                 fontWeight={600}
               >
-                information
+                Links
               </FormLabel>
 
               {socialsFields.map((field, index) => (
@@ -360,7 +360,7 @@ const UserForm = ({
                 size="sm"
                 onClick={() => appendSocial({ platform: "", url: "" })}
               >
-                Add information Item
+                Add Link Item
               </Button>
             </Stack>
           </FormControl>

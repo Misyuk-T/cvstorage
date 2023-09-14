@@ -58,13 +58,15 @@ Font.register({
   ],
 });
 
+Font.registerHyphenationCallback((word) => [word]);
+
 export const styles = StyleSheet.create({
   page: {
-    backgroundColor: "#ededed",
+    backgroundColor: "white",
     padding: 10,
     width: "100%",
     height: "auto",
-    fontFamily: "Roboto",
+    fontFamily: "Poppins",
   },
 
   header: {
@@ -73,25 +75,11 @@ export const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     gap: 50,
-    height: 80,
+    height: 90,
     width: "100%",
-    backgroundColor: "#03a497",
-    padding: "0 15px",
+    backgroundColor: "#00786e",
+    padding: "0 35px",
     marginBottom: 10,
-  },
-  firstItem: {
-    display: "flex",
-    alignSelf: "stretch",
-    width: "40%",
-    backgroundColor: "#091543",
-    marginTop: -11,
-    height: 723,
-    padding: 10,
-  },
-  secondItem: {
-    display: "flex",
-    width: "60%",
-    height: 700,
   },
 
   flex: {
@@ -104,22 +92,9 @@ export const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "flex-start",
   },
-
-  imageContainer: {
-    position: "relative",
-    display: "block",
-    width: 110,
-    height: 110,
-    borderRadius: "50%",
-    backgroundColor: "white",
-  },
   image: {
-    position: "relative",
-    left: 5,
-    top: 5,
-    width: 100,
-    height: 100,
-    borderRadius: "50%",
+    width: "auto",
+    height: 50,
   },
 
   textSmall: {
@@ -129,7 +104,7 @@ export const styles = StyleSheet.create({
   },
   textBold: {
     fontSize: 10,
-    fontWeight: 800,
+    fontWeight: 600,
     color: "black",
   },
   textTitle: {
@@ -139,21 +114,66 @@ export const styles = StyleSheet.create({
     color: "white",
   },
 
-  firstDivider: {
-    display: "block",
-    width: "100%",
-    height: 2,
-    backgroundColor: "#ededed",
-    margin: "15px 0",
-    borderRadius: 5,
+  skillsContainer: {
+    display: "flex",
+    flexDirection: "row",
+    flexWrap: "nowrap",
+    gap: 5,
+    margin: "0 -10px",
+    marginTop: 5,
   },
-  extraLine: {
-    display: "block",
-    width: "100%",
-    height: 1,
-    backgroundColor: "#091543",
-    marginBottom: 3,
-    marginLeft: 15,
-    borderRadius: 5,
+  skillsItem: {},
+  skill: {
+    position: "relative",
+    fontSize: 10,
+    color: "black",
+    opacity: 0.6,
   },
+  skillsList: {
+    display: "flex",
+    gap: 5,
+    padding: "10px 17px",
+    borderRadius: 10,
+    backgroundColor: "#f5f9fd",
+  },
+  skillsTitleBox: {
+    padding: "0 8px",
+    backgroundColor: "#ffdf33",
+    alignSelf: "center",
+    marginBottom: 8,
+  },
+  skillsTitle: {
+    fontSize: 13,
+    textTransform: "uppercase",
+    color: "black",
+    fontWeight: 600,
+  },
+
+  footer: {},
+  footerText: {
+    fontSize: 10,
+    color: "black",
+    opacity: 0.6,
+  },
+
+  projectBox: {
+    display: "flex",
+    flexDirection: "row",
+    margin: "0 -15px 5px",
+  },
+  projectTitleBox: {
+    position: "relative",
+    right: -10,
+    padding: "1px 10px",
+    minWidth: 130,
+    backgroundColor: "#ffdf33",
+    alignSelf: "flex-start",
+  },
+  projectTitle: {
+    fontSize: 12,
+    fontWeight: 500,
+    color: "black",
+    textAlign: "left",
+  },
+  projectList: {},
 });

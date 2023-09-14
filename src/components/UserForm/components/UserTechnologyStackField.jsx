@@ -17,17 +17,7 @@ import {
 import { DeleteIcon } from "@chakra-ui/icons";
 
 import { transformTechnologiesToSelect } from "@/helpers/transformData";
-
-const sliderValueToLanguageLevel = {
-  0: "A0",
-  15: "A1",
-  30: "A2",
-  45: "B1",
-  60: "B2",
-  75: "C1",
-  90: "C2",
-  100: "Native",
-};
+import { sliderValueToLanguageLevel } from "@/helpers/constants";
 
 const getIntersectedTechnology = (id, technologies) => {
   return technologies.find((item) => item.id === +id);
@@ -74,14 +64,14 @@ const UserTechnologyStackField = ({
 
   return (
     <FormControl
-      id={`technologyStack[${index}]`}
+      id={`${skillsType}[${index}]`}
       isInvalid={errors?.technology?.[index]}
       width="31%"
     >
       <Flex gap={3}>
         <Stack w="100%" gap={1}>
           <Controller
-            name={`technologyStack[${index}].technologyId`}
+            name={`${skillsType}[${index}].technologyId`}
             control={control}
             defaultValue=""
             render={({ field }) => (
@@ -129,7 +119,7 @@ const UserTechnologyStackField = ({
 
           <Box>
             <Controller
-              name={`technologyStack[${index}].level`}
+              name={`${skillsType}[${index}].level`}
               control={control}
               defaultValue={45}
               render={({ field }) =>
