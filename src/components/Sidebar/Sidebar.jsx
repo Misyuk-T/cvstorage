@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Box, Flex, Text, VStack, Button } from "@chakra-ui/react";
+import { Box, Flex, Text, VStack, Button, Link } from "@chakra-ui/react";
 
 import useTechnologiesStore from "@/store/technologiesStore";
 import useUsersStore from "@/store/usersStore";
@@ -68,6 +68,7 @@ const Sidebar = () => {
           align="start"
           justifyContent="center"
           textAlign="center"
+          height="100%"
         >
           <Text fontWeight="bold" fontSize="20" width="100%" mb={3}>
             Dashboard
@@ -104,6 +105,17 @@ const Sidebar = () => {
           >
             Sign Out
           </Button>
+
+          <Text fontSize={12} mt="auto" mb={0}>
+            Report bugs or share your ideas{" "}
+            <Link
+              href="https://github.com/Misyuk-T/cvstorage/issues"
+              color="blue"
+              target="_blank"
+            >
+              here
+            </Link>
+          </Text>
         </VStack>
       </Box>
 
