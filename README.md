@@ -8,7 +8,7 @@ To get started, you'll need [Node.js](https://nodejs.org/) version 18.15.0 and [
 
 ### Development Server
 
-To run the development server, use one of the following commands:
+To run the development server following commands inside root folder:
 
 ```bash
 yarn
@@ -22,7 +22,7 @@ After that open http://localhost:3000
 
 ### Build
 
-To run the development server, use one of the following commands:
+To run the development server, use following commands inside root folder:
 
 ```bash
 yarn
