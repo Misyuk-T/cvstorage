@@ -28,10 +28,6 @@ const handler = async (req, res) => {
     case "POST":
       const { name, type } = body;
 
-      if (!isValidClientSecret(headers.authorization)) {
-        return res.status(401).json({ error: "Unauthorized" });
-      }
-
       if (name && type) {
         try {
           const newTechnology = await Technologies.create(name, type);

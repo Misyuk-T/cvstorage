@@ -54,10 +54,6 @@ const handler = async (req, res) => {
 
     case "PUT":
       try {
-        if (!isValidClientSecret(headers.authorization)) {
-          return res.status(401).json({ error: "Unauthorized" });
-        }
-
         const parsedForm = await parseForm(req, id);
 
         const { fields, files } = parsedForm;
@@ -115,10 +111,6 @@ const handler = async (req, res) => {
       break;
 
     case "DELETE":
-      if (!isValidClientSecret(headers.authorization)) {
-        return res.status(401).json({ error: "Unauthorized" });
-      }
-
       try {
         await deleteUserMedia(id);
         const deletedUser = await Users.deleteById(id);

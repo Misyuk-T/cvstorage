@@ -5,10 +5,6 @@ const handler = async (req, res) => {
   const { method, query, headers } = req;
   const id = query.projectId;
 
-  if (!isValidClientSecret(headers.authorization)) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
-
   switch (method) {
     case "OPTIONS":
       res.setHeader("Access-Control-Allow-Origin", "*");
@@ -54,6 +50,8 @@ const handler = async (req, res) => {
     case "PUT":
       const { projectName, technologyStack, description, teamSize, link, nda } =
         req.body;
+
+      console.log(req.body, "req.body");
 
       try {
         const updatedProject = await Projects.update(

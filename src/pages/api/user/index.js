@@ -19,10 +19,6 @@ const handler = async (req, res) => {
 
   await initializeApp();
 
-  if (!isValidClientSecret(headers.authorization)) {
-    return res.status(401).json({ error: "Unauthorized" });
-  }
-
   switch (method) {
     case "OPTIONS":
       res.setHeader("Access-Control-Allow-Origin", "*");
